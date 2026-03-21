@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shreyaan | Student @ HKUST</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <script type="importmap">
+    { "imports": { "@material/web/": "https://esm.run/@material/web/" } }
+  </script>
+  <script type="module">import '@material/web/all.js';</script>
+
+  <style>
+    :root {
+      /* Dynamic Color Palette (Extracted from your "Steps" image) */
+      --md-sys-color-primary: #6750A4;
+      --md-sys-color-primary-container: #EADDFF;
+      --md-sys-color-on-primary-container: #21005D;
+      --md-sys-color-secondary: #77F2A1;
+      --md-sys-color-surface: #FFFBFE;
+      --md-sys-color-surface-container: #F3EDF7;
+      --md-sys-color-outline: #79747E;
+    }
+
+    body {
+      background-color: var(--md-sys-color-surface);
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: auto;
+      gap: 16px;
+      max-width: 500px;
+      width: 100%;
+    }
+
+    /* Hero/Profile (Full Width) */
+    .profile-card {
+      grid-column: span 2;
+      background: var(--md-sys-color-primary-container);
+      border-radius: 28px;
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      color: var(--md-sys-color-on-primary-container);
+    }
+
+    .avatar {
+      width: 96px;
+      height: 96px;
+      background: var(--md-sys-color-primary);
+      /* Expressive Shape Morph from Image 1 */
+      border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+      margin-bottom: 16px;
+      animation: morph 8s ease-in-out infinite;
+    }
+
+    @keyframes morph {
+      0%, 100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+      50% { border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%; }
+    }
+
+    /* Bento Items */
+    .item {
+      background: var(--md-sys-color-surface-container);
+      border-radius: 24px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .status-item {
+      background: var(--md-sys-color-secondary);
+      color: #00391C;
+    }
+
+    .title { font-family: 'Google Sans', sans-serif; font-weight: 700; margin: 0; }
+    .label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; margin-bottom: 4px;}
+
+    /* List Item Style */
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+      padding: 8px 0;
+    }
+
+    md-filled-button { width: 100%; margin-top: 8px; }
+  </style>
+</head>
+<body>
+
+  <div class="bento-grid">
+    <header class="profile-card">
+      <div class="avatar"></div>
+      <h1 class="title" style="font-size: 2rem;">Shreyaan Vashishtha</h1>
+      <p style="margin: 8px 0 0 0; opacity: 0.8;">The Hong Kong University of Science and Technology</p>
+    </header>
+
+    <div class="item status-item">
+      <div>
+        <div class="label">Availability</div>
+        <h2 class="title">Open for Projects</h2>
+      </div>
+      <md-icon style="align-self: flex-end;">check_circle</md-icon>
+    </div>
+
+    <div class="item">
+      <div>
+        <div class="label">Based in</div>
+        <h2 class="title">Hong Kong</h2>
+      </div>
+      <md-icon style="align-self: flex-end;">location_on</md-icon>
+    </div>
+
+    <div class="item" style="grid-column: span 2;">
+      <div class="label">Elsewhere</div>
+      <a href="#" class="contact-link">
+        <md-icon>link</md-icon>
+        <span class="title">Portfolio</span>
+      </a>
+      <a href="#" class="contact-link">
+        <md-icon>description</md-icon>
+        <span class="title">Linkedin</span>
+      </a>
+      <md-filled-button>
+        <md-icon slot="icon">mail</md-icon>
+        Get in Touch
+      </md-filled-button>
+    </div>
+
+  </div>
+
+</body>
+</html>
