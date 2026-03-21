@@ -17,16 +17,16 @@
 
   <style>
     :root {
-      --m3-surface: #F6F2F7;
-      --m3-container: #F3EDF7;
-      --m3-primary-cnt: #EADDFF;
-      --m3-tertiary-cnt: #C2E7FF;
-      --m3-secondary-cnt: #E8DEF8;
+      --m3-surface: #FAF7FB;
+      --m3-container: rgba(243, 237, 247, 0.7);
+      --m3-primary-cnt: rgba(234, 221, 255, 0.8);
+      --m3-tertiary-cnt: rgba(194, 231, 255, 0.8);
+      --m3-secondary-cnt: rgba(232, 222, 248, 0.8);
       --m3-text: #1C1B1F;
       --m3-text-v: #49454F;
-      --m3-accent: #FF3B30;
-      --map-glow: rgba(103, 80, 164, 0.1);
-      transition: all 0.8s ease;
+      --m3-accent: #6750A4;
+      --m3-media-acc: #FF3B30;
+      transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .dark-mode {
@@ -37,7 +37,6 @@
       --m3-secondary-cnt: #332D41;
       --m3-text: #E6E1E5;
       --m3-text-v: #CAC4D0;
-      --map-glow: rgba(208, 188, 255, 0.15);
     }
 
     body { 
@@ -47,39 +46,57 @@
     }
 
     .bento-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; max-width: 420px; width: 100%; }
-    
-    .widget { background: var(--m3-container); border-radius: 28px; padding: 24px; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+
+    .widget { 
+      background: var(--m3-container); border-radius: 28px; padding: 24px; 
+      display: flex; flex-direction: column; position: relative; overflow: hidden;
+      backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1);
+    }
 
     .label-m3 {
       font-family: 'Google Sans'; font-weight: 700; font-size: 0.65rem;
       text-transform: uppercase; letter-spacing: 0.12em; color: var(--m3-text-v); margin-bottom: 8px; z-index: 2;
     }
 
-    .profile-card { background: var(--m3-primary-cnt); grid-column: span 2; align-items: center; text-align: center; }
-    .avatar-blob { 
-      width: 80px; height: 80px; background: #6051a3; margin-bottom: 20px; 
-      animation: m3-morph 10s infinite; transition: background 2s ease;
-    }
-
-    .media-widget { background: #000; color: white; grid-column: span 2; min-height: 180px; justify-content: space-between; }
+    /* MEDIA PLAYER */
+    .media-widget { background: #000; color: white; grid-column: span 2; min-height: 180px; justify-content: space-between; border: none; }
     #squiggleCanvas { width: 100%; height: 40px; margin: 12px 0; }
 
-    .time-widget { background: var(--m3-tertiary-cnt); }
-    .clock-h { font-variation-settings: 'wdth' 45, 'wght' 300; font-size: 5.5rem; line-height: 0.8; letter-spacing: -4px; }
-    .clock-m { font-variation-settings: 'wdth' 35, 'wght' 300; font-size: 5.5rem; line-height: 0.8; letter-spacing: -4px; opacity: 0.35; }
-
-    .weather-widget { background: var(--m3-secondary-cnt); justify-content: space-between; cursor: pointer; }
-    .weather-widget::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-      background: radial-gradient(circle at var(--map-x, 50%) var(--map-y, 50%), var(--map-glow) 0%, transparent 70%);
-      z-index: 1; pointer-events: none;
+    /* WEATHER & SYNC */
+    .loader-ring { position: absolute; top: 24px; right: 24px; width: 44px; height: 44px; display: none; }
+    .loading .loader-ring { display: block; }
+    .loading #w-icon { display: none; }
+    .squiggle-circle {
+      fill: none; stroke: var(--m3-accent); stroke-width: 4; stroke-linecap: round;
+      stroke-dasharray: 40 60; animation: m3-squiggle-load 1.5s ease-in-out infinite, rotate 2s linear infinite;
+      transform-origin: center;
     }
 
-    .temp-display { font-variation-settings: 'wdth' 70, 'wght' 450; font-size: 3.5rem; line-height: 1; letter-spacing: -1.5px; z-index: 2; }
+    /* FORECAST */
+    .forecast-card { grid-column: span 2; }
+    .graph-container { height: 80px; display: flex; align-items: flex-end; gap: 8px; margin-top: 16px; justify-content: space-between; }
+    .graph-point { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
+    .bar { width: 8px; background: var(--m3-accent); border-radius: 10px; transition: all 0.3s ease; min-height: 6px; opacity: 0.4; }
+    .graph-point.active .bar { opacity: 1; transform: scaleX(1.4); }
+    .time-label { font-size: 0.6rem; font-weight: 700; opacity: 0.5; margin-top: 4px; }
     
-    .spinning { animation: rotate 1s linear infinite; }
+    #forecast-details { 
+      margin-top: 16px; padding: 12px; background: var(--m3-secondary-cnt); border-radius: 16px;
+      display: flex; justify-content: space-around; font-size: 0.75rem; font-weight: 600;
+      opacity: 0; transform: translateY(10px); transition: all 0.4s ease;
+    }
+    #forecast-details.show { opacity: 1; transform: translateY(0); }
+
+    .clock-h { font-variation-settings: 'wdth' 45, 'wght' 300; font-size: 5.5rem; line-height: 0.8; letter-spacing: -4px; }
+    .clock-m { font-variation-settings: 'wdth' 35, 'wght' 300; font-size: 5.5rem; line-height: 0.8; letter-spacing: -4px; opacity: 0.35; }
+    .temp-display { font-variation-settings: 'wdth' 70, 'wght' 450; font-size: 3.5rem; line-height: 1; }
 
     @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes m3-squiggle-load {
+      0% { stroke-dashoffset: 0; stroke-dasharray: 1, 100; }
+      50% { stroke-dashoffset: -40; stroke-dasharray: 80, 100; }
+      100% { stroke-dashoffset: -100; stroke-dasharray: 1, 100; }
+    }
     @keyframes m3-morph {
       0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
       50% { border-radius: 30% 60% 70% 40% / 60% 30% 60% 30%; }
@@ -88,11 +105,11 @@
 </head>
 <body>
 
-  <div class="bento-grid">
-    <div class="widget profile-card">
-      <div class="avatar-blob" id="avatar"></div>
+  <div class="bento-grid" id="mainGrid">
+    <div class="widget" style="background: var(--m3-primary-cnt); grid-column: span 2; align-items: center; text-align: center;">
+      <div id="avatar" style="width: 80px; height: 80px; background: var(--m3-accent); margin-bottom: 16px; animation: m3-morph 10s infinite;"></div>
       <h1 class="md-typescale-headline-small" style="font-weight: 700; margin: 0; font-family: 'Google Sans';">Shreyaan Vashishtha</h1>
-      <p class="md-typescale-body-medium" style="opacity: 0.6; margin-top: 4px;">HKUST • Aerospace Engineering</p>
+      <p class="md-typescale-body-medium" style="opacity: 0.6;">HKUST • Aerospace Engineering</p>
     </div>
 
     <div class="widget media-widget">
@@ -100,35 +117,43 @@
         <img src="https://upload.wikimedia.org/wikipedia/en/c/c1/The_Weeknd_-_After_Hours.png" style="width: 48px; height: 48px; border-radius: 10px;">
         <div>
           <div class="md-typescale-title-medium" style="font-weight: 700;">After Hours</div>
-          <div class="md-typescale-label-large" style="color: var(--m3-accent); font-weight: 600;">The Weeknd</div>
+          <div class="md-typescale-label-large" style="color: var(--m3-media-acc); font-weight: 600;">The Weeknd</div>
         </div>
       </div>
       <canvas id="squiggleCanvas"></canvas>
       <div style="display: flex; justify-content: space-around; align-items: center;">
         <md-icon-button style="--md-icon-button-icon-color: white;"><md-icon>skip_previous</md-icon></md-icon-button>
-        <md-filled-icon-button id="playToggle" style="--md-filled-icon-button-container-color: white; --md-filled-icon-button-icon-color: black; --md-filled-icon-button-container-shape: 12px;">
+        <md-filled-icon-button id="playToggle" style="--md-filled-icon-button-container-color: white; --md-filled-icon-button-icon-color: black; --md-filled-icon-button-container-shape: 16px;">
           <md-icon id="playIcon">pause</md-icon>
         </md-filled-icon-button>
         <md-icon-button style="--md-icon-button-icon-color: white;"><md-icon>skip_next</md-icon></md-icon-button>
       </div>
     </div>
 
-    <div class="widget time-widget">
+    <div class="widget" style="background: var(--m3-tertiary-cnt);">
       <div class="label-m3">Local Time</div>
       <div style="display: flex; flex-direction: column; margin-top: auto;">
         <div class="clock-h" id="h">--</div>
         <div class="clock-m" id="m">--</div>
-        <div id="ap" style="align-self: flex-end; font-weight: 700; font-size: 1.2rem; opacity: 0.8;">--</div>
       </div>
     </div>
 
-    <div class="widget weather-widget" id="weatherWidget" onclick="syncWeather()">
+    <div class="widget weather-widget" id="weatherBox" onclick="syncAll()">
       <div class="label-m3" id="loc-label">Hong Kong</div>
-      <span class="material-symbols-outlined" id="w-icon" style="font-size: 40px; transition: 0.3s; z-index: 2;">sync</span>
-      <div style="z-index: 2;">
-        <div class="temp-display" id="temp">--°</div>
-        <div class="md-typescale-label-medium" id="w-desc" style="font-weight: 600; opacity: 0.7;">Syncing...</div>
-        <div class="md-typescale-label-small" id="w-hum" style="opacity: 0.5;">Humidity: --%</div>
+      <span class="material-symbols-outlined" id="w-icon" style="font-size: 40px;">sync</span>
+      <svg class="loader-ring" viewBox="0 0 44 44">
+        <circle class="squiggle-circle" cx="22" cy="22" r="18" />
+      </svg>
+      <div class="temp-display" id="temp">--°</div>
+      <div class="md-typescale-label-medium" id="w-desc" style="font-weight: 600; opacity: 0.7;">Sync</div>
+    </div>
+
+    <div class="widget forecast-card">
+      <div class="label-m3">6-Hour Forecast</div>
+      <div class="graph-container" id="forecastGraph"></div>
+      <div id="forecast-details">
+        <span id="det-hum">Humidity: --%</span>
+        <span id="det-wind">Wind: -- km/h</span>
       </div>
     </div>
   </div>
@@ -136,47 +161,73 @@
   <script>
     const canvas = document.getElementById('squiggleCanvas');
     const ctx = canvas.getContext('2d');
-    let phase = 0, isPlaying = true, currentAmp = 6, targetAmp = 6;
+    let phase = 0, isPlaying = true, currentAmp = 6, targetAmp = 6, hourlyData = [];
 
-    async function syncWeather() {
-      const icon = document.getElementById('w-icon');
-      icon.classList.add('spinning');
+    const themes = {
+      sunny:  { surf: '#FFFDE7', cont: 'rgba(255, 249, 196, 0.7)', prim: '#FFE082', tert: '#FFECB3', acc: '#F9A825' },
+      cloudy: { surf: '#F5F5F5', cont: 'rgba(224, 224, 224, 0.7)', prim: '#D1C4E9', tert: '#B3E5FC', acc: '#607D8B' },
+      rainy:  { surf: '#E1F5FE', cont: 'rgba(179, 229, 252, 0.7)', prim: '#90CAF9', tert: '#81D4FA', acc: '#0288D1' },
+      sunset: { surf: '#FFF3E0', cont: 'rgba(255, 224, 178, 0.7)', prim: '#FFCCBC', tert: '#F8BBD0', acc: '#E64A19' },
+      night:  { surf: '#F3E5F5', cont: 'rgba(225, 190, 231, 0.7)', prim: '#D1C4E9', tert: '#B39DDB', acc: '#7B1FA2' }
+    };
+
+    function showDetails(index) {
+      const data = hourlyData[index];
+      const detailBox = document.getElementById('forecast-details');
+      document.querySelectorAll('.graph-point').forEach(p => p.classList.remove('active'));
+      const activePoint = document.querySelectorAll('.graph-point')[index];
+      if (activePoint) activePoint.classList.add('active');
       
-      let lat = 22.3367, lon = 114.2639, city = "Hong Kong"; // Default HKUST
+      document.getElementById('det-hum').innerText = `Humidity: ${data.humidity}%`;
+      document.getElementById('det-wind').innerText = `Wind: ${data.wind} km/h`;
+      detailBox.classList.add('show');
+    }
 
+    async function syncAll() {
+      const box = document.getElementById('weatherBox');
+      box.classList.add('loading');
+      
+      let lat = 22.3367, lon = 114.2639, city = "Hong Kong";
       try {
         const loc = await fetch('https://ipapi.co/json/').then(r => r.json());
         if(loc.latitude) { lat = loc.latitude; lon = loc.longitude; city = loc.city; }
-      } catch (e) { console.log("Using default location"); }
+      } catch (e) {}
 
       try {
-        const weather = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code&timezone=auto`).then(r => r.json());
-        const cur = weather.current;
+        const weather = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m&timezone=auto`).then(r => r.json());
         
         document.getElementById('loc-label').innerText = city;
-        document.getElementById('temp').innerText = `${Math.round(cur.temperature_2m)}°`;
-        document.getElementById('w-hum').innerText = `Humidity: ${cur.relative_humidity_2m}%`;
+        document.getElementById('temp').innerText = `${Math.round(weather.current.temperature_2m)}°`;
 
-        const weatherMap = { 
-          0: ['sunny', 'Clear', '#FFB700'], 1: ['partly_cloudy_day', 'Mainly Clear', '#9575CD'], 
-          2: ['partly_cloudy_day', 'Partly Cloudy', '#7E57C2'], 3: ['cloud', 'Cloudy', '#90A4AE'], 
-          61: ['rainy', 'Rainy', '#455A64'], 95: ['thunderstorm', 'Stormy', '#311B92'] 
-        };
+        const hrs = new Date().getHours();
+        let type = (weather.current.weather_code >= 61) ? 'rainy' : (weather.current.weather_code >= 1) ? 'cloudy' : 'sunny';
+        if (hrs >= 17 && hrs <= 19) type = 'sunset';
+        else if (hrs >= 20 || hrs <= 5) type = 'night';
 
-        const [wIcon, desc, color] = weatherMap[cur.weather_code] || ['cloud', 'Cloudy', '#6051a3'];
-        icon.innerText = wIcon;
-        document.getElementById('w-desc').innerText = desc;
-        document.getElementById('avatar').style.background = color;
+        const t = themes[type];
+        document.documentElement.style.setProperty('--m3-surface', t.surf);
+        document.documentElement.style.setProperty('--m3-container', t.cont);
+        document.documentElement.style.setProperty('--m3-primary-cnt', t.prim);
+        document.documentElement.style.setProperty('--m3-tertiary-cnt', t.tert);
+        document.documentElement.style.setProperty('--m3-accent', t.acc);
+        document.getElementById('w-desc').innerText = type.toUpperCase();
 
-        // Update Glow Position
-        const x = ((lon + 180) / 360) * 100;
-        const y = (1 - (lat + 90) / 180) * 100;
-        document.getElementById('weatherWidget').style.setProperty('--map-x', `${x}%`);
-        document.getElementById('weatherWidget').style.setProperty('--map-y', `${y}%`);
-
-      } catch (e) { document.getElementById('w-desc').innerText = "Offline"; }
-      
-      setTimeout(() => icon.classList.remove('spinning'), 1000);
+        const graph = document.getElementById('forecastGraph');
+        graph.innerHTML = ''; hourlyData = [];
+        const now = new Date();
+        for(let i = 0; i < 6; i++) {
+          hourlyData.push({ temp: weather.hourly.temperature_2m[i], humidity: weather.hourly.relative_humidity_2m[i], wind: weather.hourly.wind_speed_10m[i] });
+          const timeLabel = new Date(now.getTime() + i * 3600000).getHours() + ":00";
+          const h = Math.max(15, hourlyData[i].temp * 2); 
+          graph.innerHTML += `<div class="graph-point" onclick="showDetails(${i})">
+            <span style="font-size:0.65rem; font-weight:700;">${Math.round(hourlyData[i].temp)}°</span>
+            <div class="bar" style="height:${h}px"></div>
+            <span class="time-label">${timeLabel}</span>
+          </div>`;
+        }
+        showDetails(0);
+      } catch (e) { document.getElementById('w-desc').innerText = "RETRY"; }
+      setTimeout(() => box.classList.remove('loading'), 1000);
     }
 
     function render() {
@@ -184,16 +235,22 @@
       const h = canvas.height = canvas.offsetHeight * window.devicePixelRatio;
       ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
       ctx.clearRect(0, 0, w, h);
+
       currentAmp += (targetAmp - currentAmp) * 0.1;
+      
+      // Static background line
       ctx.beginPath(); ctx.moveTo(0, 20); ctx.lineTo(canvas.offsetWidth, 20);
-      ctx.strokeStyle = 'rgba(255,255,255,0.1)'; ctx.lineWidth = 3; ctx.stroke();
+      ctx.strokeStyle = 'rgba(255,255,255,0.1)'; ctx.lineWidth = 2; ctx.stroke();
+
+      // Squiggle wave
       ctx.beginPath(); ctx.strokeStyle = '#FF3B30'; ctx.lineWidth = 4; ctx.lineCap = 'round';
-      const prog = canvas.offsetWidth * 0.72;
+      const prog = canvas.offsetWidth * 0.72; // Simulated track progress
       for (let x = 0; x <= prog; x++) {
         const y = 20 + Math.sin(x * 0.12 + phase) * currentAmp;
         x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
       }
       ctx.stroke();
+
       if (isPlaying) phase -= 0.18;
       requestAnimationFrame(render);
     }
@@ -203,18 +260,16 @@
       const hrs = d.getHours();
       document.getElementById('h').innerText = String(hrs % 12 || 12).padStart(2, '0');
       document.getElementById('m').innerText = String(d.getMinutes()).padStart(2, '0');
-      document.getElementById('ap').innerText = hrs >= 12 ? 'PM' : 'AM';
       hrs >= 18 || hrs < 6 ? document.body.classList.add('dark-mode') : document.body.classList.remove('dark-mode');
     }
 
     document.getElementById('playToggle').onclick = (e) => {
-      e.stopPropagation();
       isPlaying = !isPlaying;
       targetAmp = isPlaying ? 6 : 0;
       document.getElementById('playIcon').innerText = isPlaying ? 'pause' : 'play_arrow';
     };
 
-    setInterval(tick, 1000); tick(); syncWeather(); render();
+    setInterval(tick, 1000); tick(); syncAll(); render();
   </script>
 </body>
 </html>
