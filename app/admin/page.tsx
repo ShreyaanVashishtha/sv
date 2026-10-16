@@ -798,7 +798,7 @@ export default function AdminPage() {
   const header = settings.header || {
     logoBadge: 'sv7',
     brandTitle: 'sv7.dev',
-    badgeSubtitle: 'HKUST Astrix',
+    badgeSubtitle: '',
     navLinks: [],
     ctaText: 'Get in Touch',
     ctaHref: '#contact',
@@ -1480,8 +1480,11 @@ export default function AdminPage() {
                       })
                     }
                     className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-sm text-white"
-                    placeholder="HKUST Astrix"
+                    placeholder="Leave blank to hide"
                   />
+                  <span className="text-[11px] text-zinc-500 mt-1 block">
+                    Optional beacon subtitle beside your brand title. Leave blank to hide.
+                  </span>
                 </div>
               </div>
 
@@ -3945,9 +3948,11 @@ export default function AdminPage() {
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
                             {data.settings.siteName || 'sv7.dev'}
                           </div>
-                          <span className="text-[9px] font-mono text-emerald-400 uppercase tracking-wider">
-                            HKUST Astrix
-                          </span>
+                          {data.settings?.header?.badgeSubtitle ? (
+                            <span className="text-[9px] font-mono text-emerald-400 uppercase tracking-wider">
+                              {data.settings.header.badgeSubtitle}
+                            </span>
+                          ) : null}
                         </div>
 
                         <div>

@@ -56,7 +56,7 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   header: {
     logoBadge: 'sv7',
     brandTitle: 'sv7.dev',
-    badgeSubtitle: 'HKUST Astrix',
+    badgeSubtitle: '',
     navLinks: [
       { name: 'Projects', href: '#projects', enabled: true },
       { name: 'Capabilities', href: '#skills', enabled: true },
