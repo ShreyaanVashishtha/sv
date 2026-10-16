@@ -83,7 +83,7 @@ export function ProjectsSection({
             <div
               key={project.id}
               onClick={() => setActiveModalProject(project)}
-              className="group relative rounded-2xl bg-zinc-900/40 border border-white/10 hover:border-white/25 p-6 transition-all duration-300 hover:shadow-card-hover flex flex-col justify-between cursor-pointer backdrop-blur-sm"
+              className="group relative rounded-2xl bg-zinc-900/40 border border-white/10 hover:border-white/25 p-6 transition-all duration-300 hover:shadow-card-hover hover:-translate-y-1.5 flex flex-col justify-between cursor-pointer backdrop-blur-sm"
             >
               <div>
                 <div className="flex items-start justify-between gap-4 mb-4">
@@ -126,7 +126,8 @@ export function ProjectsSection({
                 {/* Footer links */}
                 <div className="flex items-center justify-between pt-4 border-t border-white/5 text-xs">
                   <span className="text-zinc-400 group-hover:text-white transition-colors flex items-center gap-1 font-medium">
-                    View Architecture & Details →
+                    <span>View Architecture & Details</span>
+                    <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
                   </span>
 
                   <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>

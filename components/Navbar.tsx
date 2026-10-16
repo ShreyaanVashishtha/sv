@@ -74,7 +74,7 @@ export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps)
       <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
         {/* Brand / Logo */}
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-9 h-9 rounded-xl bg-white text-black font-archivo font-black text-xs tracking-tighter uppercase flex items-center justify-center transition-transform group-hover:scale-105 shadow-sm">
+          <div className="w-9 h-9 rounded-xl bg-white text-black font-archivo font-black text-xs tracking-tighter uppercase flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_0_15px_rgba(255,255,255,0.15)] shadow-sm">
             {logoBadge}
           </div>
           {badgeSubtitle && status?.available ? (
@@ -96,7 +96,7 @@ export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps)
 
         {/* Desktop Navigation Links */}
         {navLinks.length > 0 && (
-          <nav className="hidden md:flex items-center gap-1 bg-zinc-900/60 p-1.5 rounded-full border border-white/10 backdrop-blur-md">
+          <nav className="hidden md:flex items-center gap-1 bg-zinc-900/60 p-1.5 rounded-full border border-white/10 backdrop-blur-md shadow-sm">
             {navLinks.map((link) => {
               const target = resolveHref(link.href);
               const isActive = (pathname === link.href) || (link.href === '/photography' && pathname.startsWith('/photography'));
@@ -104,10 +104,10 @@ export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps)
                 <a
                   key={link.name}
                   href={target}
-                  className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${
+                  className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
                     isActive
                       ? 'bg-white text-black font-semibold shadow-sm'
-                      : 'text-zinc-400 hover:text-white hover:bg-white/5'
+                      : 'text-zinc-400 hover:text-white hover:bg-white/5 active:scale-95'
                   }`}
                 >
                   {link.name}
@@ -125,7 +125,7 @@ export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps)
               target="_blank"
               rel="noreferrer"
               download
-              className="flex items-center gap-1.5 text-xs text-zinc-300 hover:text-white px-3 py-1.5 rounded-lg border border-white/10 hover:border-white/20 transition-all bg-zinc-900/50 hover:bg-zinc-800/80"
+              className="flex items-center gap-1.5 text-xs text-zinc-300 hover:text-white px-3 py-1.5 rounded-lg border border-white/10 hover:border-white/20 transition-all duration-200 bg-zinc-900/50 hover:bg-zinc-800/80 active:scale-95"
               title={resumeButtonText}
             >
               <FileDown className="w-3.5 h-3.5 text-zinc-400" />
@@ -135,7 +135,7 @@ export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps)
 
           <a
             href={ctaHref}
-            className="flex items-center gap-1 text-xs font-semibold bg-white text-black px-3.5 py-1.5 rounded-lg hover:bg-zinc-200 transition-all shadow-sm"
+            className="flex items-center gap-1 text-xs font-semibold bg-white text-black px-3.5 py-1.5 rounded-lg hover:bg-zinc-200 transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] shadow-sm"
           >
             <span>{ctaText}</span>
             <ArrowUpRight className="w-3.5 h-3.5" />

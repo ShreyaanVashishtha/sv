@@ -53,7 +53,7 @@ export function SkillsSection({
           {safeSkills.map((categoryGroup, index) => (
             <div
               key={index}
-              className="p-6 rounded-2xl bg-zinc-900/30 border border-white/10 hover:border-white/20 transition-all duration-300 backdrop-blur-sm"
+              className="p-6 rounded-2xl bg-zinc-900/30 border border-white/10 hover:border-white/25 hover:-translate-y-1 hover:shadow-card-subtle transition-all duration-300 backdrop-blur-sm"
             >
               <div className="flex items-center gap-2.5 mb-5 pb-3 border-b border-white/5">
                 {getCategoryIcon(categoryGroup.category)}
@@ -67,7 +67,7 @@ export function SkillsSection({
                   {categoryGroup.items.map((skill, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-900/90 border border-white/5 text-xs text-zinc-300 hover:text-white hover:border-white/15 transition-all"
+                      className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-900/90 border border-white/5 text-xs text-zinc-300 hover:text-white hover:border-white/20 hover:bg-zinc-800 hover:scale-[1.03] active:scale-95 transition-all duration-200"
                     >
                       <span className="font-medium">{skill.name}</span>
                       {skill.level && (

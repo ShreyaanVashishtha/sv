@@ -55,7 +55,7 @@ export function EducationSection({
             {safeEducation.map((item) => (
               <div
                 key={item.id}
-                className="p-6 md:p-8 rounded-3xl bg-zinc-900/40 border border-white/10 hover:border-white/20 transition-all duration-300"
+                className="p-6 md:p-8 rounded-3xl bg-zinc-900/40 border border-white/10 hover:border-white/25 hover:-translate-y-1 hover:shadow-card-subtle transition-all duration-300"
               >
                 <div className="flex flex-col md:flex-row md:items-start justify-between gap-3 mb-4">
                   <div>
@@ -117,7 +117,7 @@ export function EducationSection({
               {safeCertifications.map((cert) => (
                 <div
                   key={cert.id}
-                  className="p-5 rounded-2xl bg-zinc-900/30 border border-white/10 hover:border-white/20 transition-all flex flex-col justify-between"
+                  className="p-5 rounded-2xl bg-zinc-900/30 border border-white/10 hover:border-white/20 hover:-translate-y-1 hover:shadow-card-subtle transition-all duration-300 flex flex-col justify-between"
                 >
                   <div>
                     <span className="text-[11px] font-mono text-zinc-500 block mb-1">

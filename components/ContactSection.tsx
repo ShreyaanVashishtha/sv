@@ -132,7 +132,7 @@ export function ContactSection({
                       placeholder="Jane Doe"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950/80 border border-white/10 text-sm text-white focus:outline-none focus:border-white/30 transition-colors"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950/80 border border-white/10 text-sm text-white focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/10 transition-all duration-200"
                       required
                     />
                   </div>
@@ -146,7 +146,7 @@ export function ContactSection({
                       placeholder="jane@example.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950/80 border border-white/10 text-sm text-white focus:outline-none focus:border-white/30 transition-colors"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950/80 border border-white/10 text-sm text-white focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/10 transition-all duration-200"
                       required
                     />
                   </div>
@@ -161,7 +161,7 @@ export function ContactSection({
                     placeholder={subjectPlaceholder}
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950/80 border border-white/10 text-sm text-white focus:outline-none focus:border-white/30 transition-colors"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950/80 border border-white/10 text-sm text-white focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/10 transition-all duration-200"
                     required
                   />
                 </div>
@@ -175,7 +175,7 @@ export function ContactSection({
                     placeholder={messagePlaceholder}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950/80 border border-white/10 text-sm text-white focus:outline-none focus:border-white/30 transition-colors resize-none"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950/80 border border-white/10 text-sm text-white focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/10 transition-all duration-200 resize-none"
                     required
                   />
                 </div>
@@ -190,10 +190,10 @@ export function ContactSection({
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full flex items-center justify-center gap-2 bg-white text-black font-semibold text-xs py-3 rounded-xl hover:bg-zinc-200 transition-all shadow-sm disabled:opacity-50"
+                  className="group w-full flex items-center justify-center gap-2 bg-white text-black font-semibold text-xs py-3 rounded-xl hover:bg-zinc-200 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] shadow-sm disabled:opacity-50"
                 >
                   <span>{submitting ? 'Encrypting & Delivering...' : submitButtonText}</span>
-                  <Send className="w-3.5 h-3.5" />
+                  <Send className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </button>
               </form>
             )}
@@ -201,7 +201,7 @@ export function ContactSection({
 
           {/* Privacy & Direct Inquiries Info */}
           <div className="flex flex-col justify-between space-y-6">
-            <div className="p-6 md:p-8 rounded-3xl bg-zinc-900/30 border border-white/10 flex flex-col justify-between">
+            <div className="p-6 md:p-8 rounded-3xl bg-zinc-900/30 border border-white/10 hover:border-white/20 transition-all duration-300 flex flex-col justify-between">
               <div>
                 <div className="flex items-center gap-2 text-xs font-mono text-emerald-400 uppercase tracking-wider mb-2">
                   <ShieldCheck className="w-4 h-4" />

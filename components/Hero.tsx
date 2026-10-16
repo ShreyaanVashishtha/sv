@@ -71,13 +71,13 @@ export function Hero({
 
   return (
     <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-mesh">
-      {/* Subtle backdrop lighting */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-white/[0.02] blur-[120px] rounded-full pointer-events-none" />
+      {/* Subtle ambient lighting drift */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[380px] bg-white/[0.03] blur-[130px] rounded-full pointer-events-none animate-ambient-drift" />
 
       <div className="max-w-5xl mx-auto px-6 relative z-10">
         {/* Availability Badge (Hidden by default, toggleable in admin) */}
         {Boolean(heroSettings?.showStatusBadge) && profile.status && profile.status.text && (
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-900/80 border border-white/10 text-xs text-zinc-300 mb-8 backdrop-blur-md shadow-sm">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-900/80 border border-white/10 text-xs text-zinc-300 mb-8 backdrop-blur-md shadow-sm animate-hero-fade">
             <span className="relative flex h-2 w-2">
               <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${profile.status.available ? 'bg-emerald-400' : 'bg-amber-400'}`} />
               <span className={`relative inline-flex rounded-full h-2 w-2 ${profile.status.available ? 'bg-emerald-500' : 'bg-amber-500'}`} />
@@ -93,35 +93,35 @@ export function Hero({
         {/* Hero Title & Optional Avatar */}
         <div className="flex flex-col md:flex-row md:items-center gap-8 mb-4">
           {showAvatar && (
-            <div className="relative w-24 h-24 md:w-28 md:h-28 rounded-3xl overflow-hidden border-2 border-white/10 shadow-2xl shrink-0">
+            <div className="relative w-24 h-24 md:w-28 md:h-28 rounded-3xl overflow-hidden border-2 border-white/10 shadow-2xl shrink-0 animate-hero-fade">
               <img
                 src={avatarSrc}
                 alt={profile.name}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
               />
             </div>
           )}
 
           <div className="space-y-4 max-w-3xl">
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3 animate-hero-fade delay-100">
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white">
                 {profile.name}
               </h1>
               {Boolean(profile.handle && profile.handle.trim()) && (
-                <span className="px-2.5 py-1 rounded-md bg-zinc-800/80 text-zinc-400 font-mono text-xs border border-white/5">
+                <span className="px-2.5 py-1 rounded-md bg-zinc-800/80 text-zinc-400 font-mono text-xs border border-white/5 transition-colors hover:border-white/15">
                   /{profile.handle.replace(/^\//, '')}
                 </span>
               )}
             </div>
 
             {profile.title && (
-              <p className="text-xl sm:text-2xl font-light text-zinc-300 leading-snug tracking-tight">
+              <p className="text-xl sm:text-2xl font-light text-zinc-300 leading-snug tracking-tight animate-hero-fade delay-200">
                 {profile.title}
               </p>
             )}
 
             {profile.tagline && (
-              <p className="text-sm sm:text-base md:text-lg text-zinc-400 leading-relaxed font-normal pt-1 max-w-2xl">
+              <p className="text-sm sm:text-base md:text-lg text-zinc-400 leading-relaxed font-normal pt-1 max-w-2xl animate-hero-fade delay-300">
                 {profile.tagline}
               </p>
             )}
@@ -129,13 +129,13 @@ export function Hero({
         </div>
 
         {/* Action Buttons & Social Links */}
-        <div className="mt-8 flex flex-wrap items-center gap-3 sm:gap-4">
+        <div className="mt-8 flex flex-wrap items-center gap-3 sm:gap-4 animate-hero-fade delay-400">
           <a
             href={exploreHref}
-            className="flex items-center gap-2 bg-white text-black px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-zinc-200 transition-all shadow-glow hover:scale-[1.02]"
+            className="group flex items-center gap-2 bg-white text-black px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-zinc-200 transition-all shadow-glow hover:scale-[1.02] active:scale-[0.98]"
           >
             <span>{exploreText}</span>
-            <ArrowDown className="w-4 h-4" />
+            <ArrowDown className="w-4 h-4 transition-transform duration-300 group-hover:translate-y-0.5" />
           </a>
 
           {cvUrl && (
@@ -144,9 +144,9 @@ export function Hero({
               target="_blank"
               rel="noreferrer"
               download
-              className="flex items-center gap-2 bg-zinc-900/90 text-zinc-300 hover:text-white px-4 py-2.5 rounded-xl text-sm font-medium border border-white/10 hover:border-white/20 transition-all hover:bg-zinc-800/80"
+              className="group flex items-center gap-2 bg-zinc-900/90 text-zinc-300 hover:text-white px-4 py-2.5 rounded-xl text-sm font-medium border border-white/10 hover:border-white/20 transition-all hover:bg-zinc-800/80 active:scale-[0.98]"
             >
-              <FileDown className="w-4 h-4 text-zinc-400" />
+              <FileDown className="w-4 h-4 text-zinc-400 transition-transform duration-300 group-hover:translate-y-0.5" />
               <span>Download CV</span>
             </a>
           )}
@@ -154,16 +154,16 @@ export function Hero({
           {hideRawEmail ? (
             <a
               href="#contact"
-              className="flex items-center gap-2 bg-zinc-900/90 text-zinc-300 hover:text-white px-4 py-2.5 rounded-xl text-sm font-medium border border-white/10 hover:border-white/20 transition-all hover:bg-zinc-800/80"
+              className="group flex items-center gap-2 bg-zinc-900/90 text-zinc-300 hover:text-white px-4 py-2.5 rounded-xl text-sm font-medium border border-white/10 hover:border-white/20 transition-all hover:bg-zinc-800/80 active:scale-[0.98]"
             >
               <Mail className="w-4 h-4 text-zinc-400" />
               <span>Direct Dispatch</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-zinc-500" />
+              <ArrowUpRight className="w-3.5 h-3.5 text-zinc-500 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-white" />
             </a>
           ) : (
             <button
               onClick={copyEmail}
-              className="flex items-center gap-2 bg-zinc-900/90 text-zinc-300 hover:text-white px-4 py-2.5 rounded-xl text-sm font-medium border border-white/10 hover:border-white/20 transition-all hover:bg-zinc-800/80"
+              className="group flex items-center gap-2 bg-zinc-900/90 text-zinc-300 hover:text-white px-4 py-2.5 rounded-xl text-sm font-medium border border-white/10 hover:border-white/20 transition-all hover:bg-zinc-800/80 active:scale-[0.98]"
             >
               {copied ? (
                 <>
@@ -172,7 +172,7 @@ export function Hero({
                 </>
               ) : (
                 <>
-                  <Copy className="w-4 h-4 text-zinc-400" />
+                  <Copy className="w-4 h-4 text-zinc-400 transition-transform duration-300 group-hover:scale-110" />
                   <span>{copyText}</span>
                 </>
               )}
@@ -188,7 +188,7 @@ export function Hero({
                   href={social.url}
                   target={social.url.startsWith('#') ? '_self' : '_blank'}
                   rel="noreferrer"
-                  className="p-2.5 rounded-xl bg-zinc-900/60 border border-white/10 text-zinc-400 hover:text-white hover:border-white/20 hover:bg-zinc-800 transition-all"
+                  className="p-2.5 rounded-xl bg-zinc-900/60 border border-white/10 text-zinc-400 hover:text-white hover:border-white/25 hover:bg-zinc-800 hover:scale-105 active:scale-95 transition-all duration-200"
                   title={social.name}
                 >
                   {renderSocialIcon(social.icon || social.name)}
@@ -200,12 +200,12 @@ export function Hero({
 
         {/* High-level metrics / focus credentials bar */}
         {showMetrics && validMetrics.length > 0 && (
-          <div className="mt-12 pt-8 border-t border-white/5">
+          <div className="mt-12 pt-8 border-t border-white/5 animate-hero-fade delay-500">
             <div className="flex flex-wrap items-center gap-3">
               {validMetrics.map((metric, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-zinc-900/60 border border-white/10 hover:border-white/20 backdrop-blur-md transition-all shadow-sm"
+                  className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-zinc-900/60 border border-white/10 hover:border-white/25 hover:bg-zinc-850 hover:-translate-y-0.5 backdrop-blur-md transition-all duration-200 shadow-sm"
                 >
                   <span className="text-sm font-semibold text-white tracking-tight">
                     {metric.value}

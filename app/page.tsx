@@ -8,6 +8,7 @@ import { EducationSection } from '@/components/EducationSection';
 import { TerminalCard } from '@/components/TerminalCard';
 import { ContactSection } from '@/components/ContactSection';
 import { Footer } from '@/components/Footer';
+import { AnimateIn } from '@/components/AnimateIn';
 
 // Revalidate on demand or per request
 export const dynamic = 'force-dynamic';
@@ -55,67 +56,73 @@ export default async function HomePage() {
     switch (key) {
       case 'projects':
         return visibility.projects ? (
-          <ProjectsSection
-            key="projects"
-            projects={data.projects}
-            eyebrow={headings.projectsEyebrow}
-            title={headings.projectsTitle}
-            subtitle={headings.projectsSubtitle}
-          />
+          <AnimateIn key="projects">
+            <ProjectsSection
+              projects={data.projects}
+              eyebrow={headings.projectsEyebrow}
+              title={headings.projectsTitle}
+              subtitle={headings.projectsSubtitle}
+            />
+          </AnimateIn>
         ) : null;
       case 'skills':
         return visibility.skills ? (
-          <SkillsSection
-            key="skills"
-            skills={data.skills}
-            eyebrow={headings.skillsEyebrow}
-            title={headings.skillsTitle}
-            subtitle={headings.skillsSubtitle}
-          />
+          <AnimateIn key="skills">
+            <SkillsSection
+              skills={data.skills}
+              eyebrow={headings.skillsEyebrow}
+              title={headings.skillsTitle}
+              subtitle={headings.skillsSubtitle}
+            />
+          </AnimateIn>
         ) : null;
       case 'experience':
         return visibility.experience ? (
-          <ExperienceSection
-            key="experience"
-            experience={data.experience}
-            eyebrow={headings.experienceEyebrow}
-            title={headings.experienceTitle}
-            subtitle={headings.experienceSubtitle}
-          />
+          <AnimateIn key="experience">
+            <ExperienceSection
+              experience={data.experience}
+              eyebrow={headings.experienceEyebrow}
+              title={headings.experienceTitle}
+              subtitle={headings.experienceSubtitle}
+            />
+          </AnimateIn>
         ) : null;
       case 'education':
         return visibility.education ? (
-          <EducationSection
-            key="education"
-            education={data.education || []}
-            certifications={visibility.certifications ? data.certifications || [] : []}
-            eyebrow={headings.educationEyebrow}
-            title={headings.educationTitle}
-            subtitle={headings.educationSubtitle}
-            certificationsEyebrow={headings.certificationsEyebrow}
-            certificationsTitle={headings.certificationsTitle}
-          />
+          <AnimateIn key="education">
+            <EducationSection
+              education={data.education || []}
+              certifications={visibility.certifications ? data.certifications || [] : []}
+              eyebrow={headings.educationEyebrow}
+              title={headings.educationTitle}
+              subtitle={headings.educationSubtitle}
+              certificationsEyebrow={headings.certificationsEyebrow}
+              certificationsTitle={headings.certificationsTitle}
+            />
+          </AnimateIn>
         ) : null;
       case 'terminalCard':
         return visibility.terminalCard ? (
-          <TerminalCard
-            key="terminalCard"
-            handle={data.profile.handle}
-            terminalSettings={data.settings?.terminal}
-          />
+          <AnimateIn key="terminalCard">
+            <TerminalCard
+              handle={data.profile.handle}
+              terminalSettings={data.settings?.terminal}
+            />
+          </AnimateIn>
         ) : null;
       case 'contact':
         return visibility.contact ? (
-          <ContactSection
-            key="contact"
-            profile={data.profile}
-            socials={data.socials}
-            contactMessage={data.settings.contactMessage}
-            eyebrow={headings.contactEyebrow}
-            title={headings.contactTitle}
-            subtitle={headings.contactSubtitle}
-            contactSettings={data.settings?.contact}
-          />
+          <AnimateIn key="contact">
+            <ContactSection
+              profile={data.profile}
+              socials={data.socials}
+              contactMessage={data.settings.contactMessage}
+              eyebrow={headings.contactEyebrow}
+              title={headings.contactTitle}
+              subtitle={headings.contactSubtitle}
+              contactSettings={data.settings?.contact}
+            />
+          </AnimateIn>
         ) : null;
       default:
         return null;
