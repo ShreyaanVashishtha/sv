@@ -2725,7 +2725,31 @@ export default function AdminPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                     <div>
                       <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
-                        Public Forwarding Alias (Display Only)
+                        Notification Alert Email (Where you receive inquiries)
+                      </label>
+                      <input
+                        type="email"
+                        placeholder="your-personal@gmail.com"
+                        value={contact.notificationEmail || ''}
+                        onChange={(e) =>
+                          setData({
+                            ...data,
+                            settings: {
+                              ...data.settings,
+                              contact: { ...contact, notificationEmail: e.target.value },
+                            },
+                          })
+                        }
+                        className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono"
+                      />
+                      <span className="text-[10px] text-zinc-500 block mt-1">
+                        Requires <code className="text-zinc-300">RESEND_API_KEY</code> in Vercel for automated email alerts.
+                      </span>
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
+                        Public Display Alias (Never reveals real email)
                       </label>
                       <input
                         type="text"
@@ -2743,27 +2767,27 @@ export default function AdminPage() {
                         className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono"
                       />
                     </div>
+                  </div>
 
-                    <div>
-                      <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
-                        Optional Instant Webhook (Discord / Slack / Telegram)
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="https://discord.com/api/webhooks/..."
-                        value={contact.webhookUrl || ''}
-                        onChange={(e) =>
-                          setData({
-                            ...data,
-                            settings: {
-                              ...data.settings,
-                              contact: { ...contact, webhookUrl: e.target.value },
-                            },
-                          })
-                        }
-                        className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono"
-                      />
-                    </div>
+                  <div className="pt-2">
+                    <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
+                      Optional Instant Webhook (Discord / Slack / Telegram)
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="https://discord.com/api/webhooks/..."
+                      value={contact.webhookUrl || ''}
+                      onChange={(e) =>
+                        setData({
+                          ...data,
+                          settings: {
+                            ...data.settings,
+                            contact: { ...contact, webhookUrl: e.target.value },
+                          },
+                        })
+                      }
+                      className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono"
+                    />
                   </div>
 
                   {/* Cloudflare Routing Quick Info */}

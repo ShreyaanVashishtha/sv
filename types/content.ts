@@ -157,6 +157,7 @@ export interface ContactSettings {
   copyAddressText: string;
   hideEmailAddress?: boolean;
   publicDisplayEmail?: string;
+  notificationEmail?: string;
   webhookUrl?: string;
 }
 
