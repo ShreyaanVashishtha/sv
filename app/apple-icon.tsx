@@ -9,11 +9,11 @@ export const size = {
 export const contentType = 'image/png';
 
 export default async function AppleIcon() {
-  let badgeText = 'sv7';
+  let badgeText = 'SV7';
   try {
     const data = await getContent();
     if (data.settings?.header?.logoBadge) {
-      badgeText = data.settings.header.logoBadge.trim();
+      badgeText = data.settings.header.logoBadge.trim().toUpperCase();
     }
   } catch (e) {
     // fallback
@@ -29,12 +29,13 @@ export default async function AppleIcon() {
           alignItems: 'center',
           justifyContent: 'center',
           backgroundColor: '#ffffff',
-          borderRadius: '44px',
+          borderRadius: '40px',
+          border: '8px solid #09090b',
           color: '#09090b',
-          fontFamily: 'monospace, sans-serif',
+          fontFamily: '"Arial Black", Impact, system-ui, sans-serif',
           fontWeight: 900,
-          fontSize: badgeText.length > 3 ? '60px' : '72px',
-          letterSpacing: '-2px',
+          fontSize: badgeText.length > 3 ? '66px' : '82px',
+          letterSpacing: '-3px',
         }}
       >
         {badgeText}

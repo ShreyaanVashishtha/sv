@@ -9,11 +9,11 @@ export const size = {
 export const contentType = 'image/png';
 
 export default async function Icon() {
-  let badgeText = 'sv7';
+  let badgeText = 'SV7';
   try {
     const data = await getContent();
     if (data.settings?.header?.logoBadge) {
-      badgeText = data.settings.header.logoBadge.trim();
+      badgeText = data.settings.header.logoBadge.trim().toUpperCase();
     }
   } catch (e) {
     // fallback to default
@@ -29,12 +29,13 @@ export default async function Icon() {
           alignItems: 'center',
           justifyContent: 'center',
           backgroundColor: '#ffffff',
-          borderRadius: '8px',
+          borderRadius: '7px',
+          border: '1.5px solid #09090b',
           color: '#09090b',
-          fontFamily: 'monospace, sans-serif',
+          fontFamily: '"Arial Black", Impact, system-ui, sans-serif',
           fontWeight: 900,
-          fontSize: badgeText.length > 3 ? '11px' : '13px',
-          letterSpacing: '-0.5px',
+          fontSize: badgeText.length > 3 ? '11px' : '14px',
+          letterSpacing: '-1px',
         }}
       >
         {badgeText}

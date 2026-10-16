@@ -3891,7 +3891,7 @@ export default function AdminPage() {
 
                   <div className="pt-2 space-y-1 font-sans">
                     <div className="flex items-center gap-2 text-xs text-zinc-400">
-                      <div className="w-4 h-4 rounded-md bg-white border border-white/20 flex items-center justify-center text-[8px] font-mono font-bold text-black overflow-hidden shadow-xs">
+                      <div className="w-4 h-4 rounded-md bg-white border border-white/20 flex items-center justify-center text-[7px] font-archivo font-black text-black uppercase tracking-tight overflow-hidden shadow-xs">
                         {data.settings.faviconUrl ? (
                           /* eslint-disable-next-line @next/next/no-img-element */
                           <img
@@ -4238,7 +4238,7 @@ export default function AdminPage() {
                         }}
                       />
                     ) : (
-                      <span className="font-mono font-bold text-sm text-black">
+                      <span className="font-archivo font-black text-xs text-black uppercase tracking-tight">
                         {data.settings?.header?.logoBadge || 'sv7'}
                       </span>
                     )}

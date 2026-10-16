@@ -1,6 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  .font-archivo {
+    font-family: 'Archivo Black', 'Arial Black', Impact, sans-serif;
+    font-weight: 900;
+  }
+}
 
 :root {
   --background: #09090b;

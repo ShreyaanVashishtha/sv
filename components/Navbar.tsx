@@ -74,7 +74,7 @@ export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps)
       <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
         {/* Brand / Logo */}
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-9 h-9 rounded-xl bg-white text-black font-mono font-bold text-sm flex items-center justify-center transition-transform group-hover:scale-105 shadow-sm">
+          <div className="w-9 h-9 rounded-xl bg-white text-black font-archivo font-black text-xs tracking-tighter uppercase flex items-center justify-center transition-transform group-hover:scale-105 shadow-sm">
             {logoBadge}
           </div>
           {badgeSubtitle && status?.available ? (
