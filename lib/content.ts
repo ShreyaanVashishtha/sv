@@ -197,8 +197,8 @@ const DEFAULT_CONTENT: WebsiteData = {
   profile: {
     name: 'Shreyaan Vashishtha',
     handle: 'shreyaanv',
-    title: 'Mechanical & Aerospace Engineering @ HKUST | Astrix Rocketry Team',
-    tagline: 'Mechanical and Aerospace Engineering undergraduate at HKUST. Junior Engineer in the Astrix Rocketry Team specializing in Aerodynamics & Descent Control, mechanism design, and computational engineering.',
+    title: 'Mechanical & Aerospace Engineering @ HKUST',
+    tagline: 'Junior Engineer in the Astrix Rocketry Team specializing in Aerodynamics & Descent Control, mechanism design, and computational engineering.',
     avatar: 'https://images.unsplash.com/photo-1517976487502-5f657a8bf606?w=600&auto=format&fit=crop&q=80',
     status: {
       available: true,

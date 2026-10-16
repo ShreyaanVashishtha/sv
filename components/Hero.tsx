@@ -61,6 +61,14 @@ export function Hero({
     (m) => m && m.label && m.value !== undefined && m.value !== ''
   );
 
+  // Avoid duplicating contact link in socials if Direct Dispatch button is already visible
+  const cleanSocials = (socials || []).filter((s) => {
+    if (hideRawEmail && (s.url === '#contact' || s.name.toLowerCase().includes('dispatch'))) {
+      return false;
+    }
+    return true;
+  });
+
   return (
     <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-mesh">
       {/* Subtle backdrop lighting */}
@@ -95,27 +103,33 @@ export function Hero({
           )}
 
           <div className="space-y-4 max-w-3xl">
-            <div className="flex items-center gap-3">
-              <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-white">
+            <div className="flex flex-wrap items-center gap-3">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white">
                 {profile.name}
               </h1>
-              <span className="px-2.5 py-1 rounded-md bg-zinc-800 text-zinc-400 font-mono text-xs border border-white/5">
-                /{profile.handle || 'sv7'}
-              </span>
+              {Boolean(profile.handle && profile.handle.trim()) && (
+                <span className="px-2.5 py-1 rounded-md bg-zinc-800/80 text-zinc-400 font-mono text-xs border border-white/5">
+                  /{profile.handle.replace(/^\//, '')}
+                </span>
+              )}
             </div>
 
-            <p className="text-xl md:text-2xl font-light text-zinc-300 leading-relaxed tracking-tight">
-              {profile.title}
-            </p>
+            {profile.title && (
+              <p className="text-xl sm:text-2xl font-light text-zinc-300 leading-snug tracking-tight">
+                {profile.title}
+              </p>
+            )}
 
-            <p className="text-base md:text-lg text-zinc-400 leading-relaxed font-normal pt-2">
-              {profile.tagline}
-            </p>
+            {profile.tagline && (
+              <p className="text-sm sm:text-base md:text-lg text-zinc-400 leading-relaxed font-normal pt-1 max-w-2xl">
+                {profile.tagline}
+              </p>
+            )}
           </div>
         </div>
 
         {/* Action Buttons & Social Links */}
-        <div className="mt-8 flex flex-wrap items-center gap-4">
+        <div className="mt-8 flex flex-wrap items-center gap-3 sm:gap-4">
           <a
             href={exploreHref}
             className="flex items-center gap-2 bg-white text-black px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-zinc-200 transition-all shadow-glow hover:scale-[1.02]"
@@ -130,7 +144,7 @@ export function Hero({
               target="_blank"
               rel="noreferrer"
               download
-              className="flex items-center gap-2 bg-zinc-900 text-zinc-300 hover:text-white px-4 py-2.5 rounded-xl text-sm font-medium border border-white/10 hover:border-white/20 transition-all hover:bg-zinc-800/80"
+              className="flex items-center gap-2 bg-zinc-900/90 text-zinc-300 hover:text-white px-4 py-2.5 rounded-xl text-sm font-medium border border-white/10 hover:border-white/20 transition-all hover:bg-zinc-800/80"
             >
               <FileDown className="w-4 h-4 text-zinc-400" />
               <span>Download CV</span>
@@ -140,7 +154,7 @@ export function Hero({
           {hideRawEmail ? (
             <a
               href="#contact"
-              className="flex items-center gap-2 bg-zinc-900 text-zinc-300 hover:text-white px-4 py-2.5 rounded-xl text-sm font-medium border border-white/10 hover:border-white/20 transition-all hover:bg-zinc-800/80"
+              className="flex items-center gap-2 bg-zinc-900/90 text-zinc-300 hover:text-white px-4 py-2.5 rounded-xl text-sm font-medium border border-white/10 hover:border-white/20 transition-all hover:bg-zinc-800/80"
             >
               <Mail className="w-4 h-4 text-zinc-400" />
               <span>Direct Dispatch</span>
@@ -149,7 +163,7 @@ export function Hero({
           ) : (
             <button
               onClick={copyEmail}
-              className="flex items-center gap-2 bg-zinc-900 text-zinc-300 hover:text-white px-4 py-2.5 rounded-xl text-sm font-medium border border-white/10 hover:border-white/20 transition-all hover:bg-zinc-800/80"
+              className="flex items-center gap-2 bg-zinc-900/90 text-zinc-300 hover:text-white px-4 py-2.5 rounded-xl text-sm font-medium border border-white/10 hover:border-white/20 transition-all hover:bg-zinc-800/80"
             >
               {copied ? (
                 <>
@@ -166,38 +180,43 @@ export function Hero({
           )}
 
           {/* Social icons pills */}
-          <div className="flex items-center gap-2 pl-2 border-l border-white/10">
-            {(socials || []).map((social) => (
-              <a
-                key={social.name}
-                href={social.url}
-                target={social.url.startsWith('#') ? '_self' : '_blank'}
-                rel="noreferrer"
-                className="p-2.5 rounded-xl bg-zinc-900/60 border border-white/10 text-zinc-400 hover:text-white hover:border-white/20 hover:bg-zinc-800 transition-all"
-                title={social.name}
-              >
-                {renderSocialIcon(social.icon || social.name)}
-              </a>
-            ))}
-          </div>
+          {cleanSocials.length > 0 && (
+            <div className="flex items-center gap-2 pl-1 sm:pl-3 sm:border-l border-white/10">
+              {cleanSocials.map((social) => (
+                <a
+                  key={social.name}
+                  href={social.url}
+                  target={social.url.startsWith('#') ? '_self' : '_blank'}
+                  rel="noreferrer"
+                  className="p-2.5 rounded-xl bg-zinc-900/60 border border-white/10 text-zinc-400 hover:text-white hover:border-white/20 hover:bg-zinc-800 transition-all"
+                  title={social.name}
+                >
+                  {renderSocialIcon(social.icon || social.name)}
+                </a>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* High-level metrics row */}
+        {/* High-level metrics / focus credentials bar */}
         {showMetrics && validMetrics.length > 0 && (
-          <div className="mt-16 pt-10 border-t border-white/5 grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-6">
-            {validMetrics.map((metric, i) => (
-              <div
-                key={i}
-                className="p-4 rounded-2xl bg-zinc-900/30 border border-white/5 backdrop-blur-sm"
-              >
-                <div className="text-2xl md:text-3xl font-bold tracking-tight text-white font-mono">
-                  {metric.value}
+          <div className="mt-12 pt-8 border-t border-white/5">
+            <div className="flex flex-wrap items-center gap-3">
+              {validMetrics.map((metric, i) => (
+                <div
+                  key={i}
+                  className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-zinc-900/60 border border-white/10 hover:border-white/20 backdrop-blur-md transition-all shadow-sm"
+                >
+                  <span className="text-sm font-semibold text-white tracking-tight">
+                    {metric.value}
+                  </span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-zinc-600" />
+                  <span className="text-xs text-zinc-400 font-medium">
+                    {metric.label}
+                  </span>
                 </div>
-                <div className="text-xs text-zinc-400 font-medium mt-1">
-                  {metric.label}
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         )}
       </div>
