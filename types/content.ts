@@ -229,6 +229,7 @@ export interface PhotoItem {
   shutterSpeed?: string;
   iso?: string;
   featured?: boolean;
+  hidden?: boolean;
   date?: string;
 }
 

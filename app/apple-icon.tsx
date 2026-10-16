@@ -29,13 +29,12 @@ export default async function AppleIcon() {
           alignItems: 'center',
           justifyContent: 'center',
           backgroundColor: '#ffffff',
-          borderRadius: '40px',
-          border: '8px solid #09090b',
+          borderRadius: '44px',
           color: '#09090b',
           fontFamily: '"Arial Black", Impact, system-ui, sans-serif',
           fontWeight: 900,
-          fontSize: badgeText.length > 3 ? '66px' : '82px',
-          letterSpacing: '-3px',
+          fontSize: badgeText.length > 3 ? '60px' : '76px',
+          letterSpacing: '-2px',
         }}
       >
         {badgeText}

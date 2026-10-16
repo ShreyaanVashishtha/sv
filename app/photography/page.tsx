@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { getContent } from '@/lib/content';
+import { getContent, saveContent } from '@/lib/content';
+import { PhotoItem } from '@/types/content';
 import { fetchPexelsCollectionPhotos, extractCollectionId } from '@/lib/pexels';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
@@ -7,28 +8,67 @@ import { PhotographyGallery } from '@/components/PhotographyGallery';
 
 export const runtime = 'nodejs';
 
-async function getPhotosWithLiveFallback(data: any) {
-  let photos = data.photos || [];
-  if (photos.length === 0) {
-    const apiKey =
-      process.env.PEXELS_API_KEY ||
-      data.photographySettings?.pexelsApiKey ||
-      '';
-    const collectionId = extractCollectionId(
-      data.photographySettings?.pexelsCollectionId || 'portfolio-je8myyb'
-    );
-    if (apiKey) {
-      try {
-        const livePhotos = await fetchPexelsCollectionPhotos(apiKey, collectionId);
-        if (livePhotos && livePhotos.length > 0) {
-          photos = livePhotos;
+async function getPhotosWithLiveFallback(data: any): Promise<PhotoItem[]> {
+  const existingPhotos: PhotoItem[] = data.photos || [];
+  const existingMap = new Map(existingPhotos.map((p) => [p.id, p]));
+
+  const apiKey =
+    process.env.PEXELS_API_KEY ||
+    data.photographySettings?.pexelsApiKey ||
+    '';
+  const collectionId = extractCollectionId(
+    data.photographySettings?.pexelsCollectionId || 'portfolio-je8myyb'
+  );
+
+  if (apiKey) {
+    try {
+      const livePhotos = await fetchPexelsCollectionPhotos(apiKey, collectionId);
+      if (livePhotos && livePhotos.length > 0) {
+        // Auto-curate and merge: preserve user edits from admin
+        const merged: PhotoItem[] = livePhotos.map((fresh) => {
+          const prev = existingMap.get(fresh.id);
+          if (prev) {
+            return {
+              ...fresh,
+              title: prev.title || fresh.title,
+              description: prev.description !== undefined ? prev.description : fresh.description,
+              category: prev.category || fresh.category,
+              camera: prev.camera || fresh.camera,
+              lens: prev.lens || fresh.lens,
+              focalLength: prev.focalLength || fresh.focalLength,
+              aperture: prev.aperture || fresh.aperture,
+              shutterSpeed: prev.shutterSpeed || fresh.shutterSpeed,
+              iso: prev.iso || fresh.iso,
+              location: prev.location || fresh.location,
+              date: prev.date || fresh.date,
+              featured: prev.featured ?? fresh.featured,
+              hidden: prev.hidden ?? fresh.hidden,
+            };
+          }
+          return fresh;
+        });
+
+        // Preserve any manually added non-Pexels frames
+        const liveIds = new Set(livePhotos.map((p) => p.id));
+        for (const prev of existingPhotos) {
+          if (!liveIds.has(prev.id)) {
+            merged.push(prev);
+          }
         }
-      } catch (err) {
-        console.warn('Auto-fetch Pexels collection failed:', err);
+
+        // Background persist if new photos were discovered
+        if (merged.length !== existingPhotos.length) {
+          saveContent({ ...data, photos: merged }).catch(() => {});
+        }
+
+        return merged;
       }
+    } catch (err) {
+      console.warn('Auto-sync Pexels collection failed:', err);
     }
   }
-  return photos;
+
+  return existingPhotos;
 }
 
 export async function generateMetadata(): Promise<Metadata> {

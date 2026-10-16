@@ -51,17 +51,21 @@ export function PhotographyGallery({
   const [copiedLink, setCopiedLink] = useState(false);
   const [showExifDrawer, setShowExifDrawer] = useState(true);
 
+  const visiblePhotos = useMemo(() => {
+    return photos.filter((p) => !p.hidden);
+  }, [photos]);
+
   const categories = useMemo(() => {
     const fromSettings = settings?.categories || [];
     const fromPhotos = Array.from(
-      new Set(photos.map((p) => p.category).filter(Boolean))
+      new Set(visiblePhotos.map((p) => p.category).filter(Boolean))
     ) as string[];
     const combined = Array.from(new Set(['All', ...fromSettings, ...fromPhotos]));
     return combined;
-  }, [settings, photos]);
+  }, [settings, visiblePhotos]);
 
   const filteredPhotos = useMemo(() => {
-    return photos.filter((photo) => {
+    return visiblePhotos.filter((photo) => {
       const matchesCategory =
         selectedCategory === 'All' ||
         (photo.category || '').toLowerCase() === selectedCategory.toLowerCase();
@@ -77,7 +81,7 @@ export function PhotographyGallery({
 
       return matchesCategory && matchesSearch;
     });
-  }, [photos, selectedCategory, searchQuery]);
+  }, [visiblePhotos, selectedCategory, searchQuery]);
 
   // Keyboard navigation for Lightbox
   useEffect(() => {
@@ -155,18 +159,11 @@ export function PhotographyGallery({
                 href={pexelsUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:border-emerald-500/40 text-xs font-medium text-zinc-300 hover:text-white transition-all shadow-sm"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 hover:border-emerald-500/40 text-xs font-medium text-zinc-300 hover:text-white transition-all shadow-sm"
               >
                 <span>View on Pexels</span>
                 <ExternalLink className="w-3 h-3 text-emerald-400" />
               </a>
-
-              <Link
-                href="/admin"
-                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-zinc-900 border border-white/10 hover:bg-zinc-800 text-xs font-mono text-zinc-400 hover:text-white transition-all"
-              >
-                <span>Sync / Curate</span>
-              </Link>
             </div>
           </div>
 
@@ -191,7 +188,7 @@ export function PhotographyGallery({
             <div className="px-3.5 py-1.5 rounded-xl bg-zinc-900/60 border border-white/10 text-xs flex items-center gap-2">
               <Camera className="w-3.5 h-3.5 text-sky-400" />
               <span className="text-zinc-400">Total Frames:</span>
-              <span className="font-mono font-bold text-white">{photos.length}</span>
+              <span className="font-mono font-bold text-white">{visiblePhotos.length}</span>
             </div>
 
             <div className="px-3.5 py-1.5 rounded-xl bg-zinc-900/60 border border-white/10 text-xs flex items-center gap-2">
@@ -270,7 +267,7 @@ export function PhotographyGallery({
         </div>
 
         {/* PHOTO GRID / MASONRY */}
-        {photos.length === 0 ? (
+        {visiblePhotos.length === 0 ? (
           <div className="text-center py-20 px-6 rounded-3xl bg-zinc-900/40 border border-white/10 space-y-4 max-w-xl mx-auto">
             <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto text-emerald-400">
               <Camera className="w-6 h-6" />
@@ -535,6 +532,11 @@ export function PhotographyGallery({
                   <h2 className="text-base font-bold text-white tracking-tight mt-1">
                     {activePhoto.title}
                   </h2>
+                  {activePhoto.description && (
+                    <p className="text-xs text-zinc-300 mt-1 max-w-2xl leading-relaxed">
+                      {activePhoto.description}
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex items-center gap-2">

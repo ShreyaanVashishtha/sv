@@ -16,7 +16,7 @@ export default async function Icon() {
       badgeText = data.settings.header.logoBadge.trim().toUpperCase();
     }
   } catch (e) {
-    // fallback to default
+    // fallback
   }
 
   return new ImageResponse(
@@ -29,13 +29,12 @@ export default async function Icon() {
           alignItems: 'center',
           justifyContent: 'center',
           backgroundColor: '#ffffff',
-          borderRadius: '7px',
-          border: '1.5px solid #09090b',
+          borderRadius: '8px',
           color: '#09090b',
           fontFamily: '"Arial Black", Impact, system-ui, sans-serif',
           fontWeight: 900,
-          fontSize: badgeText.length > 3 ? '11px' : '14px',
-          letterSpacing: '-1px',
+          fontSize: badgeText.length > 3 ? '10px' : '13px',
+          letterSpacing: '-0.5px',
         }}
       >
         {badgeText}

@@ -57,6 +57,9 @@ import {
   Fingerprint,
   Search,
   Camera,
+  EyeOff,
+  Star,
+  MapPin,
 } from 'lucide-react';
 
 interface InboxMessage {
@@ -106,6 +109,10 @@ export default function AdminPage() {
   const [syncingPexels, setSyncingPexels] = useState(false);
   const [pexelsSyncStatus, setPexelsSyncStatus] = useState('');
   const [newPhotoUrl, setNewPhotoUrl] = useState('');
+  const [showMasterPin, setShowMasterPin] = useState(false);
+  const [showPexelsApiKey, setShowPexelsApiKey] = useState(false);
+  const [photoSearchQuery, setPhotoSearchQuery] = useState('');
+  const [photoCategoryFilter, setPhotoCategoryFilter] = useState('all');
   const [saveStatus, setSaveStatus] = useState<{ type: 'success' | 'error' | ''; message: string }>({
     type: '',
     message: '',
@@ -603,8 +610,20 @@ export default function AdminPage() {
     });
   };
 
+  const handleUpdatePhoto = (index: number, patch: Partial<PhotoItem>) => {
+    if (!data || !data.photos) return;
+    const updated = [...data.photos];
+    updated[index] = { ...updated[index], ...patch };
+    setData({
+      ...data,
+      photos: updated,
+    });
+  };
+
   const handleDeletePhoto = (index: number) => {
     if (!data || !data.photos) return;
+    const title = data.photos[index]?.title || 'this photo';
+    if (!window.confirm(`Are you sure you want to remove "${title}" from your curated photography archive?`)) return;
     const updated = data.photos.filter((_, i) => i !== index);
     setData({
       ...data,
@@ -3204,26 +3223,47 @@ export default function AdminPage() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">
-                        Pexels API Key (Free)
-                      </label>
-                      <input
-                        type="password"
-                        value={data.photographySettings?.pexelsApiKey || ''}
-                        onChange={(e) =>
-                          setData({
-                            ...data,
-                            photographySettings: {
-                              ...data.photographySettings,
-                              title: data.photographySettings?.title || 'Visual Archive & Photography',
-                              subtitle: data.photographySettings?.subtitle || '',
-                              pexelsApiKey: e.target.value,
-                            },
-                          })
-                        }
-                        placeholder="Paste your Pexels API key (or set PEXELS_API_KEY in Vercel)..."
-                        className="w-full px-3.5 py-2 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono"
-                      />
+                      <div className="flex items-center justify-between mb-1">
+                        <label className="block text-xs font-mono text-zinc-400 uppercase">
+                          Pexels API Key (Free)
+                        </label>
+                        <button
+                          type="button"
+                          onClick={() => setShowPexelsApiKey(!showPexelsApiKey)}
+                          className="flex items-center gap-1 text-[11px] font-mono text-zinc-400 hover:text-white transition-colors"
+                        >
+                          {showPexelsApiKey ? (
+                            <>
+                              <EyeOff className="w-3 h-3 text-emerald-400" />
+                              <span>Hide Key</span>
+                            </>
+                          ) : (
+                            <>
+                              <Eye className="w-3 h-3 text-zinc-400" />
+                              <span>Reveal Key</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+                      <div className="relative">
+                        <input
+                          type={showPexelsApiKey ? "text" : "password"}
+                          value={data.photographySettings?.pexelsApiKey || ''}
+                          onChange={(e) =>
+                            setData({
+                              ...data,
+                              photographySettings: {
+                                ...data.photographySettings,
+                                title: data.photographySettings?.title || 'Visual Archive & Photography',
+                                subtitle: data.photographySettings?.subtitle || '',
+                                pexelsApiKey: e.target.value,
+                              },
+                            })
+                          }
+                          placeholder="Paste your Pexels API key (or set PEXELS_API_KEY in Vercel)..."
+                          className="w-full px-3.5 py-2 pr-10 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono"
+                        />
+                      </div>
                       <span className="text-[10px] text-zinc-500 mt-1 block">
                         Get your API key instantly in 30 seconds at pexels.com/api/new.
                       </span>
@@ -3351,14 +3391,15 @@ export default function AdminPage() {
               </div>
 
               {/* PHOTOS CURATION & REORDER LIST */}
-              <div className="p-6 rounded-3xl bg-zinc-900/40 border border-white/10 space-y-5">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/10">
+              <div className="p-6 rounded-3xl bg-zinc-900/40 border border-white/10 space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-white/10">
                   <div>
-                    <h3 className="text-base font-bold text-white">
-                      Curated Photographs ({data.photos?.length || 0})
+                    <h3 className="text-base font-bold text-white flex items-center gap-2">
+                      <Camera className="w-4 h-4 text-emerald-400" />
+                      <span>Curated Photographs ({data.photos?.length || 0})</span>
                     </h3>
-                    <p className="text-xs text-zinc-400">
-                      Reorder, categorize, or fine-tune captions and camera EXIF information.
+                    <p className="text-xs text-zinc-400 mt-0.5">
+                      Full control over every frame: edit titles, stories, EXIF metadata, categories, hero features, and visibility.
                     </p>
                   </div>
 
@@ -3374,7 +3415,7 @@ export default function AdminPage() {
                     <button
                       type="button"
                       onClick={handleAddManualPhoto}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white text-black hover:bg-zinc-200 text-xs font-semibold transition-all"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white text-black hover:bg-zinc-200 text-xs font-semibold transition-all shrink-0"
                     >
                       <Plus className="w-3.5 h-3.5" />
                       <span>Add Frame</span>
@@ -3382,187 +3423,466 @@ export default function AdminPage() {
                   </div>
                 </div>
 
+                {/* Filter and Search Bar */}
+                <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+                  <div className="flex flex-1 items-center gap-2">
+                    <div className="relative flex-1 max-w-md">
+                      <Search className="w-3.5 h-3.5 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="text"
+                        value={photoSearchQuery}
+                        onChange={(e) => setPhotoSearchQuery(e.target.value)}
+                        placeholder="Search photos by title, story, category, camera, location..."
+                        className="w-full pl-9 pr-3 py-1.5 rounded-xl bg-zinc-950 border border-white/10 text-xs text-white placeholder-zinc-500 focus:border-emerald-500/50"
+                      />
+                      {photoSearchQuery && (
+                        <button
+                          type="button"
+                          onClick={() => setPhotoSearchQuery('')}
+                          className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-zinc-500 hover:text-white"
+                        >
+                          ✕
+                        </button>
+                      )}
+                    </div>
+
+                    <select
+                      value={photoCategoryFilter}
+                      onChange={(e) => setPhotoCategoryFilter(e.target.value)}
+                      className="px-3 py-1.5 rounded-xl bg-zinc-950 border border-white/10 text-xs text-zinc-300 font-mono"
+                    >
+                      <option value="all">All Categories</option>
+                      {Array.from(
+                        new Set(
+                          (data.photos || [])
+                            .map((p) => p.category)
+                            .filter((c): c is string => Boolean(c))
+                        )
+                      ).map((cat) => (
+                        <option key={cat} value={cat}>
+                          {cat}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="text-[11px] font-mono text-zinc-400 flex items-center gap-3">
+                    <span>
+                      Showing{' '}
+                      <strong className="text-white">
+                        {(data.photos || []).filter((p) => {
+                          if (
+                            photoCategoryFilter !== 'all' &&
+                            (p.category || '').toLowerCase() !== photoCategoryFilter.toLowerCase()
+                          ) {
+                            return false;
+                          }
+                          if (photoSearchQuery.trim()) {
+                            const q = photoSearchQuery.toLowerCase();
+                            const match =
+                              (p.title || '').toLowerCase().includes(q) ||
+                              (p.description || '').toLowerCase().includes(q) ||
+                              (p.category || '').toLowerCase().includes(q) ||
+                              (p.camera || '').toLowerCase().includes(q) ||
+                              (p.location || '').toLowerCase().includes(q);
+                            if (!match) return false;
+                          }
+                          return true;
+                        }).length}
+                      </strong>{' '}
+                      of {data.photos?.length || 0} frames
+                    </span>
+                    {(data.photos || []).some((p) => p.hidden) && (
+                      <span className="text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full text-[10px]">
+                        {(data.photos || []).filter((p) => p.hidden).length} hidden
+                      </span>
+                    )}
+                  </div>
+                </div>
+
                 {/* Photos List */}
                 {(!data.photos || data.photos.length === 0) ? (
                   <div className="text-center py-12 text-xs text-zinc-500 font-mono">
-                    No photographs in the archive yet. Click &quot;Pull &amp; Sync Photos from Pexels Now&quot; above to import your library.
+                    No photographs in the archive yet. Click &quot;Pull &amp; Sync Collection&quot; above to import your library.
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {data.photos.map((photo, idx) => (
-                      <div
-                        key={photo.id || idx}
-                        className="p-4 rounded-2xl bg-zinc-950 border border-white/10 flex flex-col md:flex-row gap-4 items-start"
-                      >
-                        {/* Thumbnail */}
-                        <div className="w-full md:w-36 h-28 rounded-xl overflow-hidden bg-zinc-900 border border-white/10 shrink-0 relative">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={photo.src?.small || photo.src?.medium || photo.src?.original}
-                            alt={photo.title}
-                            className="w-full h-full object-cover"
-                          />
-                          {photo.featured && (
-                            <span className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-emerald-500 text-black text-[9px] font-bold font-mono uppercase">
-                              Featured
-                            </span>
-                          )}
+                    {(data.photos || [])
+                      .map((photo, originalIndex) => ({ photo, originalIndex }))
+                      .filter(({ photo }) => {
+                        if (
+                          photoCategoryFilter !== 'all' &&
+                          (photo.category || '').toLowerCase() !== photoCategoryFilter.toLowerCase()
+                        ) {
+                          return false;
+                        }
+                        if (photoSearchQuery.trim()) {
+                          const q = photoSearchQuery.toLowerCase();
+                          const match =
+                            (photo.title || '').toLowerCase().includes(q) ||
+                            (photo.description || '').toLowerCase().includes(q) ||
+                            (photo.category || '').toLowerCase().includes(q) ||
+                            (photo.camera || '').toLowerCase().includes(q) ||
+                            (photo.location || '').toLowerCase().includes(q);
+                          if (!match) return false;
+                        }
+                        return true;
+                      })
+                      .map(({ photo, originalIndex }) => (
+                        <div
+                          key={photo.id || originalIndex}
+                          className={`p-4 sm:p-5 rounded-2xl border transition-all ${
+                            photo.hidden
+                              ? 'bg-zinc-950/60 border-white/5 opacity-70'
+                              : 'bg-zinc-950 border-white/10 shadow-sm'
+                          }`}
+                        >
+                          <div className="flex flex-col lg:flex-row gap-5 items-start">
+                            {/* Thumbnail & Quick Action Column */}
+                            <div className="w-full lg:w-48 shrink-0 space-y-2">
+                              <div className="w-full h-36 rounded-xl overflow-hidden bg-zinc-900 border border-white/10 relative group">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img
+                                  src={photo.src?.small || photo.src?.medium || photo.src?.original}
+                                  alt={photo.title}
+                                  className="w-full h-full object-cover"
+                                />
+
+                                {/* Top Badges */}
+                                <div className="absolute top-2 left-2 flex flex-col gap-1 items-start">
+                                  <span className="px-1.5 py-0.5 rounded bg-black/80 backdrop-blur-md text-white text-[9px] font-mono font-bold">
+                                    #{originalIndex + 1}
+                                  </span>
+                                  {photo.featured && (
+                                    <span className="px-1.5 py-0.5 rounded bg-amber-400 text-black text-[9px] font-bold font-mono uppercase flex items-center gap-1 shadow-sm">
+                                      <Star className="w-2.5 h-2.5 fill-black" />
+                                      <span>Cover</span>
+                                    </span>
+                                  )}
+                                  {photo.hidden && (
+                                    <span className="px-1.5 py-0.5 rounded bg-zinc-800/90 text-zinc-300 text-[9px] font-bold font-mono uppercase flex items-center gap-1 border border-white/10">
+                                      <EyeOff className="w-2.5 h-2.5" />
+                                      <span>Hidden</span>
+                                    </span>
+                                  )}
+                                </div>
+
+                                {/* Dimension Badge */}
+                                {photo.width && photo.height && (
+                                  <span className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded bg-black/70 backdrop-blur-md text-[9px] font-mono text-zinc-300">
+                                    {photo.width}×{photo.height}
+                                  </span>
+                                )}
+                              </div>
+
+                              {/* Quick Toggles below thumbnail */}
+                              <div className="grid grid-cols-2 gap-1.5 pt-1">
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    handleUpdatePhoto(originalIndex, { featured: !photo.featured })
+                                  }
+                                  className={`px-2 py-1.5 rounded-lg text-[10px] font-mono font-semibold flex items-center justify-center gap-1 transition-all border ${
+                                    photo.featured
+                                      ? 'bg-amber-400/15 border-amber-400/40 text-amber-300'
+                                      : 'bg-zinc-900 border-white/10 text-zinc-400 hover:text-white'
+                                  }`}
+                                  title="Feature on Hero Cover Carousel"
+                                >
+                                  <Star
+                                    className={`w-3 h-3 ${
+                                      photo.featured ? 'fill-amber-400 text-amber-400' : 'text-zinc-500'
+                                    }`}
+                                  />
+                                  <span>{photo.featured ? 'Featured' : 'Feature'}</span>
+                                </button>
+
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    handleUpdatePhoto(originalIndex, { hidden: !photo.hidden })
+                                  }
+                                  className={`px-2 py-1.5 rounded-lg text-[10px] font-mono font-semibold flex items-center justify-center gap-1 transition-all border ${
+                                    photo.hidden
+                                      ? 'bg-zinc-900 border-white/10 text-zinc-500 hover:text-zinc-300'
+                                      : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                                  }`}
+                                  title={photo.hidden ? 'Click to Publish' : 'Click to Hide from Gallery'}
+                                >
+                                  {photo.hidden ? (
+                                    <>
+                                      <EyeOff className="w-3 h-3 text-zinc-500" />
+                                      <span>Hidden</span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Eye className="w-3 h-3 text-emerald-400" />
+                                      <span>Published</span>
+                                    </>
+                                  )}
+                                </button>
+                              </div>
+
+                              {photo.url && (
+                                <a
+                                  href={photo.url}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="w-full px-2 py-1 rounded-lg bg-zinc-900/60 hover:bg-zinc-800 text-[10px] font-mono text-zinc-400 hover:text-white transition-colors flex items-center justify-center gap-1 border border-white/5"
+                                >
+                                  <span>View on Pexels</span>
+                                  <ExternalLink className="w-2.5 h-2.5 text-zinc-500" />
+                                </a>
+                              )}
+                            </div>
+
+                            {/* Full Photo Information Editor */}
+                            <div className="flex-1 space-y-3.5 w-full">
+                              {/* Row 1: Title and Date */}
+                              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <div className="sm:col-span-2">
+                                  <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
+                                    Title / Frame Headline
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={photo.title || ''}
+                                    onChange={(e) =>
+                                      handleUpdatePhoto(originalIndex, { title: e.target.value })
+                                    }
+                                    placeholder="e.g. Cathay Pacific A350-1000 Final Approach"
+                                    className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-medium focus:border-emerald-500/50"
+                                  />
+                                </div>
+
+                                <div>
+                                  <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
+                                    Date / Year Taken
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={photo.date || ''}
+                                    onChange={(e) =>
+                                      handleUpdatePhoto(originalIndex, { date: e.target.value })
+                                    }
+                                    placeholder="e.g. Oct 2024"
+                                    className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono focus:border-emerald-500/50"
+                                  />
+                                </div>
+                              </div>
+
+                              {/* Row 2: Story / Narrative Description */}
+                              <div>
+                                <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1 flex items-center justify-between">
+                                  <span>Story / Narrative / Composition Notes</span>
+                                  <span className="text-[9px] text-zinc-500 lowercase">shown in lightbox</span>
+                                </label>
+                                <textarea
+                                  rows={2}
+                                  value={photo.description || ''}
+                                  onChange={(e) =>
+                                    handleUpdatePhoto(originalIndex, { description: e.target.value })
+                                  }
+                                  placeholder="Describe the moment, technical lighting context, aircraft registration, or architectural story..."
+                                  className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white leading-relaxed resize-none focus:border-emerald-500/50"
+                                />
+                              </div>
+
+                              {/* Row 3: Category & Location */}
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                  <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
+                                    Category
+                                  </label>
+                                  <div className="space-y-1.5">
+                                    <input
+                                      type="text"
+                                      value={photo.category || ''}
+                                      onChange={(e) =>
+                                        handleUpdatePhoto(originalIndex, { category: e.target.value })
+                                      }
+                                      placeholder="e.g. Aerospace & Aviation"
+                                      className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white focus:border-emerald-500/50"
+                                    />
+                                    {/* Quick category suggestion pills */}
+                                    <div className="flex flex-wrap gap-1">
+                                      {[
+                                        'Aerospace & Aviation',
+                                        'Architecture & Geometry',
+                                        'Urban & Nocturne',
+                                        'Nature & Textures',
+                                      ].map((catPreset) => (
+                                        <button
+                                          key={catPreset}
+                                          type="button"
+                                          onClick={() =>
+                                            handleUpdatePhoto(originalIndex, { category: catPreset })
+                                          }
+                                          className={`text-[9px] font-mono px-1.5 py-0.5 rounded transition-colors ${
+                                            photo.category === catPreset
+                                              ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                                              : 'bg-zinc-900/80 text-zinc-400 hover:text-white border border-white/5'
+                                          }`}
+                                        >
+                                          {catPreset.split('&')[0].trim()}
+                                        </button>
+                                      ))}
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div>
+                                  <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1 flex items-center gap-1">
+                                    <MapPin className="w-3 h-3 text-amber-400" />
+                                    <span>Location</span>
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={photo.location || ''}
+                                    onChange={(e) =>
+                                      handleUpdatePhoto(originalIndex, { location: e.target.value })
+                                    }
+                                    placeholder="e.g. Hong Kong SAR (HKG)"
+                                    className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white focus:border-emerald-500/50"
+                                  />
+                                </div>
+                              </div>
+
+                              {/* Row 4: Camera & EXIF details */}
+                              <div className="pt-2 border-t border-white/5">
+                                <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-2">
+                                  Camera EXIF & Optical Details
+                                </label>
+                                <div className="grid grid-cols-2 sm:grid-cols-6 gap-2">
+                                  <div>
+                                    <label className="block text-[9px] font-mono text-zinc-500 uppercase">Camera</label>
+                                    <input
+                                      type="text"
+                                      value={photo.camera || ''}
+                                      onChange={(e) =>
+                                        handleUpdatePhoto(originalIndex, { camera: e.target.value })
+                                      }
+                                      placeholder="Sony A7 IV"
+                                      className="w-full px-2 py-1 rounded-lg bg-zinc-900 border border-white/10 text-[11px] text-zinc-200"
+                                    />
+                                  </div>
+
+                                  <div>
+                                    <label className="block text-[9px] font-mono text-zinc-500 uppercase">Lens</label>
+                                    <input
+                                      type="text"
+                                      value={photo.lens || ''}
+                                      onChange={(e) =>
+                                        handleUpdatePhoto(originalIndex, { lens: e.target.value })
+                                      }
+                                      placeholder="FE 24-70 GM"
+                                      className="w-full px-2 py-1 rounded-lg bg-zinc-900 border border-white/10 text-[11px] text-zinc-200"
+                                    />
+                                  </div>
+
+                                  <div>
+                                    <label className="block text-[9px] font-mono text-zinc-500 uppercase">Focal</label>
+                                    <input
+                                      type="text"
+                                      value={photo.focalLength || ''}
+                                      onChange={(e) =>
+                                        handleUpdatePhoto(originalIndex, { focalLength: e.target.value })
+                                      }
+                                      placeholder="50mm"
+                                      className="w-full px-2 py-1 rounded-lg bg-zinc-900 border border-white/10 text-[11px] text-zinc-200 font-mono"
+                                    />
+                                  </div>
+
+                                  <div>
+                                    <label className="block text-[9px] font-mono text-zinc-500 uppercase">Aperture</label>
+                                    <input
+                                      type="text"
+                                      value={photo.aperture || ''}
+                                      onChange={(e) =>
+                                        handleUpdatePhoto(originalIndex, { aperture: e.target.value })
+                                      }
+                                      placeholder="f/2.8"
+                                      className="w-full px-2 py-1 rounded-lg bg-zinc-900 border border-white/10 text-[11px] text-zinc-200 font-mono"
+                                    />
+                                  </div>
+
+                                  <div>
+                                    <label className="block text-[9px] font-mono text-zinc-500 uppercase">Shutter</label>
+                                    <input
+                                      type="text"
+                                      value={photo.shutterSpeed || ''}
+                                      onChange={(e) =>
+                                        handleUpdatePhoto(originalIndex, { shutterSpeed: e.target.value })
+                                      }
+                                      placeholder="1/500s"
+                                      className="w-full px-2 py-1 rounded-lg bg-zinc-900 border border-white/10 text-[11px] text-zinc-200 font-mono"
+                                    />
+                                  </div>
+
+                                  <div>
+                                    <label className="block text-[9px] font-mono text-zinc-500 uppercase">ISO</label>
+                                    <input
+                                      type="text"
+                                      value={photo.iso || ''}
+                                      onChange={(e) =>
+                                        handleUpdatePhoto(originalIndex, { iso: e.target.value })
+                                      }
+                                      placeholder="100"
+                                      className="w-full px-2 py-1 rounded-lg bg-zinc-900 border border-white/10 text-[11px] text-zinc-200 font-mono"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Card Action Controls & Status */}
+                              <div className="flex items-center justify-between pt-2 border-t border-white/10">
+                                <div className="text-[11px] font-mono flex items-center gap-2">
+                                  {photo.hidden ? (
+                                    <span className="text-zinc-500 flex items-center gap-1.5">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-zinc-500"></span>
+                                      <span>Hidden from Public Gallery</span>
+                                    </span>
+                                  ) : (
+                                    <span className="text-emerald-400 flex items-center gap-1.5">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                      <span>Published on Public Gallery</span>
+                                    </span>
+                                  )}
+                                </div>
+
+                                <div className="flex items-center gap-1">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleMovePhoto(originalIndex, 'up')}
+                                    disabled={originalIndex === 0}
+                                    className="p-1.5 rounded-lg bg-zinc-900 border border-white/10 text-zinc-400 hover:text-white disabled:opacity-20 hover:border-white/20 transition-all"
+                                    title="Move Earlier in Gallery"
+                                  >
+                                    <MoveUp className="w-3.5 h-3.5" />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleMovePhoto(originalIndex, 'down')}
+                                    disabled={originalIndex === (data.photos?.length || 0) - 1}
+                                    className="p-1.5 rounded-lg bg-zinc-900 border border-white/10 text-zinc-400 hover:text-white disabled:opacity-20 hover:border-white/20 transition-all"
+                                    title="Move Later in Gallery"
+                                  >
+                                    <MoveDown className="w-3.5 h-3.5" />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleDeletePhoto(originalIndex)}
+                                    className="p-1.5 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 hover:bg-rose-500/20 hover:text-rose-300 ml-1.5 transition-all"
+                                    title="Delete Photo Frame"
+                                  >
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-
-                        {/* Editable details */}
-                        <div className="flex-1 space-y-3 w-full">
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <div>
-                              <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
-                                Title / Headline
-                              </label>
-                              <input
-                                type="text"
-                                value={photo.title}
-                                onChange={(e) => {
-                                  const updated = [...(data.photos || [])];
-                                  updated[idx] = { ...photo, title: e.target.value };
-                                  setData({ ...data, photos: updated });
-                                }}
-                                className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-medium"
-                              />
-                            </div>
-
-                            <div>
-                              <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
-                                Category
-                              </label>
-                              <select
-                                value={photo.category || 'Aerospace & Aviation'}
-                                onChange={(e) => {
-                                  const updated = [...(data.photos || [])];
-                                  updated[idx] = { ...photo, category: e.target.value };
-                                  setData({ ...data, photos: updated });
-                                }}
-                                className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white"
-                              >
-                                <option value="Aerospace & Aviation">Aerospace &amp; Aviation</option>
-                                <option value="Architecture & Geometry">Architecture &amp; Geometry</option>
-                                <option value="Urban & Nocturne">Urban &amp; Nocturne</option>
-                                <option value="Nature & Textures">Nature &amp; Textures</option>
-                              </select>
-                            </div>
-                          </div>
-
-                          {/* Camera & EXIF details */}
-                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                            <div>
-                              <label className="block text-[9px] font-mono text-zinc-500 uppercase">Camera</label>
-                              <input
-                                type="text"
-                                value={photo.camera || ''}
-                                onChange={(e) => {
-                                  const updated = [...(data.photos || [])];
-                                  updated[idx] = { ...photo, camera: e.target.value };
-                                  setData({ ...data, photos: updated });
-                                }}
-                                placeholder="Sony Alpha 7 IV"
-                                className="w-full px-2 py-1 rounded-lg bg-zinc-900 border border-white/10 text-[11px] text-zinc-200"
-                              />
-                            </div>
-
-                            <div>
-                              <label className="block text-[9px] font-mono text-zinc-500 uppercase">Lens</label>
-                              <input
-                                type="text"
-                                value={photo.lens || ''}
-                                onChange={(e) => {
-                                  const updated = [...(data.photos || [])];
-                                  updated[idx] = { ...photo, lens: e.target.value };
-                                  setData({ ...data, photos: updated });
-                                }}
-                                placeholder="FE 24-70mm"
-                                className="w-full px-2 py-1 rounded-lg bg-zinc-900 border border-white/10 text-[11px] text-zinc-200"
-                              />
-                            </div>
-
-                            <div>
-                              <label className="block text-[9px] font-mono text-zinc-500 uppercase">Aperture / Shutter</label>
-                              <input
-                                type="text"
-                                value={`${photo.aperture || 'f/2.8'} • ${photo.shutterSpeed || '1/500s'}`}
-                                onChange={(e) => {
-                                  const parts = e.target.value.split('•').map((s) => s.trim());
-                                  const updated = [...(data.photos || [])];
-                                  updated[idx] = {
-                                    ...photo,
-                                    aperture: parts[0] || photo.aperture,
-                                    shutterSpeed: parts[1] || photo.shutterSpeed,
-                                  };
-                                  setData({ ...data, photos: updated });
-                                }}
-                                className="w-full px-2 py-1 rounded-lg bg-zinc-900 border border-white/10 text-[11px] text-zinc-200 font-mono"
-                              />
-                            </div>
-
-                            <div>
-                              <label className="block text-[9px] font-mono text-zinc-500 uppercase">Location</label>
-                              <input
-                                type="text"
-                                value={photo.location || ''}
-                                onChange={(e) => {
-                                  const updated = [...(data.photos || [])];
-                                  updated[idx] = { ...photo, location: e.target.value };
-                                  setData({ ...data, photos: updated });
-                                }}
-                                placeholder="Hong Kong SAR"
-                                className="w-full px-2 py-1 rounded-lg bg-zinc-900 border border-white/10 text-[11px] text-zinc-200"
-                              />
-                            </div>
-                          </div>
-
-                          <div className="flex items-center justify-between pt-1">
-                            <label className="flex items-center gap-1.5 cursor-pointer text-xs text-zinc-400 hover:text-white">
-                              <input
-                                type="checkbox"
-                                checked={Boolean(photo.featured)}
-                                onChange={(e) => {
-                                  const updated = [...(data.photos || [])];
-                                  updated[idx] = { ...photo, featured: e.target.checked };
-                                  setData({ ...data, photos: updated });
-                                }}
-                                className="w-3.5 h-3.5 rounded accent-white"
-                              />
-                              <span>Feature on hero cover</span>
-                            </label>
-
-                            <div className="flex items-center gap-1">
-                              <button
-                                type="button"
-                                onClick={() => handleMovePhoto(idx, 'up')}
-                                disabled={idx === 0}
-                                className="p-1 text-zinc-500 hover:text-white disabled:opacity-30"
-                                title="Move Earlier"
-                              >
-                                <MoveUp className="w-3.5 h-3.5" />
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => handleMovePhoto(idx, 'down')}
-                                disabled={idx === (data.photos?.length || 0) - 1}
-                                className="p-1 text-zinc-500 hover:text-white disabled:opacity-30"
-                                title="Move Later"
-                              >
-                                <MoveDown className="w-3.5 h-3.5" />
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => handleDeletePhoto(idx)}
-                                className="p-1 text-zinc-500 hover:text-rose-400 ml-2"
-                                title="Delete Photo"
-                              >
-                                <Trash2 className="w-3.5 h-3.5" />
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                      ))}
                   </div>
                 )}
               </div>
@@ -4271,26 +4591,48 @@ export default function AdminPage() {
                       Master Passkey Security
                     </label>
                   </div>
-                  <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full font-bold">
-                    &apos;admin&apos; Disabled
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowMasterPin(!showMasterPin)}
+                      className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-900 border border-white/10 text-[11px] font-mono text-zinc-300 hover:text-white hover:border-white/20 transition-all"
+                      title={showMasterPin ? "Hide master passkey" : "Reveal master passkey"}
+                    >
+                      {showMasterPin ? (
+                        <>
+                          <EyeOff className="w-3.5 h-3.5 text-emerald-400" />
+                          <span>Hide Key</span>
+                        </>
+                      ) : (
+                        <>
+                          <Eye className="w-3.5 h-3.5 text-zinc-400" />
+                          <span>Reveal Key</span>
+                        </>
+                      )}
+                    </button>
+                    <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full font-bold">
+                      &apos;admin&apos; Disabled
+                    </span>
+                  </div>
                 </div>
-                <input
-                  type="text"
-                  value={data.settings.adminPasskey || ''}
-                  onChange={(e) =>
-                    setData({
-                      ...data,
-                      settings: {
-                        ...data.settings,
-                        adminPasskey: e.target.value,
-                        adminPassword: e.target.value,
-                      },
-                    })
-                  }
-                  placeholder="Enter new master passkey (e.g. sv7-passkey-2026)..."
-                  className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-sm text-white font-mono focus:border-emerald-500/50"
-                />
+                <div className="relative">
+                  <input
+                    type={showMasterPin ? "text" : "password"}
+                    value={data.settings.adminPasskey || ''}
+                    onChange={(e) =>
+                      setData({
+                        ...data,
+                        settings: {
+                          ...data.settings,
+                          adminPasskey: e.target.value,
+                          adminPassword: e.target.value,
+                        },
+                      })
+                    }
+                    placeholder="Enter new master passkey (e.g. sv7-passkey-2026)..."
+                    className="w-full px-3.5 py-2 pr-10 rounded-xl bg-zinc-950 border border-white/10 text-sm text-white font-mono focus:border-emerald-500/50"
+                  />
+                </div>
                 <div className="text-[11px] text-zinc-400 leading-relaxed space-y-1">
                   <p>
                     The default password <code className="text-rose-400 bg-rose-500/10 px-1.5 py-0.5 rounded font-mono">&apos;admin&apos;</code> is permanently disabled and rejected for your security.

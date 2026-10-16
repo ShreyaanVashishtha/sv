@@ -226,14 +226,18 @@ export async function POST(req: NextRequest) {
         return {
           ...fresh,
           title: prev.title || fresh.title,
-          description: prev.description || fresh.description,
+          description: prev.description !== undefined ? prev.description : fresh.description,
           category: prev.category || fresh.category,
           camera: prev.camera || fresh.camera,
           lens: prev.lens || fresh.lens,
+          focalLength: prev.focalLength || fresh.focalLength,
           aperture: prev.aperture || fresh.aperture,
           shutterSpeed: prev.shutterSpeed || fresh.shutterSpeed,
           iso: prev.iso || fresh.iso,
+          location: prev.location || fresh.location,
+          date: prev.date || fresh.date,
           featured: prev.featured ?? fresh.featured,
+          hidden: prev.hidden ?? fresh.hidden,
         };
       }
       return fresh;
