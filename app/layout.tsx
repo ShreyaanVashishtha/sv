@@ -3,6 +3,13 @@ import './globals.css';
 import { getContent } from '@/lib/content';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { BotIdClient } from 'botid/client';
+
+const botIdProtectedRoutes = [
+  { path: '/api/contact', method: 'POST' },
+  { path: '/api/auth', method: 'POST' },
+  { path: '/api/content', method: 'POST' },
+];
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
@@ -136,6 +143,7 @@ export default async function RootLayout({
   return (
     <html lang="en" className="dark scroll-smooth">
       <head>
+        <BotIdClient protect={botIdProtectedRoutes} />
         {jsonLd && (
           <script
             type="application/ld+json"

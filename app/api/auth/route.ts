@@ -13,6 +13,20 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    // Vercel BotID Protection against credential stuffing and brute force
+    try {
+      const { checkBotId } = await import('botid/server');
+      const verification = await checkBotId();
+      if (verification?.isBot) {
+        return NextResponse.json(
+          { error: 'Automated authentication attempt blocked by Vercel BotID.' },
+          { status: 403 }
+        );
+      }
+    } catch (botErr) {
+      // Allow in dev / local mode
+    }
+
     const body = await request.json();
     const candidate = (body.passkey || body.password || '').toString().trim();
 

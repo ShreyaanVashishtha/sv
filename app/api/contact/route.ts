@@ -18,6 +18,20 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { name, email, subject, message } = body;
 
+    // Vercel BotID Protection against automated spam
+    try {
+      const { checkBotId } = await import('botid/server');
+      const verification = await checkBotId();
+      if (verification?.isBot) {
+        return NextResponse.json(
+          { error: 'Automated submission blocked by Vercel BotID.' },
+          { status: 403 }
+        );
+      }
+    } catch (botErr) {
+      // Allow graceful execution in development or offline mode
+    }
+
     if (!email || !message) {
       return NextResponse.json(
         { error: 'Email and message are required.' },
