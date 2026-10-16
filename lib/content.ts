@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { WebsiteData, SiteSettings, PhotoItem, PhotographySettings } from '@/types/content';
+import { WebsiteData, SiteSettings, PhotoItem, VideoItem, PhotographySettings } from '@/types/content';
 import { redis } from '@/lib/redis';
 
 const DATA_FILE_PATH = path.join(process.cwd(), 'data', 'content.json');
@@ -138,13 +138,56 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   },
 };
 
+export const DEFAULT_VIDEOS: VideoItem[] = [
+  {
+    id: 'vid-1',
+    title: 'A350-1000 Low-Pass Flare & Touchdown',
+    description: 'Cathay Pacific Airbus A350-1000 on ILS 25R final approach at HKG during golden hour crosswind conditions. 10-bit S-Log3 grading.',
+    category: 'Aerospace & Aviation',
+    videoUrl: 'https://images.pexels.com/videos/3045163/free-video-3045163.mp4',
+    posterUrl: 'https://images.unsplash.com/photo-1542296332-2e4473faf563?w=1200&auto=format&fit=crop&q=80',
+    instagramUrl: 'https://www.instagram.com/sv.snap/',
+    duration: '0:35',
+    aspectRatio: '9:16',
+    resolution: '4K 60fps',
+    camera: 'Sony Alpha 7 IV',
+    lens: 'FE 200-600mm F5.6-6.3 G OSS',
+    fps: '60fps',
+    location: 'Hong Kong International Airport (HKG)',
+    date: 'Oct 2024',
+    featured: true,
+  },
+  {
+    id: 'vid-2',
+    title: 'Nocturne Runway Operations & Thrust Reversal',
+    description: 'Long-exposure motion study of night departures and apron ground handling dynamics with moisture condensation trails.',
+    category: 'Urban & Nocturne',
+    videoUrl: 'https://images.pexels.com/videos/4774391/pexels-photo-4774391.mp4',
+    posterUrl: 'https://images.unsplash.com/photo-1506015391300-4802dc74de2e?w=1200&auto=format&fit=crop&q=80',
+    instagramUrl: 'https://www.instagram.com/sv.snap/',
+    duration: '0:48',
+    aspectRatio: '16:9',
+    resolution: '4K 24fps Cinema',
+    camera: 'Sony Alpha 7 IV',
+    lens: 'FE 24-70mm f/2.8 GM',
+    fps: '24fps',
+    location: 'HKG South Runway Observation Point',
+    date: 'Sep 2024',
+    featured: false,
+  },
+];
+
 export const DEFAULT_PHOTOGRAPHY_SETTINGS: PhotographySettings = {
-  title: 'Visual Archive & Photography',
-  subtitle: 'Aerospace perspectives, mechanical forms, and terrestrial observations through the lens.',
-  bio: 'A curated visual log captured on 35mm & digital sensors — featuring aviation, structural geometry, urban nocturnes, and natural textures.',
+  title: 'Visual Archive & Cinematography',
+  subtitle: 'Aerospace perspectives, mechanical forms, and terrestrial observations through stills & motion.',
+  bio: 'A curated visual and motion log captured on 35mm & 4K digital sensors — featuring aviation reels on @sv.snap, structural geometry, and nocturne atmospheres.',
   pexelsProfileUrl: 'https://www.pexels.com/collections/portfolio-je8myyb/',
   pexelsUsername: 'shreyaan',
   pexelsCollectionId: 'portfolio-je8myyb',
+  instagramHandle: 'sv.snap',
+  instagramProfileUrl: 'https://www.instagram.com/sv.snap/',
+  instagramBio: 'Aviation reels, vertical cinema, and high-speed motion studies.',
+  enableVideos: true,
   categories: ['All', 'Aerospace & Aviation', 'Architecture', 'Urban & Nocturne', 'Nature & Textures'],
   enableExif: true,
   photosPerPage: 24,
@@ -186,6 +229,7 @@ const DEFAULT_CONTENT: WebsiteData = {
   education: [],
   certifications: [],
   photos: [],
+  videos: DEFAULT_VIDEOS,
   photographySettings: DEFAULT_PHOTOGRAPHY_SETTINGS,
   settings: DEFAULT_SETTINGS,
 };
@@ -269,6 +313,7 @@ function mergeWithDefaults(parsed: any): WebsiteData {
       },
     },
     photos: Array.isArray(parsed?.photos) ? parsed.photos : [],
+    videos: Array.isArray(parsed?.videos) ? parsed.videos : DEFAULT_VIDEOS,
     photographySettings: {
       ...DEFAULT_PHOTOGRAPHY_SETTINGS,
       ...(parsed?.photographySettings || {}),

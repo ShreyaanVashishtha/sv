@@ -137,6 +137,7 @@ export default async function PhotographyPage() {
       <main>
         <PhotographyGallery
           photos={photos}
+          videos={data.videos || []}
           settings={data.photographySettings}
           profile={data.profile}
           socials={data.socials}

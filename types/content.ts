@@ -234,6 +234,26 @@ export interface PhotoItem {
   date?: string;
 }
 
+export interface VideoItem {
+  id: string;
+  title: string;
+  description?: string;
+  category?: string;
+  videoUrl: string; // Direct MP4/WebM, Instagram Reel URL, YouTube, or Vimeo
+  posterUrl?: string; // Thumbnail preview image
+  instagramUrl?: string; // Link to the reel on @sv.snap
+  duration?: string; // e.g. "0:30", "Reel"
+  aspectRatio?: '9:16' | '16:9' | '1:1' | '4:5';
+  resolution?: string; // e.g. "4K 60fps", "1080p 120fps Log"
+  camera?: string; // e.g. "Sony Alpha 7 IV"
+  lens?: string; // e.g. "FE 24-70mm f/2.8 GM"
+  fps?: string; // e.g. "60fps"
+  location?: string; // e.g. "Hong Kong SAR"
+  date?: string; // e.g. "Oct 2024"
+  featured?: boolean;
+  hidden?: boolean;
+}
+
 export interface PhotographySettings {
   title: string;
   subtitle: string;
@@ -242,6 +262,10 @@ export interface PhotographySettings {
   pexelsUsername?: string;
   pexelsCollectionId?: string;
   pexelsApiKey?: string;
+  instagramHandle?: string;
+  instagramProfileUrl?: string;
+  instagramBio?: string;
+  enableVideos?: boolean;
   categories?: string[];
   enableExif?: boolean;
   photosPerPage?: number;
@@ -256,6 +280,7 @@ export interface WebsiteData {
   education: EducationItem[];
   certifications: CertificationItem[];
   photos?: PhotoItem[];
+  videos?: VideoItem[];
   photographySettings?: PhotographySettings;
   settings: SiteSettings;
 }

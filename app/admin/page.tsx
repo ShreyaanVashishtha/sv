@@ -13,6 +13,7 @@ import {
   Metric,
   NavLink,
   PhotoItem,
+  VideoItem,
   PhotographySettings,
 } from '@/types/content';
 import {
@@ -60,6 +61,10 @@ import {
   EyeOff,
   Star,
   MapPin,
+  Instagram,
+  Film,
+  Play,
+  Video,
 } from 'lucide-react';
 
 interface InboxMessage {
@@ -113,6 +118,9 @@ export default function AdminPage() {
   const [showPexelsApiKey, setShowPexelsApiKey] = useState(false);
   const [photoSearchQuery, setPhotoSearchQuery] = useState('');
   const [photoCategoryFilter, setPhotoCategoryFilter] = useState('all');
+  const [videoSearchQuery, setVideoSearchQuery] = useState('');
+  const [videoCategoryFilter, setVideoCategoryFilter] = useState('all');
+  const [newVideoUrl, setNewVideoUrl] = useState('');
   const [saveStatus, setSaveStatus] = useState<{ type: 'success' | 'error' | ''; message: string }>({
     type: '',
     message: '',
@@ -631,6 +639,71 @@ export default function AdminPage() {
     });
   };
 
+  const handleAddVideo = () => {
+    if (!data) return;
+    const cleanUrl = newVideoUrl.trim();
+    const isInstagram = cleanUrl.includes('instagram.com');
+    const newVid: VideoItem = {
+      id: `vid-${Date.now()}`,
+      title: 'New Motion Reel (@sv.snap)',
+      description: 'Aviation and mechanical cinematography study for @sv.snap.',
+      category: 'Aerospace & Aviation',
+      videoUrl: cleanUrl || 'https://images.pexels.com/videos/3045163/free-video-3045163.mp4',
+      posterUrl: 'https://images.unsplash.com/photo-1542296332-2e4473faf563?w=1200&auto=format&fit=crop&q=80',
+      instagramUrl: isInstagram ? cleanUrl : `https://www.instagram.com/${data.photographySettings?.instagramHandle || 'sv.snap'}/`,
+      duration: '0:30',
+      aspectRatio: '9:16',
+      resolution: '4K 60fps',
+      camera: 'Sony Alpha 7 IV',
+      lens: 'FE 24-70mm f/2.8 GM',
+      fps: '60fps',
+      location: 'Hong Kong SAR (HKG)',
+      date: new Date().getFullYear().toString(),
+      featured: false,
+      hidden: false,
+    };
+    setData({
+      ...data,
+      videos: [newVid, ...(data.videos || [])],
+    });
+    setNewVideoUrl('');
+  };
+
+  const handleUpdateVideo = (index: number, patch: Partial<VideoItem>) => {
+    if (!data || !data.videos) return;
+    const updated = [...data.videos];
+    updated[index] = { ...updated[index], ...patch };
+    setData({
+      ...data,
+      videos: updated,
+    });
+  };
+
+  const handleMoveVideo = (index: number, direction: 'up' | 'down') => {
+    if (!data || !data.videos) return;
+    const newVideos = [...data.videos];
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= newVideos.length) return;
+    const temp = newVideos[index];
+    newVideos[index] = newVideos[targetIndex];
+    newVideos[targetIndex] = temp;
+    setData({
+      ...data,
+      videos: newVideos,
+    });
+  };
+
+  const handleDeleteVideo = (index: number) => {
+    if (!data || !data.videos) return;
+    const title = data.videos[index]?.title || 'this video';
+    if (!window.confirm(`Are you sure you want to remove "${title}" from your curated motion archive?`)) return;
+    const updated = data.videos.filter((_, i) => i !== index);
+    setData({
+      ...data,
+      videos: updated,
+    });
+  };
+
   // Section Order reordering
   const handleMoveSection = (index: number, direction: 'up' | 'down') => {
     if (!data || !data.settings.sectionOrder) return;
@@ -899,9 +972,12 @@ export default function AdminPage() {
     },
     {
       id: 'photography',
-      label: `Photography (${data.photos?.length || 0})`,
+      label: `Photography & Motion (${(data.photos?.length || 0) + (data.videos?.length || 0)})`,
       icon: Camera,
-      badge: data.photos?.length ? `${data.photos.length}` : undefined,
+      badge:
+        (data.photos?.length || 0) + (data.videos?.length || 0)
+          ? `${(data.photos?.length || 0) + (data.videos?.length || 0)}`
+          : undefined,
     },
     { id: 'flow', label: 'Section Flow & Toggles', icon: Eye },
     { id: 'socials', label: 'Social Channels', icon: Share2 },
@@ -3413,6 +3489,125 @@ export default function AdminPage() {
                 </div>
               </div>
 
+              {/* INSTAGRAM & MOTION SHOWCASE SETTINGS */}
+              <div className="p-6 rounded-3xl bg-zinc-900/40 border border-white/10 space-y-5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-white/10">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-500 via-pink-500 to-purple-600 flex items-center justify-center text-white shadow-sm">
+                      <Instagram className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h2 className="text-base font-bold text-white">Instagram Cinematography &amp; Motion (@sv.snap)</h2>
+                      <p className="text-xs text-zinc-400">
+                        Showcase your aviation reels, high-speed videos, and motion cinematography on your gallery.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <label className="flex items-center gap-2 cursor-pointer text-xs text-zinc-300 bg-zinc-950 px-3 py-1.5 rounded-xl border border-white/10 hover:border-white/20 transition-all">
+                      <input
+                        type="checkbox"
+                        checked={data.photographySettings?.enableVideos !== false}
+                        onChange={(e) =>
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              enableVideos: e.target.checked,
+                            },
+                          })
+                        }
+                        className="w-4 h-4 rounded accent-pink-500"
+                      />
+                      <span>Enable Videos on Gallery</span>
+                    </label>
+
+                    {data.photographySettings?.instagramProfileUrl && (
+                      <a
+                        href={data.photographySettings.instagramProfileUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinc-950 border border-white/10 hover:border-pink-500/40 text-xs text-pink-400 font-mono transition-all"
+                      >
+                        <span>@{data.photographySettings.instagramHandle || 'sv.snap'}</span>
+                        <ExternalLink className="w-3 h-3 text-pink-400" />
+                      </a>
+                    )}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">Instagram Handle</label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-mono text-zinc-500">@</span>
+                      <input
+                        type="text"
+                        value={data.photographySettings?.instagramHandle || ''}
+                        onChange={(e) =>
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              instagramHandle: e.target.value.replace(/^@/, ''),
+                            },
+                          })
+                        }
+                        placeholder="sv.snap"
+                        className="w-full pl-7 pr-3 py-2 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">Instagram Profile Link</label>
+                    <input
+                      type="text"
+                      value={data.photographySettings?.instagramProfileUrl || ''}
+                      onChange={(e) =>
+                        setData({
+                          ...data,
+                          photographySettings: {
+                            ...data.photographySettings,
+                            title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                            subtitle: data.photographySettings?.subtitle || '',
+                            instagramProfileUrl: e.target.value,
+                          },
+                        })
+                      }
+                      placeholder="https://www.instagram.com/sv.snap/"
+                      className="w-full px-3.5 py-2 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">Motion Channel Tagline / Bio</label>
+                  <input
+                    type="text"
+                    value={data.photographySettings?.instagramBio || ''}
+                    onChange={(e) =>
+                      setData({
+                        ...data,
+                        photographySettings: {
+                          ...data.photographySettings,
+                          title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                          subtitle: data.photographySettings?.subtitle || '',
+                          instagramBio: e.target.value,
+                        },
+                      })
+                    }
+                    placeholder="e.g. Aviation reels, vertical cinema, and high-speed motion studies."
+                    className="w-full px-3.5 py-2 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white"
+                  />
+                </div>
+              </div>
+
               {/* PHOTOS CURATION & REORDER LIST */}
               <div className="p-6 rounded-3xl bg-zinc-900/40 border border-white/10 space-y-6">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-white/10">
@@ -3897,6 +4092,548 @@ export default function AdminPage() {
                                     onClick={() => handleDeletePhoto(originalIndex)}
                                     className="p-1.5 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 hover:bg-rose-500/20 hover:text-rose-300 ml-1.5 transition-all"
                                     title="Delete Photo Frame"
+                                  >
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                )}
+              </div>
+
+              {/* CURATED MOTION & VIDEOS SECTION */}
+              <div className="p-6 rounded-3xl bg-zinc-900/40 border border-white/10 space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-white/10">
+                  <div>
+                    <h3 className="text-base font-bold text-white flex items-center gap-2">
+                      <Film className="w-4 h-4 text-pink-400" />
+                      <span>Curated Videos &amp; Reels (@sv.snap) ({data.videos?.length || 0})</span>
+                    </h3>
+                    <p className="text-xs text-zinc-400 mt-0.5">
+                      Showcase aviation reels, MP4 videos, Instagram links, and cinematic footage alongside your photos.
+                    </p>
+                  </div>
+
+                  {/* Quick Add Video input */}
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={newVideoUrl}
+                      onChange={(e) => setNewVideoUrl(e.target.value)}
+                      placeholder="Paste Instagram Reel or MP4 URL..."
+                      className="px-3 py-1.5 rounded-xl bg-zinc-950 border border-white/10 text-xs text-white min-w-[220px]"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleAddVideo}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 hover:opacity-90 text-white text-xs font-semibold transition-all shrink-0 shadow-md"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Add Video Frame</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Filter and Search Bar for Videos */}
+                <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+                  <div className="flex flex-1 items-center gap-2">
+                    <div className="relative flex-1 max-w-md">
+                      <Search className="w-3.5 h-3.5 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="text"
+                        value={videoSearchQuery}
+                        onChange={(e) => setVideoSearchQuery(e.target.value)}
+                        placeholder="Search videos by title, story, category, camera, location..."
+                        className="w-full pl-9 pr-3 py-1.5 rounded-xl bg-zinc-950 border border-white/10 text-xs text-white placeholder-zinc-500 focus:border-pink-500/50"
+                      />
+                      {videoSearchQuery && (
+                        <button
+                          type="button"
+                          onClick={() => setVideoSearchQuery('')}
+                          className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-zinc-500 hover:text-white"
+                        >
+                          ✕
+                        </button>
+                      )}
+                    </div>
+
+                    <select
+                      value={videoCategoryFilter}
+                      onChange={(e) => setVideoCategoryFilter(e.target.value)}
+                      className="px-3 py-1.5 rounded-xl bg-zinc-950 border border-white/10 text-xs text-zinc-300 font-mono"
+                    >
+                      <option value="all">All Video Categories</option>
+                      {Array.from(
+                        new Set(
+                          (data.videos || [])
+                            .map((v) => v.category)
+                            .filter((c): c is string => Boolean(c))
+                        )
+                      ).map((cat) => (
+                        <option key={cat} value={cat}>
+                          {cat}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="text-[11px] font-mono text-zinc-400 flex items-center gap-3">
+                    <span>
+                      Showing{' '}
+                      <strong className="text-white">
+                        {(data.videos || []).filter((v) => {
+                          if (
+                            videoCategoryFilter !== 'all' &&
+                            (v.category || '').toLowerCase() !== videoCategoryFilter.toLowerCase()
+                          ) {
+                            return false;
+                          }
+                          if (videoSearchQuery.trim()) {
+                            const q = videoSearchQuery.toLowerCase();
+                            const match =
+                              (v.title || '').toLowerCase().includes(q) ||
+                              (v.description || '').toLowerCase().includes(q) ||
+                              (v.category || '').toLowerCase().includes(q) ||
+                              (v.camera || '').toLowerCase().includes(q) ||
+                              (v.location || '').toLowerCase().includes(q);
+                            if (!match) return false;
+                          }
+                          return true;
+                        }).length}
+                      </strong>{' '}
+                      of {data.videos?.length || 0} videos
+                    </span>
+                    {(data.videos || []).some((v) => v.hidden) && (
+                      <span className="text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full text-[10px]">
+                        {(data.videos || []).filter((v) => v.hidden).length} hidden
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Videos List */}
+                {(!data.videos || data.videos.length === 0) ? (
+                  <div className="text-center py-12 text-xs text-zinc-500 font-mono">
+                    No videos added yet. Click &quot;Add Video Frame&quot; above to link your first Instagram Reel or MP4 motion piece.
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {(data.videos || [])
+                      .map((video, originalIndex) => ({ video, originalIndex }))
+                      .filter(({ video }) => {
+                        if (
+                          videoCategoryFilter !== 'all' &&
+                          (video.category || '').toLowerCase() !== videoCategoryFilter.toLowerCase()
+                        ) {
+                          return false;
+                        }
+                        if (videoSearchQuery.trim()) {
+                          const q = videoSearchQuery.toLowerCase();
+                          const match =
+                            (video.title || '').toLowerCase().includes(q) ||
+                            (video.description || '').toLowerCase().includes(q) ||
+                            (video.category || '').toLowerCase().includes(q) ||
+                            (video.camera || '').toLowerCase().includes(q) ||
+                            (video.location || '').toLowerCase().includes(q);
+                          if (!match) return false;
+                        }
+                        return true;
+                      })
+                      .map(({ video, originalIndex }) => (
+                        <div
+                          key={video.id || originalIndex}
+                          className={`p-4 sm:p-5 rounded-2xl border transition-all ${
+                            video.hidden
+                              ? 'bg-zinc-950/60 border-white/5 opacity-70'
+                              : 'bg-zinc-950 border-white/10 shadow-sm'
+                          }`}
+                        >
+                          <div className="flex flex-col lg:flex-row gap-5 items-start">
+                            {/* Poster / Video Preview */}
+                            <div className="w-full lg:w-48 shrink-0 space-y-2">
+                              <div className="w-full h-36 rounded-xl overflow-hidden bg-zinc-900 border border-white/10 relative group">
+                                {video.posterUrl ? (
+                                  /* eslint-disable-next-line @next/next/no-img-element */
+                                  <img
+                                    src={video.posterUrl}
+                                    alt={video.title}
+                                    className="w-full h-full object-cover"
+                                  />
+                                ) : (
+                                  <div className="w-full h-full bg-zinc-950 flex items-center justify-center">
+                                    <Film className="w-8 h-8 text-zinc-700" />
+                                  </div>
+                                )}
+
+                                <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                                  <div className="w-9 h-9 rounded-full bg-white/90 text-black flex items-center justify-center shadow-lg">
+                                    <Play className="w-4 h-4 fill-black ml-0.5" />
+                                  </div>
+                                </div>
+
+                                {/* Top Badges */}
+                                <div className="absolute top-2 left-2 flex flex-col gap-1 items-start">
+                                  <span className="px-1.5 py-0.5 rounded bg-black/80 backdrop-blur-md text-white text-[9px] font-mono font-bold">
+                                    #{originalIndex + 1}
+                                  </span>
+                                  {video.featured && (
+                                    <span className="px-1.5 py-0.5 rounded bg-pink-500 text-white text-[9px] font-bold font-mono uppercase flex items-center gap-1 shadow-sm">
+                                      <Star className="w-2.5 h-2.5 fill-white" />
+                                      <span>Cover</span>
+                                    </span>
+                                  )}
+                                  {video.hidden && (
+                                    <span className="px-1.5 py-0.5 rounded bg-zinc-800/90 text-zinc-300 text-[9px] font-bold font-mono uppercase flex items-center gap-1 border border-white/10">
+                                      <EyeOff className="w-2.5 h-2.5" />
+                                      <span>Hidden</span>
+                                    </span>
+                                  )}
+                                </div>
+
+                                {video.duration && (
+                                  <span className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded bg-black/70 backdrop-blur-md text-[9px] font-mono text-zinc-300">
+                                    {video.duration}
+                                  </span>
+                                )}
+                              </div>
+
+                              {/* Toggles below thumbnail */}
+                              <div className="grid grid-cols-2 gap-1.5 pt-1">
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    handleUpdateVideo(originalIndex, { featured: !video.featured })
+                                  }
+                                  className={`px-2 py-1.5 rounded-lg text-[10px] font-mono font-semibold flex items-center justify-center gap-1 transition-all border ${
+                                    video.featured
+                                      ? 'bg-pink-500/15 border-pink-500/40 text-pink-300'
+                                      : 'bg-zinc-900 border-white/10 text-zinc-400 hover:text-white'
+                                  }`}
+                                  title="Feature on Hero Cover"
+                                >
+                                  <Star
+                                    className={`w-3 h-3 ${
+                                      video.featured ? 'fill-pink-400 text-pink-400' : 'text-zinc-500'
+                                    }`}
+                                  />
+                                  <span>{video.featured ? 'Featured' : 'Feature'}</span>
+                                </button>
+
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    handleUpdateVideo(originalIndex, { hidden: !video.hidden })
+                                  }
+                                  className={`px-2 py-1.5 rounded-lg text-[10px] font-mono font-semibold flex items-center justify-center gap-1 transition-all border ${
+                                    video.hidden
+                                      ? 'bg-zinc-900 border-white/10 text-zinc-500 hover:text-zinc-300'
+                                      : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                                  }`}
+                                  title={video.hidden ? 'Click to Publish' : 'Click to Hide'}
+                                >
+                                  {video.hidden ? (
+                                    <>
+                                      <EyeOff className="w-3 h-3 text-zinc-500" />
+                                      <span>Hidden</span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Eye className="w-3 h-3 text-emerald-400" />
+                                      <span>Published</span>
+                                    </>
+                                  )}
+                                </button>
+                              </div>
+
+                              {video.instagramUrl && (
+                                <a
+                                  href={video.instagramUrl}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="w-full px-2 py-1 rounded-lg bg-zinc-900/60 hover:bg-zinc-800 text-[10px] font-mono text-zinc-400 hover:text-pink-400 transition-colors flex items-center justify-center gap-1 border border-white/5"
+                                >
+                                  <Instagram className="w-3 h-3 text-pink-400" />
+                                  <span>Open on @sv.snap</span>
+                                  <ExternalLink className="w-2.5 h-2.5 text-zinc-500" />
+                                </a>
+                              )}
+                            </div>
+
+                            {/* Full Video Information Editor */}
+                            <div className="flex-1 space-y-3.5 w-full">
+                              {/* Row 1: Title, Aspect Ratio & Duration */}
+                              <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                                <div className="sm:col-span-2">
+                                  <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
+                                    Video Title / Headline
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={video.title || ''}
+                                    onChange={(e) =>
+                                      handleUpdateVideo(originalIndex, { title: e.target.value })
+                                    }
+                                    placeholder="e.g. A350-1000 High-Speed Flare & Touchdown"
+                                    className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-medium focus:border-pink-500/50"
+                                  />
+                                </div>
+
+                                <div>
+                                  <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
+                                    Aspect Ratio
+                                  </label>
+                                  <select
+                                    value={video.aspectRatio || '9:16'}
+                                    onChange={(e) =>
+                                      handleUpdateVideo(originalIndex, {
+                                        aspectRatio: e.target.value as any,
+                                      })
+                                    }
+                                    className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white"
+                                  >
+                                    <option value="9:16">9:16 Vertical Reel</option>
+                                    <option value="16:9">16:9 Cinema Widescreen</option>
+                                    <option value="1:1">1:1 Square</option>
+                                    <option value="4:5">4:5 Portrait</option>
+                                  </select>
+                                </div>
+
+                                <div>
+                                  <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
+                                    Duration / Timestamp
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={video.duration || ''}
+                                    onChange={(e) =>
+                                      handleUpdateVideo(originalIndex, { duration: e.target.value })
+                                    }
+                                    placeholder="0:30 or Reel"
+                                    className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono focus:border-pink-500/50"
+                                  />
+                                </div>
+                              </div>
+
+                              {/* Row 2: Stream URLs */}
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                  <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1 flex items-center justify-between">
+                                    <span>Video Stream URL (MP4, WebM, or Video Link)</span>
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={video.videoUrl || ''}
+                                    onChange={(e) =>
+                                      handleUpdateVideo(originalIndex, { videoUrl: e.target.value })
+                                    }
+                                    placeholder="https://.../video.mp4 or Instagram Reel URL"
+                                    className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono focus:border-pink-500/50"
+                                  />
+                                </div>
+
+                                <div>
+                                  <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1 flex items-center gap-1">
+                                    <Instagram className="w-3 h-3 text-pink-400" />
+                                    <span>Direct Instagram Reel Link (@sv.snap)</span>
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={video.instagramUrl || ''}
+                                    onChange={(e) =>
+                                      handleUpdateVideo(originalIndex, { instagramUrl: e.target.value })
+                                    }
+                                    placeholder="https://www.instagram.com/reel/..."
+                                    className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono focus:border-pink-500/50"
+                                  />
+                                </div>
+                              </div>
+
+                              {/* Row 3: Poster & Story Description */}
+                              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <div>
+                                  <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
+                                    Cover Poster Image URL
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={video.posterUrl || ''}
+                                    onChange={(e) =>
+                                      handleUpdateVideo(originalIndex, { posterUrl: e.target.value })
+                                    }
+                                    placeholder="https://.../cover.jpg"
+                                    className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono focus:border-pink-500/50"
+                                  />
+                                </div>
+
+                                <div className="sm:col-span-2">
+                                  <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
+                                    Story &amp; Cinematography Notes
+                                  </label>
+                                  <textarea
+                                    rows={2}
+                                    value={video.description || ''}
+                                    onChange={(e) =>
+                                      handleUpdateVideo(originalIndex, { description: e.target.value })
+                                    }
+                                    placeholder="Story behind the clip, audio grading, technical approach..."
+                                    className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white leading-relaxed resize-none focus:border-pink-500/50"
+                                  />
+                                </div>
+                              </div>
+
+                              {/* Row 4: Category, Location, Date */}
+                              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <div>
+                                  <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
+                                    Category
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={video.category || ''}
+                                    onChange={(e) =>
+                                      handleUpdateVideo(originalIndex, { category: e.target.value })
+                                    }
+                                    placeholder="Aerospace & Aviation"
+                                    className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white focus:border-pink-500/50"
+                                  />
+                                </div>
+
+                                <div>
+                                  <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1 flex items-center gap-1">
+                                    <MapPin className="w-3 h-3 text-amber-400" />
+                                    <span>Location</span>
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={video.location || ''}
+                                    onChange={(e) =>
+                                      handleUpdateVideo(originalIndex, { location: e.target.value })
+                                    }
+                                    placeholder="Hong Kong SAR (HKG)"
+                                    className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white focus:border-pink-500/50"
+                                  />
+                                </div>
+
+                                <div>
+                                  <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
+                                    Date Taken
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={video.date || ''}
+                                    onChange={(e) =>
+                                      handleUpdateVideo(originalIndex, { date: e.target.value })
+                                    }
+                                    placeholder="Oct 2024"
+                                    className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono focus:border-pink-500/50"
+                                  />
+                                </div>
+                              </div>
+
+                              {/* Row 5: Specs strip (Camera, Lens, Resolution, FPS) */}
+                              <div className="pt-2 border-t border-white/5">
+                                <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-2">
+                                  Camera Optics &amp; Video Specs
+                                </label>
+                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                                  <div>
+                                    <label className="block text-[9px] font-mono text-zinc-500 uppercase">Camera</label>
+                                    <input
+                                      type="text"
+                                      value={video.camera || ''}
+                                      onChange={(e) =>
+                                        handleUpdateVideo(originalIndex, { camera: e.target.value })
+                                      }
+                                      placeholder="Sony A7 IV"
+                                      className="w-full px-2 py-1 rounded-lg bg-zinc-900 border border-white/10 text-[11px] text-zinc-200"
+                                    />
+                                  </div>
+
+                                  <div>
+                                    <label className="block text-[9px] font-mono text-zinc-500 uppercase">Lens</label>
+                                    <input
+                                      type="text"
+                                      value={video.lens || ''}
+                                      onChange={(e) =>
+                                        handleUpdateVideo(originalIndex, { lens: e.target.value })
+                                      }
+                                      placeholder="FE 200-600 GM"
+                                      className="w-full px-2 py-1 rounded-lg bg-zinc-900 border border-white/10 text-[11px] text-zinc-200"
+                                    />
+                                  </div>
+
+                                  <div>
+                                    <label className="block text-[9px] font-mono text-zinc-500 uppercase">Resolution</label>
+                                    <input
+                                      type="text"
+                                      value={video.resolution || ''}
+                                      onChange={(e) =>
+                                        handleUpdateVideo(originalIndex, { resolution: e.target.value })
+                                      }
+                                      placeholder="4K 60fps"
+                                      className="w-full px-2 py-1 rounded-lg bg-zinc-900 border border-white/10 text-[11px] text-zinc-200 font-mono"
+                                    />
+                                  </div>
+
+                                  <div>
+                                    <label className="block text-[9px] font-mono text-zinc-500 uppercase">FPS / Mode</label>
+                                    <input
+                                      type="text"
+                                      value={video.fps || ''}
+                                      onChange={(e) =>
+                                        handleUpdateVideo(originalIndex, { fps: e.target.value })
+                                      }
+                                      placeholder="60fps Log"
+                                      className="w-full px-2 py-1 rounded-lg bg-zinc-900 border border-white/10 text-[11px] text-zinc-200 font-mono"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Card Action Controls & Status */}
+                              <div className="flex items-center justify-between pt-2 border-t border-white/10">
+                                <div className="text-[11px] font-mono flex items-center gap-2">
+                                  {video.hidden ? (
+                                    <span className="text-zinc-500 flex items-center gap-1.5">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-zinc-500"></span>
+                                      <span>Hidden from Public Gallery</span>
+                                    </span>
+                                  ) : (
+                                    <span className="text-pink-400 flex items-center gap-1.5">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-pink-400"></span>
+                                      <span>Published on Motion Gallery</span>
+                                    </span>
+                                  )}
+                                </div>
+
+                                <div className="flex items-center gap-1">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleMoveVideo(originalIndex, 'up')}
+                                    disabled={originalIndex === 0}
+                                    className="p-1.5 rounded-lg bg-zinc-900 border border-white/10 text-zinc-400 hover:text-white disabled:opacity-20 hover:border-white/20 transition-all"
+                                    title="Move Earlier in Gallery"
+                                  >
+                                    <MoveUp className="w-3.5 h-3.5" />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleMoveVideo(originalIndex, 'down')}
+                                    disabled={originalIndex === (data.videos?.length || 0) - 1}
+                                    className="p-1.5 rounded-lg bg-zinc-900 border border-white/10 text-zinc-400 hover:text-white disabled:opacity-20 hover:border-white/20 transition-all"
+                                    title="Move Later in Gallery"
+                                  >
+                                    <MoveDown className="w-3.5 h-3.5" />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleDeleteVideo(originalIndex)}
+                                    className="p-1.5 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 hover:bg-rose-500/20 hover:text-rose-300 ml-1.5 transition-all"
+                                    title="Delete Video Frame"
                                   >
                                     <Trash2 className="w-3.5 h-3.5" />
                                   </button>
