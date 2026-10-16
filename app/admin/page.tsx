@@ -53,6 +53,7 @@ import {
   Database,
   KeyRound,
   Fingerprint,
+  Search,
 } from 'lucide-react';
 
 interface InboxMessage {
@@ -3267,26 +3268,186 @@ export default function AdminPage() {
 
           {/* TAB: SITE SETTINGS */}
           {activeTab === 'settings' && (
-            <div className="p-6 rounded-3xl bg-zinc-900/40 border border-white/10 space-y-4">
-              <h2 className="text-base font-bold text-white mb-2">General & Metadata Settings</h2>
+            <div className="p-6 rounded-3xl bg-zinc-900/40 border border-white/10 space-y-6">
+              <div className="flex items-center justify-between pb-3 border-b border-white/10">
+                <div className="flex items-center gap-2.5">
+                  <Globe className="w-5 h-5 text-emerald-400" />
+                  <div>
+                    <h2 className="text-base font-bold text-white">SEO &amp; Social Link Previews</h2>
+                    <p className="text-xs text-zinc-400">
+                      Fine-tune search engine ranking, rich link unfurls, and Google crawler indexing.
+                    </p>
+                  </div>
+                </div>
+                <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/25 px-2.5 py-1 rounded-full font-bold">
+                  Auto-Synced with sitemap.xml &amp; robots.txt
+                </span>
+              </div>
 
-              <div>
-                <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">Site Name / Domain</label>
-                <input
-                  type="text"
-                  value={data.settings.siteName}
-                  onChange={(e) =>
-                    setData({
-                      ...data,
-                      settings: { ...data.settings, siteName: e.target.value },
-                    })
-                  }
-                  className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-sm text-white"
-                />
+              {/* LIVE PREVIEW CARDS */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                {/* Google Search Result Preview */}
+                <div className="p-4 rounded-2xl bg-zinc-950 border border-white/10 space-y-2">
+                  <div className="flex items-center justify-between text-[11px] font-mono text-zinc-400 uppercase tracking-wider pb-1 border-b border-white/5">
+                    <span className="flex items-center gap-1.5 text-zinc-300">
+                      <Search className="w-3.5 h-3.5 text-sky-400" />
+                      Google Search Result Preview
+                    </span>
+                    <span className="text-[10px] text-zinc-500">Google SERP</span>
+                  </div>
+
+                  <div className="pt-2 space-y-1 font-sans">
+                    <div className="flex items-center gap-2 text-xs text-zinc-400">
+                      <div className="w-4 h-4 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-[9px] font-bold text-white">
+                        sv
+                      </div>
+                      <span className="text-zinc-300 text-xs">
+                        {data.settings.canonicalUrl || 'https://sv7.dev'}
+                      </span>
+                      <span className="text-zinc-600">&rsaquo;</span>
+                      <span className="text-zinc-500 text-xs">portfolio</span>
+                    </div>
+
+                    <h3 className="text-sm font-medium text-sky-400 hover:underline cursor-pointer line-clamp-1 leading-snug">
+                      {data.settings.metaTitle || 'sv7.dev — Engineering & Systems'}
+                    </h3>
+
+                    <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
+                      {data.settings.metaDescription ||
+                        'Official portfolio and systems engineering showcase of Shreyaan Vashishtha.'}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Social Card Preview */}
+                <div className="p-4 rounded-2xl bg-zinc-950 border border-white/10 space-y-2">
+                  <div className="flex items-center justify-between text-[11px] font-mono text-zinc-400 uppercase tracking-wider pb-1 border-b border-white/5">
+                    <span className="flex items-center gap-1.5 text-zinc-300">
+                      <Share2 className="w-3.5 h-3.5 text-emerald-400" />
+                      Social Media Card Preview
+                    </span>
+                    <span className="text-[10px] text-zinc-500">X / iMessage / Discord</span>
+                  </div>
+
+                  <div className="pt-2 rounded-xl overflow-hidden border border-white/10 bg-zinc-900/80">
+                    {data.settings.ogImageUrl ? (
+                      <div className="h-32 w-full bg-zinc-950 relative overflow-hidden">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={data.settings.ogImageUrl}
+                          alt="Social preview"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div className="h-32 w-full bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950 p-3.5 flex flex-col justify-between border-b border-white/5 relative">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono text-white">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                            {data.settings.siteName || 'sv7.dev'}
+                          </div>
+                          <span className="text-[9px] font-mono text-emerald-400 uppercase tracking-wider">
+                            HKUST Astrix
+                          </span>
+                        </div>
+
+                        <div>
+                          <div className="text-sm font-bold text-white tracking-tight">
+                            {data.profile?.name || 'Shreyaan Vashishtha'}
+                          </div>
+                          <div className="text-[11px] text-sky-400 font-medium line-clamp-1">
+                            {data.profile?.title || 'Mechanical & Aerospace Engineering'}
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-1.5">
+                          {['Descent Control', 'SolidWorks CAD', 'Python'].map((pill) => (
+                            <span
+                              key={pill}
+                              className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[9px] text-zinc-300"
+                            >
+                              {pill}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="p-2.5 bg-zinc-900 space-y-0.5">
+                      <div className="text-[10px] font-mono text-zinc-400 uppercase tracking-wider">
+                        {(data.settings.canonicalUrl || 'https://sv7.dev').replace(/^https?:\/\//, '')}
+                      </div>
+                      <div className="text-xs font-semibold text-white line-clamp-1">
+                        {data.settings.metaTitle || 'sv7.dev'}
+                      </div>
+                      <div className="text-[11px] text-zinc-400 line-clamp-1">
+                        {data.settings.metaDescription || ''}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* INPUT FIELDS */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">
+                    Site Brand Name
+                  </label>
+                  <input
+                    type="text"
+                    value={data.settings.siteName}
+                    onChange={(e) =>
+                      setData({
+                        ...data,
+                        settings: { ...data.settings, siteName: e.target.value },
+                      })
+                    }
+                    className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-sm text-white"
+                    placeholder="sv7.dev"
+                  />
+                  <span className="text-[11px] text-zinc-500 mt-0.5 block">
+                    Displays in title template and Knowledge Graph
+                  </span>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">
+                    Canonical Base URL
+                  </label>
+                  <input
+                    type="text"
+                    value={data.settings.canonicalUrl || ''}
+                    onChange={(e) =>
+                      setData({
+                        ...data,
+                        settings: { ...data.settings, canonicalUrl: e.target.value },
+                      })
+                    }
+                    className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-sm text-white font-mono"
+                    placeholder="https://sv7.dev"
+                  />
+                  <span className="text-[11px] text-zinc-500 mt-0.5 block">
+                    Used for sitemap.xml, robots.txt, and canonical tags
+                  </span>
+                </div>
               </div>
 
               <div>
-                <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">SEO Title Tag</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-mono text-zinc-400 uppercase">
+                    SEO Title Tag
+                  </label>
+                  <span
+                    className={`text-[10px] font-mono ${
+                      (data.settings.metaTitle || '').length > 60
+                        ? 'text-amber-400'
+                        : 'text-zinc-500'
+                    }`}
+                  >
+                    {(data.settings.metaTitle || '').length} / 60 chars (ideal: 50-60)
+                  </span>
+                </div>
                 <input
                   type="text"
                   value={data.settings.metaTitle}
@@ -3301,7 +3462,20 @@ export default function AdminPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">SEO Meta Description</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-mono text-zinc-400 uppercase">
+                    SEO Meta Description
+                  </label>
+                  <span
+                    className={`text-[10px] font-mono ${
+                      (data.settings.metaDescription || '').length > 160
+                        ? 'text-amber-400'
+                        : 'text-zinc-500'
+                    }`}
+                  >
+                    {(data.settings.metaDescription || '').length} / 160 chars (ideal: 140-160)
+                  </span>
+                </div>
                 <textarea
                   rows={2}
                   value={data.settings.metaDescription}
@@ -3315,19 +3489,132 @@ export default function AdminPage() {
                 />
               </div>
 
+              {/* KEYWORDS MANAGER */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-mono text-zinc-400 uppercase">
+                    Search Engine Keywords &amp; Topics
+                  </label>
+                  <span className="text-[10px] font-mono text-zinc-500">
+                    {(data.settings.keywords || []).length} keywords
+                  </span>
+                </div>
+
+                <div className="flex flex-wrap gap-1.5 p-2.5 rounded-xl bg-zinc-950 border border-white/10 min-h-[48px] items-center">
+                  {(data.settings.keywords || []).map((keyword, idx) => (
+                    <span
+                      key={idx}
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-800 text-xs text-zinc-200 border border-white/10 font-sans"
+                    >
+                      <span>{keyword}</span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updated = (data.settings.keywords || []).filter((_, i) => i !== idx);
+                          setData({
+                            ...data,
+                            settings: { ...data.settings, keywords: updated },
+                          });
+                        }}
+                        className="text-zinc-400 hover:text-rose-400 text-sm leading-none"
+                        title="Remove keyword"
+                      >
+                        &times;
+                      </button>
+                    </span>
+                  ))}
+
+                  <input
+                    type="text"
+                    placeholder="Add keyword (press Enter or comma)..."
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ',') {
+                        e.preventDefault();
+                        const val = e.currentTarget.value.trim().replace(/,/g, '');
+                        if (val && !(data.settings.keywords || []).includes(val)) {
+                          setData({
+                            ...data,
+                            settings: {
+                              ...data.settings,
+                              keywords: [...(data.settings.keywords || []), val],
+                            },
+                          });
+                          e.currentTarget.value = '';
+                        }
+                      }
+                    }}
+                    className="flex-1 min-w-[200px] bg-transparent text-xs text-white placeholder-zinc-500 outline-none px-2 py-1"
+                  />
+                </div>
+                <p className="text-[11px] text-zinc-500">
+                  Keywords are embedded into HTML meta tags and Schema.org metadata for search indexing.
+                </p>
+              </div>
+
+              {/* TWITTER HANDLE & SOCIAL IMAGE OVERRIDE */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">
+                    Twitter / X Creator Handle
+                  </label>
+                  <input
+                    type="text"
+                    value={data.settings.twitterHandle || ''}
+                    onChange={(e) =>
+                      setData({
+                        ...data,
+                        settings: { ...data.settings, twitterHandle: e.target.value },
+                      })
+                    }
+                    className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-sm text-white font-mono"
+                    placeholder="@shreyaanv"
+                  />
+                  <span className="text-[11px] text-zinc-500 mt-0.5 block">
+                    Used for twitter:creator and twitter:site cards
+                  </span>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">
+                    Resume / CV File Path
+                  </label>
+                  <input
+                    type="text"
+                    value={data.settings.cvUrl || ''}
+                    onChange={(e) =>
+                      setData({
+                        ...data,
+                        settings: { ...data.settings, cvUrl: e.target.value },
+                      })
+                    }
+                    className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-sm text-white font-mono"
+                    placeholder="/CV-Shreyaan-Vashishtha.pdf"
+                  />
+                  <span className="text-[11px] text-zinc-500 mt-0.5 block">
+                    Target link for the Header &amp; Hero CV buttons
+                  </span>
+                </div>
+              </div>
+
               <div>
-                <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">Resume / CV File Path</label>
+                <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">
+                  Custom Social Sharing Image URL (Optional Override)
+                </label>
                 <input
                   type="text"
-                  value={data.settings.cvUrl || ''}
+                  value={data.settings.ogImageUrl || ''}
                   onChange={(e) =>
                     setData({
                       ...data,
-                      settings: { ...data.settings, cvUrl: e.target.value },
+                      settings: { ...data.settings, ogImageUrl: e.target.value },
                     })
                   }
                   className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-sm text-white font-mono"
+                  placeholder="https://... (leave empty to use dynamic Next.js card)"
                 />
+                <span className="text-[11px] text-zinc-500 mt-0.5 block">
+                  Leave blank to automatically use the high-resolution dynamic dark-mode card generated by <code className="text-zinc-300">/opengraph-image</code>.
+                </span>
               </div>
 
               <div className="pt-4 border-t border-white/10 space-y-3">

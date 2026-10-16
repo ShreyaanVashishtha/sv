@@ -176,6 +176,10 @@ export interface SiteSettings {
   siteName: string;
   metaTitle: string;
   metaDescription: string;
+  keywords?: string[];
+  ogImageUrl?: string;
+  twitterHandle?: string;
+  canonicalUrl?: string;
   adminPassword?: string;
   adminPasskey?: string;
   biometricCredentialIds?: string[];

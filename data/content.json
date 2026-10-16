@@ -40,7 +40,7 @@
     },
     {
       "name": "GitHub",
-      "url": "https://github.com",
+      "url": "https://github.com/ShreyaanVashishtha",
       "icon": "github"
     }
   ],
@@ -60,7 +60,7 @@
         "HKUST"
       ],
       "demoUrl": "https://www.linkedin.com/in/shreyaanv/",
-      "githubUrl": "https://github.com",
+      "githubUrl": "https://github.com/ShreyaanVashishtha",
       "imageUrl": "https://images.unsplash.com/photo-1517976487502-5f657a8bf606?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -77,7 +77,7 @@
         "Mechanical Design"
       ],
       "demoUrl": "https://www.linkedin.com/in/shreyaanv/",
-      "githubUrl": "https://github.com",
+      "githubUrl": "https://github.com/ShreyaanVashishtha",
       "imageUrl": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop&q=80"
     }
   ],
@@ -271,6 +271,22 @@
     "siteName": "sv7.dev",
     "metaTitle": "Shreyaan Vashishtha — Mechanical & Aerospace Engineering | sv7.dev",
     "metaDescription": "Official portfolio of Shreyaan Vashishtha. Mechanical & Aerospace Engineering at HKUST, Astrix Rocketry, mechanism design, and scientific computing.",
+    "canonicalUrl": "https://sv7.dev",
+    "twitterHandle": "@shreyaanv",
+    "ogImageUrl": "",
+    "keywords": [
+      "Shreyaan Vashishtha",
+      "Mechanical Engineering",
+      "Aerospace Engineering",
+      "HKUST",
+      "Astrix Rocketry",
+      "Aerodynamics and Descent Control",
+      "SolidWorks CAD",
+      "Autodesk Fusion 360",
+      "Computational Python",
+      "Hong Kong Engineer",
+      "sv7.dev"
+    ],
     "adminPassword": "sv7-passkey-2026",
     "accentColor": "#ffffff",
     "cvUrl": "/CV-Shreyaan-Vashishtha.pdf",

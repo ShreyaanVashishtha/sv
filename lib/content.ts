@@ -17,6 +17,23 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   siteName: 'sv7.dev',
   metaTitle: 'Shreyaan Vashishtha — Mechanical & Aerospace Engineering | sv7.dev',
   metaDescription: 'Official portfolio of Shreyaan Vashishtha. Mechanical & Aerospace Engineering at HKUST, Astrix Rocketry, mechanism design, and scientific computing.',
+  keywords: [
+    'Shreyaan Vashishtha',
+    'Mechanical Engineering',
+    'Aerospace Engineering',
+    'HKUST',
+    'Astrix Rocketry',
+    'Aerodynamics and Descent Control',
+    'SolidWorks CAD',
+    'Autodesk Fusion 360',
+    'IB Physics Tutor',
+    'IB Mathematics AA HL',
+    'Numerical Python',
+    'Hong Kong Engineer',
+  ],
+  ogImageUrl: '',
+  twitterHandle: '@shreyaanv',
+  canonicalUrl: 'https://sv7.dev',
   adminPasskey: DEFAULT_PASSKEY,
   adminPassword: DEFAULT_PASSKEY,
   biometricCredentialIds: [],
@@ -195,6 +212,12 @@ function mergeWithDefaults(parsed: any): WebsiteData {
       biometricCredentialIds: Array.isArray(parsed?.settings?.biometricCredentialIds)
         ? parsed.settings.biometricCredentialIds
         : [],
+      keywords: Array.isArray(parsed?.settings?.keywords)
+        ? parsed.settings.keywords
+        : DEFAULT_SETTINGS.keywords,
+      ogImageUrl: parsed?.settings?.ogImageUrl ?? DEFAULT_SETTINGS.ogImageUrl,
+      twitterHandle: parsed?.settings?.twitterHandle ?? DEFAULT_SETTINGS.twitterHandle,
+      canonicalUrl: parsed?.settings?.canonicalUrl ?? DEFAULT_SETTINGS.canonicalUrl,
       sectionVisibility: {
         ...DEFAULT_SETTINGS.sectionVisibility,
         ...(parsed?.settings?.sectionVisibility || {}),
