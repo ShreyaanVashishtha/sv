@@ -81,9 +81,31 @@ export async function generateMetadata(): Promise<Metadata> {
           'max-snippet': -1,
         },
       },
-      icons: {
-        icon: '/favicon.ico',
-      },
+      icons: data.settings?.faviconUrl?.trim()
+        ? {
+            icon: [
+              { url: data.settings.faviconUrl.trim() },
+              { url: '/icon.svg', type: 'image/svg+xml' },
+              { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+              { url: '/favicon.ico' },
+            ],
+            apple: [
+              { url: data.settings.faviconUrl.trim() },
+              { url: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
+            ],
+            shortcut: [data.settings.faviconUrl.trim()],
+          }
+        : {
+            icon: [
+              { url: '/icon.svg', type: 'image/svg+xml' },
+              { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+              { url: '/favicon.ico' },
+            ],
+            apple: [
+              { url: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
+            ],
+            shortcut: ['/favicon.ico'],
+          },
     };
   } catch (e) {
     return {
@@ -140,10 +162,30 @@ export default async function RootLayout({
     // ignore
   }
 
+  let customFavicon = '';
+  try {
+    const data = await getContent();
+    customFavicon = data.settings?.faviconUrl?.trim() || '';
+  } catch (e) {
+    // ignore
+  }
+
   return (
     <html lang="en" className="dark scroll-smooth">
       <head>
         <BotIdClient protect={botIdProtectedRoutes} />
+        {customFavicon ? (
+          <>
+            <link rel="icon" href={customFavicon} />
+            <link rel="apple-touch-icon" href={customFavicon} />
+          </>
+        ) : (
+          <>
+            <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+            <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png" />
+            <link rel="apple-touch-icon" href="/apple-icon.png" />
+          </>
+        )}
         {jsonLd && (
           <script
             type="application/ld+json"

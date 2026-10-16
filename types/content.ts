@@ -178,6 +178,7 @@ export interface SiteSettings {
   metaDescription: string;
   keywords?: string[];
   ogImageUrl?: string;
+  faviconUrl?: string;
   twitterHandle?: string;
   canonicalUrl?: string;
   adminPassword?: string;

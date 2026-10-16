@@ -406,7 +406,8 @@
       "accentColor": "white",
       "glowIntensity": "subtle"
     },
-    "adminPasskey": "sv7-passkey-2026"
+    "adminPasskey": "sv7-passkey-2026",
+    "faviconUrl": ""
   },
   "photographySettings": {
     "title": "Visual Archive & Photography",

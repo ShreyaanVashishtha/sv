@@ -32,6 +32,7 @@ export const DEFAULT_SETTINGS: SiteSettings = {
     'Hong Kong Engineer',
   ],
   ogImageUrl: '',
+  faviconUrl: '',
   twitterHandle: '@shreyaanv',
   canonicalUrl: 'https://sv7.dev',
   adminPasskey: DEFAULT_PASSKEY,
@@ -230,6 +231,7 @@ function mergeWithDefaults(parsed: any): WebsiteData {
         ? parsed.settings.keywords
         : DEFAULT_SETTINGS.keywords,
       ogImageUrl: parsed?.settings?.ogImageUrl ?? DEFAULT_SETTINGS.ogImageUrl,
+      faviconUrl: parsed?.settings?.faviconUrl ?? DEFAULT_SETTINGS.faviconUrl,
       twitterHandle: parsed?.settings?.twitterHandle ?? DEFAULT_SETTINGS.twitterHandle,
       canonicalUrl: parsed?.settings?.canonicalUrl ?? DEFAULT_SETTINGS.canonicalUrl,
       sectionVisibility: {
