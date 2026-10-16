@@ -1,14 +1,40 @@
 import type { Metadata } from 'next';
 import { getContent } from '@/lib/content';
+import { fetchPexelsCollectionPhotos, extractCollectionId } from '@/lib/pexels';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { PhotographyGallery } from '@/components/PhotographyGallery';
 
 export const runtime = 'nodejs';
 
+async function getPhotosWithLiveFallback(data: any) {
+  let photos = data.photos || [];
+  if (photos.length === 0) {
+    const apiKey =
+      process.env.PEXELS_API_KEY ||
+      data.photographySettings?.pexelsApiKey ||
+      '';
+    const collectionId = extractCollectionId(
+      data.photographySettings?.pexelsCollectionId || 'portfolio-je8myyb'
+    );
+    if (apiKey) {
+      try {
+        const livePhotos = await fetchPexelsCollectionPhotos(apiKey, collectionId);
+        if (livePhotos && livePhotos.length > 0) {
+          photos = livePhotos;
+        }
+      } catch (err) {
+        console.warn('Auto-fetch Pexels collection failed:', err);
+      }
+    }
+  }
+  return photos;
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   try {
     const data = await getContent();
+    const photos = await getPhotosWithLiveFallback(data);
     const siteName = data.settings?.siteName || 'sv7.dev';
     const canonicalBase = (data.settings?.canonicalUrl || 'https://sv7.dev').replace(/\/$/, '');
     const title = `${data.photographySettings?.title || 'Visual Archive & Photography'} — ${data.profile?.name || 'Shreyaan Vashishtha'} | ${siteName}`;
@@ -16,7 +42,7 @@ export async function generateMetadata(): Promise<Metadata> {
       data.photographySettings?.subtitle ||
       'Curated visual archive featuring aerospace perspectives, structural geometry, urban nocturnes, and Pexels photography by Shreyaan Vashishtha.';
 
-    const featuredPhoto = data.photos?.find((p) => p.featured) || data.photos?.[0];
+    const featuredPhoto = photos.find((p: any) => p.featured) || photos[0];
     const ogImage = featuredPhoto?.src?.large2x || featuredPhoto?.src?.large || '/opengraph-image';
 
     return {
@@ -57,6 +83,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function PhotographyPage() {
   const data = await getContent();
+  const photos = await getPhotosWithLiveFallback(data);
 
   return (
     <div className="min-h-screen bg-zinc-950 text-foreground selection:bg-white selection:text-black">
@@ -69,7 +96,7 @@ export default async function PhotographyPage() {
 
       <main>
         <PhotographyGallery
-          photos={data.photos || []}
+          photos={photos}
           settings={data.photographySettings}
           profile={data.profile}
           socials={data.socials}

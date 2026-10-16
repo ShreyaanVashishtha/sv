@@ -276,10 +276,10 @@ export function PhotographyGallery({
               <Camera className="w-6 h-6" />
             </div>
             <h3 className="text-base sm:text-lg font-bold text-white tracking-tight">
-              Ready to Sync Your Pexels Collection
+              Collection Linked: <span className="font-mono text-emerald-400">portfolio-je8myyb</span>
             </h3>
             <p className="text-xs text-zinc-400 leading-relaxed">
-              Your profile (<code className="text-emerald-400 font-mono">@shreyaan</code>) is linked. Go to the Admin Studio to paste your Pexels Collection link or enter your API key to pull your personal photographs.
+              Your Pexels collection is linked! Because Pexels protects collection endpoints with API authentication, you just need to provide your free Pexels API key (in Vercel or in the Admin Studio) to pull your 27 photographs.
             </p>
             <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
               <Link
@@ -290,13 +290,21 @@ export function PhotographyGallery({
                 <ExternalLink className="w-3.5 h-3.5" />
               </Link>
               <a
-                href={pexelsUrl}
+                href="https://www.pexels.com/collections/portfolio-je8myyb/"
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-zinc-900 border border-white/10 text-xs text-zinc-300 hover:text-white hover:bg-zinc-800 transition-all"
               >
-                <span>View Pexels Profile</span>
+                <span>View Collection on Pexels</span>
                 <ExternalLink className="w-3 h-3 text-emerald-400" />
+              </a>
+              <a
+                href="https://www.pexels.com/api/new"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-zinc-900/60 border border-white/10 text-xs text-zinc-400 hover:text-white transition-all"
+              >
+                <span>Get Free API Key ↗</span>
               </a>
             </div>
           </div>

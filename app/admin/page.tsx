@@ -3259,7 +3259,7 @@ export default function AdminPage() {
                       className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs transition-all disabled:opacity-50 shadow-sm"
                     >
                       <RefreshCw className={`w-3.5 h-3.5 ${syncingPexels ? 'animate-spin' : ''}`} />
-                      <span>{syncingPexels ? 'Pulling from Pexels...' : 'Pull & Sync Photos from Pexels Now'}</span>
+                      <span>{syncingPexels ? 'Pulling from Pexels Collection...' : 'Pull & Sync Collection (portfolio-je8myyb)'}</span>
                     </button>
 
                     {pexelsSyncStatus && (

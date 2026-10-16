@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getContent, saveContent } from '@/lib/content';
 import { PhotoItem } from '@/types/content';
+import { extractCollectionId, mapPexelsPhotoToItem, categorizePexelsPhoto } from '@/lib/pexels';
 
 export const runtime = 'nodejs';
 
@@ -10,14 +11,6 @@ function extractPexelsUsername(urlOrHandle: string): string {
   const match = trimmed.match(/pexels\.com\/@([a-zA-Z0-9_-]+)/i);
   if (match) return match[1];
   return trimmed.replace(/^@/, '');
-}
-
-function extractCollectionId(urlOrId: string): string {
-  if (!urlOrId) return '';
-  const trimmed = urlOrId.trim().replace(/\/$/, '');
-  const lastSegment = trimmed.split('/').pop() || '';
-  const parts = lastSegment.split('-');
-  return parts[parts.length - 1];
 }
 
 export async function POST(req: NextRequest) {
@@ -45,9 +38,9 @@ export async function POST(req: NextRequest) {
     const rawCollectionInput =
       body.pexelsCollectionId ||
       currentData.photographySettings?.pexelsCollectionId ||
-      '';
+      'portfolio-je8myyb';
 
-    const cleanCollectionId = extractCollectionId(rawCollectionInput);
+    const cleanCollectionId = extractCollectionId(rawCollectionInput) || 'je8myyb';
 
     let fetchedPhotos: PhotoItem[] = [];
 
@@ -281,75 +274,3 @@ export async function POST(req: NextRequest) {
   }
 }
 
-function mapPexelsPhotoToItem(p: any): PhotoItem {
-  return {
-    id: String(p.id),
-    title: p.alt || (p.id ? `Pexels Photograph #${p.id}` : 'Photograph'),
-    description: p.alt || '',
-    category: categorizePexelsPhoto(p.alt || ''),
-    src: {
-      original: p.src?.original || '',
-      large2x: p.src?.large2x || p.src?.large || p.src?.original || '',
-      large: p.src?.large || p.src?.original || '',
-      medium: p.src?.medium || p.src?.large || '',
-      small: p.src?.small || p.src?.medium || '',
-      portrait: p.src?.portrait,
-      landscape: p.src?.landscape,
-      tiny: p.src?.tiny,
-    },
-    width: p.width || 4000,
-    height: p.height || 3000,
-    url: p.url || `https://www.pexels.com/photo/${p.id}/`,
-    photographer: p.photographer || 'Shreyaan Vashishtha',
-    photographerUrl: p.photographer_url || '',
-    avgColor: p.avg_color,
-    alt: p.alt,
-    camera: 'Sony Alpha',
-    lens: 'FE 24-70mm f/2.8',
-    aperture: 'f/2.8',
-    shutterSpeed: '1/500s',
-    iso: '100',
-    featured: false,
-  };
-}
-
-function categorizePexelsPhoto(altText: string): string {
-  const text = (altText || '').toLowerCase();
-  if (
-    text.includes('rocket') ||
-    text.includes('airplane') ||
-    text.includes('plane') ||
-    text.includes('jet') ||
-    text.includes('aviation') ||
-    text.includes('flight') ||
-    text.includes('sky') ||
-    text.includes('space') ||
-    text.includes('star') ||
-    text.includes('astronomy')
-  ) {
-    return 'Aerospace & Aviation';
-  }
-  if (
-    text.includes('building') ||
-    text.includes('architecture') ||
-    text.includes('bridge') ||
-    text.includes('tower') ||
-    text.includes('concrete') ||
-    text.includes('structure') ||
-    text.includes('window')
-  ) {
-    return 'Architecture & Geometry';
-  }
-  if (
-    text.includes('city') ||
-    text.includes('street') ||
-    text.includes('night') ||
-    text.includes('light') ||
-    text.includes('traffic') ||
-    text.includes('urban') ||
-    text.includes('hong kong')
-  ) {
-    return 'Urban & Nocturne';
-  }
-  return 'Nature & Textures';
-}
