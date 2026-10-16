@@ -1,0 +1,313 @@
+{
+  "profile": {
+    "name": "Shreyaan Vashishtha",
+    "handle": "",
+    "title": "Mechanical & Aerospace Engineering @ HKUST | Astrix Rocketry Team",
+    "tagline": "Mechanical and Aerospace Engineering undergraduate at HKUST. Junior Engineer in the Astrix Rocketry Team specializing in Aerodynamics & Descent Control, mechanism design, and computational engineering.",
+    "avatar": "https://images.unsplash.com/photo-1517976487502-5f657a8bf606?w=600&auto=format&fit=crop&q=80",
+    "status": {
+      "available": true,
+      "text": "B.Eng Student at HKUST & Engineering with Astrix Rocketry"
+    },
+    "location": "Hong Kong",
+    "email": "contact@sv7.dev",
+    "bio": [
+      "I'm an undergraduate student in the Department of Mechanical and Aerospace Engineering at The Hong Kong University of Science and Technology (HKUST).",
+      "Currently, I contribute as a Junior Engineer in the Astrix Rocketry Team (Aerodynamic & Descent Control), involved in mechanism design, flight recovery systems, and aerodynamic testing.",
+      "Beyond rocketry, I have an extensive background in STEM mentorship (1-on-1 tutoring for IB Physics, Economics, and Mathematics AA HL), numerical simulation using Python, and precision 3D CAD modeling with SolidWorks and Fusion 360."
+    ],
+    "metrics": [
+      {
+        "label": "Astrix Flight Team",
+        "value": "Aero & Descent"
+      },
+      {
+        "label": "Undergraduate",
+        "value": "HKUST B.Eng"
+      }
+    ]
+  },
+  "socials": [
+    {
+      "name": "LinkedIn",
+      "url": "https://www.linkedin.com/in/shreyaanv/",
+      "icon": "linkedin"
+    },
+    {
+      "name": "Direct Dispatch",
+      "url": "#contact",
+      "icon": "mail"
+    },
+    {
+      "name": "GitHub",
+      "url": "https://github.com",
+      "icon": "github"
+    }
+  ],
+  "projects": [
+    {
+      "id": "proj-1",
+      "title": "Astrix Rocket Aerodynamics & Descent Recovery",
+      "category": "Aerospace & Systems",
+      "description": "Mechanism design, aerodynamic load analysis, and control considerations for rocket recovery and descent systems in the HKUST Astrix team.",
+      "longDescription": "Focused on mechanism design, deployment dynamics, and control considerations for high-altitude recovery and aerodynamic stability under flight conditions.",
+      "featured": true,
+      "tags": [
+        "Aerospace",
+        "SolidWorks",
+        "Descent Control",
+        "Rocketry",
+        "HKUST"
+      ],
+      "demoUrl": "https://www.linkedin.com/in/shreyaanv/",
+      "githubUrl": "https://github.com",
+      "imageUrl": "https://images.unsplash.com/photo-1517976487502-5f657a8bf606?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": "proj-3",
+      "title": "High-Tolerance CAD Mechanical Assemblies",
+      "category": "CAD & Design",
+      "description": "Parametric mechanical assemblies and stress-optimized mounting brackets engineered in SolidWorks and Autodesk Fusion 360.",
+      "longDescription": "Engineered multi-body assemblies with GD&T tolerances, rapid prototyping via FDM/SLA 3D printing, and structural stress validation.",
+      "featured": true,
+      "tags": [
+        "SolidWorks",
+        "Fusion 360",
+        "CAD Modeling",
+        "Mechanical Design"
+      ],
+      "demoUrl": "https://www.linkedin.com/in/shreyaanv/",
+      "githubUrl": "https://github.com",
+      "imageUrl": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop&q=80"
+    }
+  ],
+  "skills": [
+    {
+      "category": "Engineering & CAD",
+      "items": [
+        {
+          "name": "SolidWorks",
+          "level": "Advanced CAD"
+        },
+        {
+          "name": "Fusion 360",
+          "level": "Parametric 3D"
+        },
+        {
+          "name": "Mechanism Design",
+          "level": "Specialized"
+        },
+        {
+          "name": "Aerodynamic Testing",
+          "level": "Applied"
+        },
+        {
+          "name": "Descent & Recovery",
+          "level": "Rocketry"
+        }
+      ]
+    },
+    {
+      "category": "Programming & Computing",
+      "items": [
+        {
+          "name": "Python",
+          "level": "Proficient"
+        },
+        {
+          "name": "Numerical Computing",
+          "level": "Applied"
+        },
+        {
+          "name": "Algorithm Design",
+          "level": "Proficient"
+        },
+        {
+          "name": "Git & Version Control",
+          "level": "Proficient"
+        },
+        {
+          "name": "GUI Development",
+          "level": "Practical"
+        }
+      ]
+    },
+    {
+      "category": "Analytical Sciences",
+      "items": [
+        {
+          "name": "Classical Mechanics & Physics",
+          "level": "IB HL Grade 7"
+        },
+        {
+          "name": "Mathematics: Analysis & Approaches",
+          "level": "IB HL Grade 6"
+        },
+        {
+          "name": "Quantitative Economics",
+          "level": "IB HL Grade 6"
+        },
+        {
+          "name": "Flight Dynamics",
+          "level": "Applied"
+        }
+      ]
+    },
+    {
+      "category": "Core Competencies",
+      "items": [
+        {
+          "name": "STEM Tutoring & Mentorship",
+          "level": "Experienced"
+        },
+        {
+          "name": "Technical Problem-Solving",
+          "level": "Core"
+        },
+        {
+          "name": "Cross-Functional Collaboration",
+          "level": "Astrix Team"
+        },
+        {
+          "name": "Communication & Leadership",
+          "level": "Core"
+        }
+      ]
+    }
+  ],
+  "experience": [
+    {
+      "id": "exp-1",
+      "role": "Junior Engineer (Aerodynamic & Descent Control)",
+      "company": "Astrix | The Hong Kong University of Science and Technology",
+      "period": "Sep 2025 — Present",
+      "description": "Contributing to the Aerodynamic & Descent Control subsystem for experimental rocketry. Previously a member of the Payload and Descent Control teams, involved in mechanism design, testing, and control considerations for flight and recovery systems.",
+      "highlights": [
+        "Involved in mechanism design and flight recovery system testing for high-altitude rocketry.",
+        "Conducted aerodynamic stability analysis and evaluated descent control dynamics.",
+        "Collaborated across rocketry sub-teams to ensure system redundancy and recovery readiness."
+      ]
+    },
+    {
+      "id": "exp-2",
+      "role": "IB Tutor (Physics, Economics, Maths AA HL/SL)",
+      "company": "Edunade",
+      "period": "Jan 2026 — Present",
+      "description": "Providing personalized 1-on-1 tutoring in IB Physics, Economics, and Mathematics Analysis & Approaches (HL/SL), adapting pedagogical explanations to individual learning styles.",
+      "highlights": [
+        "Designed exam-focused lesson frameworks aligned with IB mark schemes, command terms, and assessment criteria.",
+        "Guided students through complex calculus proofs, Newtonian mechanics, and macroeconomic models."
+      ]
+    },
+    {
+      "id": "exp-3",
+      "role": "Mathematics Mentor (Math Buddies)",
+      "company": "Creative Secondary School",
+      "period": "2023 — 2024",
+      "description": "Mentored junior students in mathematics through the Math Buddies program, offering weekly structured support to improve understanding of key mathematical concepts.",
+      "highlights": [
+        "Mentored junior cohorts to reinforce algebra, geometry, and foundational numeracy.",
+        "Fostered student confidence through personalized diagnostic problem solving."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "id": "edu-1",
+      "degree": "Bachelor of Engineering (B.Eng.) — Mechanical & Aerospace Engineering",
+      "institution": "The Hong Kong University of Science and Technology (HKUST)",
+      "period": "2025 — 2029 (Expected June 2029)",
+      "location": "Hong Kong",
+      "score": "Undergraduate",
+      "highlights": [
+        "Member of the Astrix Rocketry Team (Aerodynamic and Descent Control).",
+        "Focused study in mechanical systems, aerospace dynamics, and computational mechanics."
+      ]
+    },
+    {
+      "id": "edu-2",
+      "degree": "International Baccalaureate (IB) Diploma",
+      "institution": "Creative Secondary School",
+      "period": "Graduated May 2025",
+      "location": "Hong Kong",
+      "score": "",
+      "highlights": [
+        "Physics (HL)",
+        "Mathematics: Analysis & Approaches (HL)",
+        "Economics (HL)",
+        "English A: Language & Literature (SL)",
+        "Theory of Knowledge",
+        "Extended Essay "
+      ]
+    }
+  ],
+  "certifications": [
+    {
+      "id": "cert-1",
+      "title": "IELTS Academic (Overall 8.5 / 9.0)",
+      "issuer": "British Council",
+      "date": "September 2024",
+      "score": "8.5 / 9.0 (C2 Proficient)",
+      "details": "Listening: 9.0 | Reading: 8.5 | Speaking: 8.5 | Writing: 7.0"
+    },
+    {
+      "id": "cert-2",
+      "title": "GCSE Chinese (Mandarin)",
+      "issuer": "Pearson Edexcel",
+      "date": "June 2023",
+      "score": "Grade 7",
+      "details": "Certified Chinese Mandarin proficiency"
+    },
+    {
+      "id": "cert-3",
+      "title": "IB Middle Years Programme (MYP)",
+      "issuer": "International Baccalaureate",
+      "date": "June 2022",
+      "score": "Honors Distinction",
+      "details": "Integrated Sciences: 7, ICT: 7, Physical Education: 7, Mathematics: 6"
+    }
+  ],
+  "settings": {
+    "siteName": "sv7.dev",
+    "metaTitle": "Shreyaan Vashishtha — Mechanical & Aerospace Engineering | sv7.dev",
+    "metaDescription": "Official portfolio of Shreyaan Vashishtha. Mechanical & Aerospace Engineering at HKUST, Astrix Rocketry, mechanism design, and scientific computing.",
+    "adminPassword": "admin",
+    "accentColor": "#ffffff",
+    "cvUrl": "/CV-Shreyaan-Vashishtha.pdf",
+    "contactMessage": "Interested in aerospace engineering, Astrix rocketry, IB tutoring, or technical collaboration? Reach out directly.",
+    "footerNote": "Crafted with precision for sv7.dev. Mechanical & Aerospace Engineering @ HKUST.",
+    "sectionVisibility": {
+      "heroMetrics": true,
+      "projects": true,
+      "skills": true,
+      "experience": true,
+      "education": true,
+      "certifications": true,
+      "terminalCard": false,
+      "contact": true
+    },
+    "sectionOrder": [
+      "heroMetrics",
+      "projects",
+      "skills",
+      "experience",
+      "education",
+      "certifications",
+      "terminalCard",
+      "contact"
+    ],
+    "contact": {
+      "formTitle": "Send a Direct Dispatch",
+      "subjectLabel": "Subject / Topic",
+      "subjectPlaceholder": "e.g. Rocketry Systems, Collaboration, IB Tutoring",
+      "messageLabel": "Your Message",
+      "messagePlaceholder": "Tell me about your project, inquiry, or question...",
+      "submitButtonText": "Send Dispatch",
+      "directTitle": "Direct Channels",
+      "responseDisclaimer": "Typically replies within 24–48 hours.",
+      "copyAddressText": "Copy Address",
+      "hideEmailAddress": true,
+      "publicDisplayEmail": "contact@sv7.dev"
+    }
+  }
+}
