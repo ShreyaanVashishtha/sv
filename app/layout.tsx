@@ -4,7 +4,7 @@ import { getContent } from '@/lib/content';
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
-    const data = getContent();
+    const data = await getContent();
     return {
       title: data.settings?.metaTitle || 'sv7.dev — Engineering & Systems',
       description: data.settings?.metaDescription || 'Official portfolio & systems lab of sv7.dev',

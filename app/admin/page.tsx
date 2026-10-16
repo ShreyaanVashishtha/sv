@@ -50,6 +50,7 @@ import {
   Check,
   Clock,
   Globe,
+  Database,
 } from 'lucide-react';
 
 interface InboxMessage {
@@ -70,6 +71,7 @@ export default function AdminPage() {
   const [data, setData] = useState<WebsiteData | null>(null);
   const [rawJsonText, setRawJsonText] = useState('');
   const [jsonError, setJsonError] = useState('');
+  const [isDatabaseConnected, setIsDatabaseConnected] = useState(false);
   const [messages, setMessages] = useState<InboxMessage[]>([]);
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [selectedMessage, setSelectedMessage] = useState<InboxMessage | null>(null);
@@ -123,6 +125,7 @@ export default function AdminPage() {
       const res = await fetch('/api/content');
       if (res.ok) {
         const json = await res.json();
+        setIsDatabaseConnected(!!json.isDatabaseConnected);
         setData(json);
         setRawJsonText(JSON.stringify(json, null, 2));
       }
@@ -236,7 +239,13 @@ export default function AdminPage() {
 
       const json = await res.json();
       if (res.ok && json.success) {
-        setSaveStatus({ type: 'success', message: 'All changes saved and live!' });
+        setIsDatabaseConnected(!!json.isDatabaseConnected);
+        setSaveStatus({
+          type: 'success',
+          message: json.isDatabaseConnected
+            ? 'Saved to Cloud Database (Instantly Live Globally)!'
+            : 'All changes saved and live!',
+        });
         setRawJsonText(JSON.stringify(payload, null, 2));
         setTimeout(() => setSaveStatus({ type: '', message: '' }), 4000);
       } else {
@@ -501,6 +510,17 @@ export default function AdminPage() {
               <span className="text-[10px] font-mono text-zinc-400 bg-zinc-800 px-2 py-0.5 rounded-full">
                 Full CMS
               </span>
+              {isDatabaseConnected ? (
+                <span className="flex items-center gap-1.5 text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                  Cloud DB Active
+                </span>
+              ) : (
+                <span className="flex items-center gap-1 text-[10px] font-mono text-zinc-400 bg-zinc-900 border border-white/5 px-2 py-0.5 rounded-full">
+                  <Database className="w-2.5 h-2.5 text-zinc-500" />
+                  File Storage
+                </span>
+              )}
             </h1>
           </div>
         </div>
@@ -3017,10 +3037,15 @@ export default function AdminPage() {
                 />
               </div>
 
-              <div className="pt-4 border-t border-white/10">
-                <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">
-                  Change Master Admin Password
-                </label>
+              <div className="pt-4 border-t border-white/10 space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-mono text-zinc-400 uppercase">
+                    Change Master Admin Password
+                  </label>
+                  <span className="text-[10px] font-mono text-zinc-500">
+                    Active: {data.settings.adminPassword ? 'Configured' : 'admin'}
+                  </span>
+                </div>
                 <input
                   type="text"
                   value={data.settings.adminPassword || ''}
@@ -3030,9 +3055,53 @@ export default function AdminPage() {
                       settings: { ...data.settings, adminPassword: e.target.value },
                     })
                   }
-                  placeholder="Enter new master password"
+                  placeholder="Enter new master password..."
                   className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-sm text-white font-mono"
                 />
+                <p className="text-[11px] text-zinc-400 leading-relaxed">
+                  Enter your desired password and click <strong>Save All Changes</strong>. You can also permanently secure it by adding an <code className="text-zinc-200 bg-zinc-900 px-1.5 py-0.5 rounded border border-white/10">ADMIN_PASSWORD</code> environment variable in your Vercel Project Settings.
+                </p>
+              </div>
+
+              {/* CLOUD DATABASE INTEGRATION CARD */}
+              <div className="pt-6 border-t border-white/10 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Database className="w-4 h-4 text-emerald-400" />
+                    <h3 className="text-sm font-bold text-white">Instant Cloud Database (Free Vercel KV)</h3>
+                  </div>
+                  {isDatabaseConnected ? (
+                    <span className="flex items-center gap-1.5 text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full font-bold">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                      Connected &amp; Live
+                    </span>
+                  ) : (
+                    <span className="text-[10px] font-mono text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2.5 py-0.5 rounded-full">
+                      Not Connected (Using Local File)
+                    </span>
+                  )}
+                </div>
+
+                <div className="p-4 rounded-2xl bg-zinc-950 border border-white/10 space-y-3">
+                  <p className="text-xs text-zinc-300 leading-relaxed">
+                    Connect a free cloud database to make your website <strong>100% editable from anywhere with instant global updates</strong> (no git commits required).
+                  </p>
+
+                  <div className="p-3.5 rounded-xl bg-zinc-900/60 border border-white/5 space-y-2">
+                    <span className="text-[11px] font-mono text-zinc-400 uppercase font-bold block">
+                      Quick 1-Click Setup in Vercel:
+                    </span>
+                    <ol className="text-xs text-zinc-400 space-y-1.5 list-decimal list-inside leading-relaxed">
+                      <li>Go to your <strong>Vercel Dashboard</strong> and click your <strong>sv7</strong> project.</li>
+                      <li>Click the <strong>Storage</strong> tab at the top &rarr; click <strong>Create Database</strong>.</li>
+                      <li>Select <strong>KV</strong> (free tier: 30,000 commands/day).</li>
+                      <li>Click <strong>Create</strong>, then click <strong>Connect to Project</strong>.</li>
+                    </ol>
+                    <p className="text-[11px] text-emerald-400/90 pt-1">
+                      That&apos;s it! Vercel automatically links the credentials. Edits in this panel will be live to every visitor within 10 milliseconds.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           )}

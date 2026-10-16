@@ -9,14 +9,15 @@ export function createSessionToken(password: string): string {
   return Buffer.from(`${password}:${secret}:${new Date().toDateString()}`).toString('base64');
 }
 
-export function verifySession(): boolean {
+export async function verifySession(): Promise<boolean> {
   try {
     const cookieStore = cookies();
     const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
     if (!token) return false;
 
-    const content = getContent();
-    const expectedToken = createSessionToken(content.settings.adminPassword);
+    const content = await getContent();
+    const expectedPassword = process.env.ADMIN_PASSWORD || content.settings.adminPassword;
+    const expectedToken = createSessionToken(expectedPassword);
     return token === expectedToken;
   } catch (error) {
     return false;

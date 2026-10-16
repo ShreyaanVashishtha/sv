@@ -1,8 +1,15 @@
 import fs from 'fs';
 import path from 'path';
 import { WebsiteData, SiteSettings } from '@/types/content';
+import { redis } from '@/lib/redis';
 
 const DATA_FILE_PATH = path.join(process.cwd(), 'data', 'content.json');
+const TMP_FILE_PATH = path.join('/tmp', 'sv7_content.json');
+const REDIS_CONTENT_KEY = 'sv7_website_content';
+
+declare global {
+  var __sv7_content_cache: WebsiteData | undefined;
+}
 
 export const DEFAULT_SETTINGS: SiteSettings = {
   siteName: 'sv7.dev',
@@ -146,74 +153,155 @@ const DEFAULT_CONTENT: WebsiteData = {
   settings: DEFAULT_SETTINGS,
 };
 
-export function getContent(): WebsiteData {
-  try {
-    if (!fs.existsSync(DATA_FILE_PATH)) {
-      return DEFAULT_CONTENT;
-    }
-    const fileContents = fs.readFileSync(DATA_FILE_PATH, 'utf-8');
-    if (!fileContents.trim()) {
-      return DEFAULT_CONTENT;
-    }
-    const parsed = JSON.parse(fileContents);
-    return {
-      ...DEFAULT_CONTENT,
-      ...parsed,
-      settings: {
-        ...DEFAULT_SETTINGS,
-        ...(parsed.settings || {}),
-        sectionVisibility: {
-          ...DEFAULT_SETTINGS.sectionVisibility,
-          ...(parsed.settings?.sectionVisibility || {}),
-        },
-        header: {
-          ...DEFAULT_SETTINGS.header,
-          ...(parsed.settings?.header || {}),
-        },
-        hero: {
-          ...DEFAULT_SETTINGS.hero,
-          ...(parsed.settings?.hero || {}),
-        },
-        headings: {
-          ...DEFAULT_SETTINGS.headings,
-          ...(parsed.settings?.headings || {}),
-        },
-        terminal: {
-          ...DEFAULT_SETTINGS.terminal,
-          ...(parsed.settings?.terminal || {}),
-        },
-        contact: {
-          ...DEFAULT_SETTINGS.contact,
-          ...(parsed.settings?.contact || {}),
-        },
-        footer: {
-          ...DEFAULT_SETTINGS.footer,
-          ...(parsed.settings?.footer || {}),
-        },
-        theme: {
-          ...DEFAULT_SETTINGS.theme,
-          ...(parsed.settings?.theme || {}),
-        },
+function mergeWithDefaults(parsed: any): WebsiteData {
+  return {
+    ...DEFAULT_CONTENT,
+    ...(parsed || {}),
+    profile: {
+      ...DEFAULT_CONTENT.profile,
+      ...(parsed?.profile || {}),
+      status: {
+        ...DEFAULT_CONTENT.profile.status,
+        ...(parsed?.profile?.status || {}),
       },
-    };
+    },
+    settings: {
+      ...DEFAULT_SETTINGS,
+      ...(parsed?.settings || {}),
+      adminPassword:
+        process.env.ADMIN_PASSWORD ||
+        parsed?.settings?.adminPassword ||
+        DEFAULT_SETTINGS.adminPassword,
+      sectionVisibility: {
+        ...DEFAULT_SETTINGS.sectionVisibility,
+        ...(parsed?.settings?.sectionVisibility || {}),
+      },
+      header: {
+        ...DEFAULT_SETTINGS.header,
+        ...(parsed?.settings?.header || {}),
+      },
+      hero: {
+        ...DEFAULT_SETTINGS.hero,
+        ...(parsed?.settings?.hero || {}),
+      },
+      headings: {
+        ...DEFAULT_SETTINGS.headings,
+        ...(parsed?.settings?.headings || {}),
+      },
+      terminal: {
+        ...DEFAULT_SETTINGS.terminal,
+        ...(parsed?.settings?.terminal || {}),
+      },
+      contact: {
+        ...DEFAULT_SETTINGS.contact,
+        ...(parsed?.settings?.contact || {}),
+      },
+      footer: {
+        ...DEFAULT_SETTINGS.footer,
+        ...(parsed?.settings?.footer || {}),
+      },
+      theme: {
+        ...DEFAULT_SETTINGS.theme,
+        ...(parsed?.settings?.theme || {}),
+      },
+    },
+  };
+}
+
+export async function getContent(): Promise<WebsiteData> {
+  try {
+    // 1. Check in-memory cache first (super fast response)
+    if (globalThis.__sv7_content_cache) {
+      const cached = globalThis.__sv7_content_cache;
+      if (process.env.ADMIN_PASSWORD) {
+        cached.settings.adminPassword = process.env.ADMIN_PASSWORD;
+      }
+      return cached;
+    }
+
+    // 2. Check Cloud Database (Vercel KV / Upstash Redis) if available
+    if (redis) {
+      try {
+        const remote = await redis.get<WebsiteData>(REDIS_CONTENT_KEY);
+        if (remote && remote.profile) {
+          const merged = mergeWithDefaults(remote);
+          globalThis.__sv7_content_cache = merged;
+          return merged;
+        }
+      } catch (redisErr) {
+        console.warn('Redis read failed, falling back to disk:', redisErr);
+      }
+    }
+
+    let fileContents = '';
+
+    // 3. Check /tmp (active serverless runtime writes)
+    if (fs.existsSync(TMP_FILE_PATH)) {
+      try {
+        fileContents = fs.readFileSync(TMP_FILE_PATH, 'utf-8');
+      } catch (e) {}
+    }
+
+    // 4. Check primary repository location (process.cwd())
+    if (!fileContents && fs.existsSync(DATA_FILE_PATH)) {
+      fileContents = fs.readFileSync(DATA_FILE_PATH, 'utf-8');
+    }
+
+    const parsed = fileContents.trim() ? JSON.parse(fileContents) : DEFAULT_CONTENT;
+    const result = mergeWithDefaults(parsed);
+
+    // If Redis is active but empty, auto-seed it with the initial website data
+    if (redis) {
+      try {
+        await redis.set(REDIS_CONTENT_KEY, result);
+      } catch (seedErr) {
+        console.warn('Auto-seeding Redis failed:', seedErr);
+      }
+    }
+
+    globalThis.__sv7_content_cache = result;
+    return result;
   } catch (error) {
-    console.error('Error reading content.json, using fallback:', error);
+    console.error('Error reading content, using fallback:', error);
     return DEFAULT_CONTENT;
   }
 }
 
-export function saveContent(data: WebsiteData): boolean {
+export async function saveContent(data: WebsiteData): Promise<boolean> {
   try {
-    const dir = path.dirname(DATA_FILE_PATH);
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
+    // 1. Update in-memory cache immediately
+    globalThis.__sv7_content_cache = data;
+
+    // 2. If Redis is configured, save directly to cloud database!
+    if (redis) {
+      try {
+        await redis.set(REDIS_CONTENT_KEY, data);
+      } catch (redisErr) {
+        console.error('Failed to write to Redis:', redisErr);
+      }
     }
-    const tempFile = `${DATA_FILE_PATH}.tmp`;
-    fs.writeFileSync(tempFile, JSON.stringify(data, null, 2), 'utf-8');
-    fs.renameSync(tempFile, DATA_FILE_PATH);
+
+    // 3. Try primary repo disk write (works in local dev & persistent containers)
+    try {
+      const dir = path.dirname(DATA_FILE_PATH);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+      const tempFile = `${DATA_FILE_PATH}.tmp`;
+      fs.writeFileSync(tempFile, JSON.stringify(data, null, 2), 'utf-8');
+      fs.renameSync(tempFile, DATA_FILE_PATH);
+    } catch (diskErr) {
+      // In serverless (Vercel), process.cwd() is read-only (EROFS)
+    }
+
+    // 4. Write to /tmp as local serverless container fallback
+    try {
+      fs.writeFileSync(TMP_FILE_PATH, JSON.stringify(data, null, 2), 'utf-8');
+    } catch (tmpErr) {}
+
     return true;
   } catch (error) {
-    console.error('Error saving content.json:', error);
+    console.error('Error in saveContent:', error);
     return false;
   }
 }

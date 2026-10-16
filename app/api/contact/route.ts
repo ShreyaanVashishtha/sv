@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const saved = saveMessage({
+    const saved = await saveMessage({
       name: (name || 'Anonymous Visitor').trim(),
       email: email.trim(),
       subject: (subject || 'General Inquiry via sv7.dev').trim(),
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
 
     // Optional webhook notification (e.g. Discord, Telegram, or Slack)
     try {
-      const content = getContent();
+      const content = await getContent();
       const webhookUrl = (content.settings.contact as any)?.webhookUrl;
       if (webhookUrl && webhookUrl.startsWith('http')) {
         await fetch(webhookUrl, {
@@ -53,17 +53,17 @@ export async function POST(request: NextRequest) {
 
 // Protected admin endpoints to read, mark read, or delete messages
 export async function GET() {
-  const isAuthenticated = verifySession();
+  const isAuthenticated = await verifySession();
   if (!isAuthenticated) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const messages = getMessages();
+  const messages = await getMessages();
   return NextResponse.json({ messages });
 }
 
 export async function DELETE(request: NextRequest) {
-  const isAuthenticated = verifySession();
+  const isAuthenticated = await verifySession();
   if (!isAuthenticated) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
@@ -75,12 +75,12 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ error: 'Message ID is required' }, { status: 400 });
   }
 
-  const success = deleteMessage(id);
+  const success = await deleteMessage(id);
   return NextResponse.json({ success });
 }
 
 export async function PATCH(request: NextRequest) {
-  const isAuthenticated = verifySession();
+  const isAuthenticated = await verifySession();
   if (!isAuthenticated) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
@@ -90,6 +90,6 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ error: 'Message ID is required' }, { status: 400 });
   }
 
-  const success = markMessageRead(id);
+  const success = await markMessageRead(id);
   return NextResponse.json({ success });
 }

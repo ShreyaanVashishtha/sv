@@ -12,8 +12,8 @@ import { Footer } from '@/components/Footer';
 // Revalidate on demand or per request
 export const dynamic = 'force-dynamic';
 
-export default function HomePage() {
-  const data = getContent();
+export default async function HomePage() {
+  const data = await getContent();
   const visibility = data.settings?.sectionVisibility || {
     heroMetrics: true,
     projects: true,
