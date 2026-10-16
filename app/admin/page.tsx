@@ -51,6 +51,7 @@ import {
   Clock,
   Globe,
   Database,
+  KeyRound,
 } from 'lucide-react';
 
 interface InboxMessage {
@@ -103,9 +104,23 @@ export default function AdminPage() {
     checkAuthAndLoad();
   }, []);
 
+  const getAuthHeaders = (extra: Record<string, string> = {}) => {
+    const headers: Record<string, string> = { ...extra };
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('sv7_admin_token');
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+    }
+    return headers;
+  };
+
   const checkAuthAndLoad = async () => {
     try {
-      const authRes = await fetch('/api/auth');
+      const authRes = await fetch('/api/auth', {
+        headers: getAuthHeaders(),
+        credentials: 'include',
+      });
       const authJson = await authRes.json();
 
       if (authJson.authenticated) {
@@ -122,12 +137,17 @@ export default function AdminPage() {
 
   const fetchContent = async () => {
     try {
-      const res = await fetch('/api/content');
+      const res = await fetch('/api/content', {
+        headers: getAuthHeaders(),
+        credentials: 'include',
+      });
       if (res.ok) {
         const json = await res.json();
         setIsDatabaseConnected(!!json.isDatabaseConnected);
         setData(json);
         setRawJsonText(JSON.stringify(json, null, 2));
+      } else if (res.status === 401) {
+        setIsAuthenticated(false);
       }
     } catch (e) {
       console.error('Failed to load content', e);
@@ -137,7 +157,10 @@ export default function AdminPage() {
   const fetchMessages = async () => {
     setLoadingMessages(true);
     try {
-      const res = await fetch('/api/contact');
+      const res = await fetch('/api/contact', {
+        headers: getAuthHeaders(),
+        credentials: 'include',
+      });
       if (res.ok) {
         const json = await res.json();
         setMessages(json.messages || []);
@@ -154,6 +177,8 @@ export default function AdminPage() {
     try {
       const res = await fetch(`/api/contact?id=${encodeURIComponent(id)}`, {
         method: 'DELETE',
+        headers: getAuthHeaders(),
+        credentials: 'include',
       });
       if (res.ok) {
         setMessages((prev) => prev.filter((m) => m.id !== id));
@@ -170,7 +195,8 @@ export default function AdminPage() {
     try {
       const res = await fetch('/api/contact', {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
+        credentials: 'include',
         body: JSON.stringify({ id }),
       });
       if (res.ok) {
@@ -195,17 +221,21 @@ export default function AdminPage() {
       const res = await fetch('/api/auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: passwordInput }),
+        credentials: 'include',
+        body: JSON.stringify({ passkey: passwordInput }),
       });
 
       const json = await res.json();
       if (res.ok && json.success) {
+        if (json.token && typeof window !== 'undefined') {
+          localStorage.setItem('sv7_admin_token', json.token);
+        }
         setIsAuthenticated(true);
         setPasswordInput('');
         fetchContent();
         fetchMessages();
       } else {
-        setLoginError(json.error || 'Invalid password');
+        setLoginError(json.error || 'Invalid master passkey');
       }
     } catch (e) {
       setLoginError('Authentication failed');
@@ -216,7 +246,10 @@ export default function AdminPage() {
 
   const handleLogout = async () => {
     try {
-      await fetch('/api/auth', { method: 'DELETE' });
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('sv7_admin_token');
+      }
+      await fetch('/api/auth', { method: 'DELETE', credentials: 'include' });
       setIsAuthenticated(false);
       setData(null);
     } catch (e) {
@@ -233,7 +266,8 @@ export default function AdminPage() {
     try {
       const res = await fetch('/api/content', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
+        credentials: 'include',
         body: JSON.stringify(payload),
       });
 
@@ -249,6 +283,10 @@ export default function AdminPage() {
         setRawJsonText(JSON.stringify(payload, null, 2));
         setTimeout(() => setSaveStatus({ type: '', message: '' }), 4000);
       } else {
+        if (res.status === 401) {
+          setIsAuthenticated(false);
+          setLoginError('Session expired or unauthorized. Please re-enter your master passkey.');
+        }
         setSaveStatus({ type: 'error', message: json.error || 'Failed to save changes.' });
       }
     } catch (e) {
@@ -344,33 +382,38 @@ export default function AdminPage() {
         <div className="w-full max-w-md p-8 rounded-3xl bg-zinc-900/70 border border-white/10 backdrop-blur-xl shadow-2xl">
           <div className="flex flex-col items-center text-center mb-8">
             <div className="w-12 h-12 rounded-2xl bg-white text-black flex items-center justify-center mb-4 shadow-sm">
-              <Lock className="w-5 h-5" />
+              <KeyRound className="w-5 h-5 text-zinc-900" />
             </div>
             <h1 className="text-2xl font-bold tracking-tight text-white">sv7.dev Master Admin</h1>
             <p className="text-xs text-zinc-400 mt-1">
-              Enter your master key for comprehensive site editing.
+              Enter your Master Passkey for administrative access.
             </p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-xs font-mono text-zinc-400 uppercase mb-2">
-                Admin Password
-              </label>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-xs font-mono text-zinc-400 uppercase">
+                  Master Passkey
+                </label>
+                <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full font-medium">
+                  &apos;admin&apos; Disabled
+                </span>
+              </div>
               <input
                 type="password"
-                placeholder="Enter password..."
+                placeholder="Enter master passkey..."
                 value={passwordInput}
                 onChange={(e) => setPasswordInput(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-white/10 text-white placeholder-zinc-600 focus:outline-none focus:border-white/30 text-sm font-mono"
+                className="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-white/10 text-white placeholder-zinc-600 focus:outline-none focus:border-emerald-500/50 text-sm font-mono transition-colors"
                 required
                 autoFocus
               />
             </div>
 
             {loginError && (
-              <div className="flex items-center gap-2 text-xs text-rose-400 bg-rose-500/10 border border-rose-500/20 px-3 py-2 rounded-xl font-mono">
-                <AlertCircle className="w-4 h-4 shrink-0" />
+              <div className="flex items-start gap-2.5 text-xs text-rose-400 bg-rose-500/10 border border-rose-500/20 px-3.5 py-2.5 rounded-xl font-mono leading-relaxed">
+                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
                 <span>{loginError}</span>
               </div>
             )}
@@ -378,17 +421,21 @@ export default function AdminPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-white text-black font-semibold text-xs py-3 rounded-xl hover:bg-zinc-200 transition-all shadow-sm disabled:opacity-50"
+              className="w-full bg-white text-black font-semibold text-xs py-3 rounded-xl hover:bg-zinc-200 transition-all shadow-sm disabled:opacity-50 flex items-center justify-center gap-2"
             >
-              {loading ? 'Authenticating...' : 'Sign In to Console'}
+              <KeyRound className="w-3.5 h-3.5" />
+              <span>{loading ? 'Verifying Passkey...' : 'Authenticate with Passkey'}</span>
             </button>
 
             <div className="pt-4 border-t border-white/5 flex items-center justify-between text-xs text-zinc-500">
-              <Link href="/" className="hover:text-zinc-300 flex items-center gap-1">
+              <Link href="/" className="hover:text-zinc-300 flex items-center gap-1 transition-colors">
                 <ArrowLeft className="w-3.5 h-3.5" />
                 <span>Back to Homepage</span>
               </Link>
-              <span className="font-mono text-[11px] text-zinc-600">Default: admin</span>
+              <span className="font-mono text-[11px] text-zinc-400 flex items-center gap-1.5">
+                <Shield className="w-3 h-3 text-emerald-400" />
+                <span>Passkey Protected</span>
+              </span>
             </div>
           </form>
         </div>
@@ -3037,30 +3084,42 @@ export default function AdminPage() {
                 />
               </div>
 
-              <div className="pt-4 border-t border-white/10 space-y-2">
+              <div className="pt-4 border-t border-white/10 space-y-3">
                 <div className="flex items-center justify-between">
-                  <label className="block text-xs font-mono text-zinc-400 uppercase">
-                    Change Master Admin Password
-                  </label>
-                  <span className="text-[10px] font-mono text-zinc-500">
-                    Active: {data.settings.adminPassword ? 'Configured' : 'admin'}
+                  <div className="flex items-center gap-2">
+                    <KeyRound className="w-4 h-4 text-emerald-400" />
+                    <label className="block text-xs font-mono text-zinc-300 uppercase font-semibold">
+                      Master Passkey Security
+                    </label>
+                  </div>
+                  <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full font-bold">
+                    &apos;admin&apos; Disabled
                   </span>
                 </div>
                 <input
                   type="text"
-                  value={data.settings.adminPassword || ''}
+                  value={data.settings.adminPasskey || ''}
                   onChange={(e) =>
                     setData({
                       ...data,
-                      settings: { ...data.settings, adminPassword: e.target.value },
+                      settings: {
+                        ...data.settings,
+                        adminPasskey: e.target.value,
+                        adminPassword: e.target.value,
+                      },
                     })
                   }
-                  placeholder="Enter new master password..."
-                  className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-sm text-white font-mono"
+                  placeholder="Enter new master passkey (e.g. sv7-passkey-2026)..."
+                  className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-sm text-white font-mono focus:border-emerald-500/50"
                 />
-                <p className="text-[11px] text-zinc-400 leading-relaxed">
-                  Enter your desired password and click <strong>Save All Changes</strong>. You can also permanently secure it by adding an <code className="text-zinc-200 bg-zinc-900 px-1.5 py-0.5 rounded border border-white/10">ADMIN_PASSWORD</code> environment variable in your Vercel Project Settings.
-                </p>
+                <div className="text-[11px] text-zinc-400 leading-relaxed space-y-1">
+                  <p>
+                    The default password <code className="text-rose-400 bg-rose-500/10 px-1.5 py-0.5 rounded font-mono">&apos;admin&apos;</code> is permanently disabled and rejected for your security.
+                  </p>
+                  <p>
+                    Set your custom passkey above and click <strong>Save All Changes</strong>. You can also permanently enforce it in Vercel using the <code className="text-zinc-200 bg-zinc-900 px-1.5 py-0.5 rounded border border-white/10 font-mono">ADMIN_PASSKEY</code> environment variable.
+                  </p>
+                </div>
               </div>
 
               {/* CLOUD DATABASE INTEGRATION CARD */}

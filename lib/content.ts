@@ -11,11 +11,14 @@ declare global {
   var __sv7_content_cache: WebsiteData | undefined;
 }
 
+export const DEFAULT_PASSKEY = 'sv7-passkey-2026';
+
 export const DEFAULT_SETTINGS: SiteSettings = {
   siteName: 'sv7.dev',
   metaTitle: 'Shreyaan Vashishtha — Mechanical & Aerospace Engineering | sv7.dev',
   metaDescription: 'Official portfolio of Shreyaan Vashishtha. Mechanical & Aerospace Engineering at HKUST, Astrix Rocketry, mechanism design, and scientific computing.',
-  adminPassword: 'admin',
+  adminPasskey: DEFAULT_PASSKEY,
+  adminPassword: DEFAULT_PASSKEY,
   accentColor: '#ffffff',
   cvUrl: '/CV-Shreyaan-Vashishtha.pdf',
   contactMessage: 'Interested in aerospace engineering, Astrix rocketry, IB tutoring, or technical collaboration? Reach out directly.',
@@ -168,10 +171,26 @@ function mergeWithDefaults(parsed: any): WebsiteData {
     settings: {
       ...DEFAULT_SETTINGS,
       ...(parsed?.settings || {}),
-      adminPassword:
-        process.env.ADMIN_PASSWORD ||
-        parsed?.settings?.adminPassword ||
-        DEFAULT_SETTINGS.adminPassword,
+      adminPasskey: (() => {
+        const raw =
+          process.env.ADMIN_PASSKEY ||
+          process.env.ADMIN_PASSWORD ||
+          parsed?.settings?.adminPasskey ||
+          parsed?.settings?.adminPassword;
+        return raw && raw.toString().trim().toLowerCase() !== 'admin'
+          ? raw.toString().trim()
+          : DEFAULT_PASSKEY;
+      })(),
+      adminPassword: (() => {
+        const raw =
+          process.env.ADMIN_PASSKEY ||
+          process.env.ADMIN_PASSWORD ||
+          parsed?.settings?.adminPasskey ||
+          parsed?.settings?.adminPassword;
+        return raw && raw.toString().trim().toLowerCase() !== 'admin'
+          ? raw.toString().trim()
+          : DEFAULT_PASSKEY;
+      })(),
       sectionVisibility: {
         ...DEFAULT_SETTINGS.sectionVisibility,
         ...(parsed?.settings?.sectionVisibility || {}),
@@ -213,8 +232,10 @@ export async function getContent(): Promise<WebsiteData> {
     // 1. Check in-memory cache first (super fast response)
     if (globalThis.__sv7_content_cache) {
       const cached = globalThis.__sv7_content_cache;
-      if (process.env.ADMIN_PASSWORD) {
-        cached.settings.adminPassword = process.env.ADMIN_PASSWORD;
+      const envKey = process.env.ADMIN_PASSKEY || process.env.ADMIN_PASSWORD;
+      if (envKey && envKey.trim().toLowerCase() !== 'admin') {
+        cached.settings.adminPasskey = envKey.trim();
+        cached.settings.adminPassword = envKey.trim();
       }
       return cached;
     }
@@ -269,6 +290,18 @@ export async function getContent(): Promise<WebsiteData> {
 
 export async function saveContent(data: WebsiteData): Promise<boolean> {
   try {
+    // Sanitize passkey: ensure 'admin' is never stored
+    if (
+      data.settings.adminPasskey &&
+      data.settings.adminPasskey.trim().toLowerCase() === 'admin'
+    ) {
+      data.settings.adminPasskey = DEFAULT_PASSKEY;
+    }
+    if (!data.settings.adminPasskey) {
+      data.settings.adminPasskey = DEFAULT_PASSKEY;
+    }
+    data.settings.adminPassword = data.settings.adminPasskey;
+
     // 1. Update in-memory cache immediately
     globalThis.__sv7_content_cache = data;
 

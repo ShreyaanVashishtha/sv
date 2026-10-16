@@ -175,7 +175,8 @@ export interface SiteSettings {
   siteName: string;
   metaTitle: string;
   metaDescription: string;
-  adminPassword: string;
+  adminPassword?: string;
+  adminPasskey?: string;
   accentColor: string;
   cvUrl?: string;
   contactMessage: string;

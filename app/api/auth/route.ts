@@ -1,27 +1,53 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getContent } from '@/lib/content';
-import { createSessionToken, verifySession, SESSION_COOKIE_NAME } from '@/lib/auth';
+import {
+  createSessionToken,
+  verifySession,
+  verifyPasskey,
+  SESSION_COOKIE_NAME,
+} from '@/lib/auth';
 
-export async function GET() {
-  const isAuthenticated = await verifySession();
+export async function GET(request: NextRequest) {
+  const isAuthenticated = await verifySession(request);
   return NextResponse.json({ authenticated: isAuthenticated });
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const { password } = await request.json();
-    const content = await getContent();
-    const expectedPassword = process.env.ADMIN_PASSWORD || content.settings.adminPassword;
+    const body = await request.json();
+    const candidate = (body.passkey || body.password || '').toString().trim();
 
-    if (!password || password !== expectedPassword) {
+    if (!candidate) {
       return NextResponse.json(
-        { error: 'Invalid admin credentials' },
+        { error: 'Master passkey is required' },
+        { status: 400 }
+      );
+    }
+
+    // STRICT CHECK: The default password 'admin' is permanently disallowed
+    if (candidate.toLowerCase() === 'admin') {
+      return NextResponse.json(
+        {
+          error:
+            "The default password 'admin' is permanently disabled for security. Please enter your secure Master Passkey.",
+        },
         { status: 401 }
       );
     }
 
-    const token = createSessionToken(expectedPassword);
-    const response = NextResponse.json({ success: true, message: 'Logged in successfully' });
+    const isValid = await verifyPasskey(candidate);
+    if (!isValid) {
+      return NextResponse.json(
+        { error: 'Invalid master passkey. Please check and try again.' },
+        { status: 401 }
+      );
+    }
+
+    const token = createSessionToken();
+    const response = NextResponse.json({
+      success: true,
+      message: 'Authenticated successfully with Master Passkey',
+      token,
+    });
 
     response.cookies.set({
       name: SESSION_COOKIE_NAME,
@@ -30,11 +56,12 @@ export async function POST(request: NextRequest) {
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 7 days
+      maxAge: 60 * 60 * 24 * 30, // 30 days
     });
 
     return response;
   } catch (error) {
+    console.error('Error in auth route POST:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

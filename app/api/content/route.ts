@@ -4,18 +4,19 @@ import { verifySession } from '@/lib/auth';
 import { WebsiteData } from '@/types/content';
 import { isRedisConfigured } from '@/lib/redis';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const data = await getContent();
-    const isAuthenticated = await verifySession();
+    const isAuthenticated = await verifySession(request);
 
     if (!isAuthenticated) {
-      // Mask admin password when exposed publicly
+      // Mask admin passkey when exposed publicly
       const sanitized = {
         ...data,
         settings: {
           ...data.settings,
           adminPassword: '', // do not expose
+          adminPasskey: '', // do not expose
         },
       };
       return NextResponse.json(sanitized);
@@ -32,18 +33,36 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const isAuthenticated = await verifySession();
+    const isAuthenticated = await verifySession(request);
     if (!isAuthenticated) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(
+        { error: 'Unauthorized: Session expired or invalid. Please re-enter your master passkey.' },
+        { status: 401 }
+      );
     }
 
     const updatedData = (await request.json()) as WebsiteData;
     const currentData = await getContent();
 
-    // Preserve existing password if not modified in payload
-    if (!updatedData.settings.adminPassword) {
-      updatedData.settings.adminPassword = currentData.settings.adminPassword;
+    // STRICT CHECK: Disallow setting passkey to "admin"
+    if (
+      updatedData.settings.adminPasskey &&
+      updatedData.settings.adminPasskey.trim().toLowerCase() === 'admin'
+    ) {
+      return NextResponse.json(
+        { error: "The passkey cannot be set to 'admin'. Please choose a secure passkey." },
+        { status: 400 }
+      );
     }
+
+    // Preserve existing passkey if not explicitly changed
+    if (!updatedData.settings.adminPasskey) {
+      updatedData.settings.adminPasskey =
+        currentData.settings.adminPasskey || 'sv7-passkey-2026';
+    }
+
+    // Keep legacy adminPassword synced with adminPasskey for backwards compatibility
+    updatedData.settings.adminPassword = updatedData.settings.adminPasskey;
 
     const success = await saveContent(updatedData);
     if (!success) {
