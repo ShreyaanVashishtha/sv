@@ -12,6 +12,14 @@ function extractPexelsUsername(urlOrHandle: string): string {
   return trimmed.replace(/^@/, '');
 }
 
+function extractCollectionId(urlOrId: string): string {
+  if (!urlOrId) return '';
+  const trimmed = urlOrId.trim().replace(/\/$/, '');
+  const lastSegment = trimmed.split('/').pop() || '';
+  const parts = lastSegment.split('-');
+  return parts[parts.length - 1];
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));
@@ -26,18 +34,20 @@ export async function POST(req: NextRequest) {
     const rawProfileUrl =
       body.pexelsProfileUrl ||
       currentData.photographySettings?.pexelsProfileUrl ||
-      '';
+      'https://www.pexels.com/@shreyaan/';
 
     const username =
       body.pexelsUsername ||
       extractPexelsUsername(rawProfileUrl) ||
       currentData.photographySettings?.pexelsUsername ||
-      '';
+      'shreyaan';
 
-    const collectionId =
+    const rawCollectionInput =
       body.pexelsCollectionId ||
       currentData.photographySettings?.pexelsCollectionId ||
       '';
+
+    const cleanCollectionId = extractCollectionId(rawCollectionInput);
 
     let fetchedPhotos: PhotoItem[] = [];
 
@@ -48,11 +58,11 @@ export async function POST(req: NextRequest) {
         'User-Agent': 'sv7-portfolio-sync/1.0',
       };
 
-      // 1A. Fetch from collection if collectionId provided
-      if (collectionId) {
+      // 1A. Fetch from specific collection if collectionId provided
+      if (cleanCollectionId) {
         try {
           const colRes = await fetch(
-            `https://api.pexels.com/v1/collections/${collectionId}?per_page=80`,
+            `https://api.pexels.com/v1/collections/${cleanCollectionId}?per_page=80`,
             { headers, cache: 'no-store' }
           );
           if (colRes.ok) {
@@ -62,57 +72,54 @@ export async function POST(req: NextRequest) {
                 .filter((m: any) => m.type === 'Photo' || m.src)
                 .map(mapPexelsPhotoToItem);
             }
+          } else {
+            console.warn(`Pexels collection fetch error: HTTP ${colRes.status}`);
           }
         } catch (colErr) {
           console.warn('Pexels collection fetch error:', colErr);
         }
       }
 
-      // 1B. Fetch user's collections if no photos yet
+      // 1B. Fetch ALL user's collections if no collectionId specified or 0 photos found
       if (fetchedPhotos.length === 0) {
         try {
           const myColRes = await fetch(
-            'https://api.pexels.com/v1/collections/my-collections?per_page=10',
+            'https://api.pexels.com/v1/collections/my-collections?per_page=20',
             { headers, cache: 'no-store' }
           );
           if (myColRes.ok) {
             const myColData = await myColRes.json();
             if (Array.isArray(myColData.collections) && myColData.collections.length > 0) {
-              const firstCol = myColData.collections[0];
-              const mediaRes = await fetch(
-                `https://api.pexels.com/v1/collections/${firstCol.id}?per_page=80`,
-                { headers, cache: 'no-store' }
-              );
-              if (mediaRes.ok) {
-                const mediaData = await mediaRes.json();
-                if (Array.isArray(mediaData.media)) {
-                  fetchedPhotos = mediaData.media.map(mapPexelsPhotoToItem);
+              const allMedia: any[] = [];
+              for (const col of myColData.collections) {
+                try {
+                  const mediaRes = await fetch(
+                    `https://api.pexels.com/v1/collections/${col.id}?per_page=80`,
+                    { headers, cache: 'no-store' }
+                  );
+                  if (mediaRes.ok) {
+                    const mediaData = await mediaRes.json();
+                    if (Array.isArray(mediaData.media)) {
+                      allMedia.push(...mediaData.media);
+                    }
+                  }
+                } catch (colFetchErr) {
+                  console.warn(`Failed to fetch media for collection ${col.id}:`, colFetchErr);
                 }
               }
+
+              const seen = new Set<string>();
+              fetchedPhotos = allMedia
+                .filter((m: any) => {
+                  if (seen.has(String(m.id))) return false;
+                  seen.add(String(m.id));
+                  return m.type === 'Photo' || m.src;
+                })
+                .map(mapPexelsPhotoToItem);
             }
           }
         } catch (myColErr) {
           console.warn('Pexels my-collections fetch error:', myColErr);
-        }
-      }
-
-      // 1C. Search photographer name if still no photos
-      if (fetchedPhotos.length === 0 && username) {
-        try {
-          const searchRes = await fetch(
-            `https://api.pexels.com/v1/search?query=${encodeURIComponent(
-              username
-            )}&per_page=80`,
-            { headers, cache: 'no-store' }
-          );
-          if (searchRes.ok) {
-            const searchData = await searchRes.json();
-            if (Array.isArray(searchData.photos)) {
-              fetchedPhotos = searchData.photos.map(mapPexelsPhotoToItem);
-            }
-          }
-        } catch (sErr) {
-          console.warn('Pexels search error:', sErr);
         }
       }
     }
@@ -205,34 +212,39 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    if (fetchedPhotos.length === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          count: 0,
+          error:
+            'No photos could be retrieved from your Pexels collection. Please make sure your Pexels Collection link or ID is entered, and that your PEXELS_API_KEY is set in Vercel or in the settings below.',
+        },
+        { status: 400 }
+      );
+    }
+
     // Merge or update existing photos
     const existingPhotos = currentData.photos || [];
-    let updatedPhotos: PhotoItem[] = [];
-
-    if (fetchedPhotos.length > 0) {
-      // Map existing photos by ID to retain custom user edits (e.g. customized titles, camera info)
-      const existingMap = new Map(existingPhotos.map((p) => [p.id, p]));
-      updatedPhotos = fetchedPhotos.map((fresh) => {
-        const prev = existingMap.get(fresh.id);
-        if (prev) {
-          return {
-            ...fresh,
-            title: prev.title || fresh.title,
-            description: prev.description || fresh.description,
-            category: prev.category || fresh.category,
-            camera: prev.camera || fresh.camera,
-            lens: prev.lens || fresh.lens,
-            aperture: prev.aperture || fresh.aperture,
-            shutterSpeed: prev.shutterSpeed || fresh.shutterSpeed,
-            iso: prev.iso || fresh.iso,
-            featured: prev.featured ?? fresh.featured,
-          };
-        }
-        return fresh;
-      });
-    } else {
-      updatedPhotos = existingPhotos;
-    }
+    const existingMap = new Map(existingPhotos.map((p) => [p.id, p]));
+    const updatedPhotos = fetchedPhotos.map((fresh) => {
+      const prev = existingMap.get(fresh.id);
+      if (prev) {
+        return {
+          ...fresh,
+          title: prev.title || fresh.title,
+          description: prev.description || fresh.description,
+          category: prev.category || fresh.category,
+          camera: prev.camera || fresh.camera,
+          lens: prev.lens || fresh.lens,
+          aperture: prev.aperture || fresh.aperture,
+          shutterSpeed: prev.shutterSpeed || fresh.shutterSpeed,
+          iso: prev.iso || fresh.iso,
+          featured: prev.featured ?? fresh.featured,
+        };
+      }
+      return fresh;
+    });
 
     // Update settings
     const updatedSettings = {
@@ -242,7 +254,7 @@ export async function POST(req: NextRequest) {
       }),
       pexelsProfileUrl: rawProfileUrl,
       pexelsUsername: username,
-      pexelsCollectionId: collectionId,
+      pexelsCollectionId: rawCollectionInput,
       pexelsApiKey: apiKey,
     };
 
@@ -258,10 +270,7 @@ export async function POST(req: NextRequest) {
       success: true,
       count: updatedPhotos.length,
       photos: updatedPhotos,
-      message:
-        fetchedPhotos.length > 0
-          ? `Successfully synchronized ${fetchedPhotos.length} photos from Pexels!`
-          : `Pexels profile saved. (No new photos returned from endpoint; kept ${existingPhotos.length} cached photos).`,
+      message: `Successfully synchronized ${updatedPhotos.length} photos from your Pexels collection!`,
     });
   } catch (error: any) {
     console.error('Photography sync error:', error);

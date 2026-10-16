@@ -3225,7 +3225,7 @@ export default function AdminPage() {
 
                     <div>
                       <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">
-                        Specific Collection ID (Optional)
+                        Pexels Collection Link or ID
                       </label>
                       <input
                         type="text"
@@ -3241,9 +3241,12 @@ export default function AdminPage() {
                             },
                           })
                         }
-                        placeholder="Leave empty to sync all your uploaded photos"
+                        placeholder="https://www.pexels.com/collections/... or collection ID"
                         className="w-full px-3.5 py-2 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono"
                       />
+                      <span className="text-[10px] text-zinc-500 mt-1 block">
+                        Paste the full link to your Pexels collection (or leave blank to sync all collections in your account).
+                      </span>
                     </div>
                   </div>
 

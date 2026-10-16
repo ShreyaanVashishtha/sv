@@ -270,7 +270,37 @@ export function PhotographyGallery({
         </div>
 
         {/* PHOTO GRID / MASONRY */}
-        {filteredPhotos.length === 0 ? (
+        {photos.length === 0 ? (
+          <div className="text-center py-20 px-6 rounded-3xl bg-zinc-900/40 border border-white/10 space-y-4 max-w-xl mx-auto">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto text-emerald-400">
+              <Camera className="w-6 h-6" />
+            </div>
+            <h3 className="text-base sm:text-lg font-bold text-white tracking-tight">
+              Ready to Sync Your Pexels Collection
+            </h3>
+            <p className="text-xs text-zinc-400 leading-relaxed">
+              Your profile (<code className="text-emerald-400 font-mono">@shreyaan</code>) is linked. Go to the Admin Studio to paste your Pexels Collection link or enter your API key to pull your personal photographs.
+            </p>
+            <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
+              <Link
+                href="/admin"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-black text-xs font-semibold hover:bg-zinc-200 transition-all shadow-sm"
+              >
+                <span>Open Admin &amp; Sync Collection</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </Link>
+              <a
+                href={pexelsUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-zinc-900 border border-white/10 text-xs text-zinc-300 hover:text-white hover:bg-zinc-800 transition-all"
+              >
+                <span>View Pexels Profile</span>
+                <ExternalLink className="w-3 h-3 text-emerald-400" />
+              </a>
+            </div>
+          </div>
+        ) : filteredPhotos.length === 0 ? (
           <div className="text-center py-24 rounded-3xl bg-zinc-900/30 border border-white/10 space-y-4">
             <Camera className="w-10 h-10 text-zinc-600 mx-auto" />
             <h3 className="text-base font-semibold text-white">No photographs matched your filter</h3>
