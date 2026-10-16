@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { getContent } from '@/lib/content';
+import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
@@ -29,6 +31,8 @@ export default function RootLayout({
     <html lang="en" className="dark scroll-smooth">
       <body className="min-h-screen bg-background text-foreground antialiased selection:bg-white selection:text-black">
         {children}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
