@@ -180,7 +180,7 @@
       "id": "exp-1",
       "role": "Junior Engineer (Aerodynamic & Descent Control)",
       "company": "Astrix | The Hong Kong University of Science and Technology",
-      "period": "Sep 2025 — Present",
+      "period": "Sep 2025 \u2014 Present",
       "description": "Contributing to the Aerodynamic & Descent Control subsystem for experimental rocketry. Previously a member of the Payload and Descent Control teams, involved in mechanism design, testing, and control considerations for flight and recovery systems.",
       "highlights": [
         "Involved in mechanism design and flight recovery system testing for high-altitude rocketry.",
@@ -192,7 +192,7 @@
       "id": "exp-2",
       "role": "IB Tutor (Physics, Economics, Maths AA HL/SL)",
       "company": "Edunade",
-      "period": "Jan 2026 — Present",
+      "period": "Jan 2026 \u2014 Present",
       "description": "Providing personalized 1-on-1 tutoring in IB Physics, Economics, and Mathematics Analysis & Approaches (HL/SL), adapting pedagogical explanations to individual learning styles.",
       "highlights": [
         "Designed exam-focused lesson frameworks aligned with IB mark schemes, command terms, and assessment criteria.",
@@ -203,7 +203,7 @@
       "id": "exp-3",
       "role": "Mathematics Mentor (Math Buddies)",
       "company": "Creative Secondary School",
-      "period": "2023 — 2024",
+      "period": "2023 \u2014 2024",
       "description": "Mentored junior students in mathematics through the Math Buddies program, offering weekly structured support to improve understanding of key mathematical concepts.",
       "highlights": [
         "Mentored junior cohorts to reinforce algebra, geometry, and foundational numeracy.",
@@ -214,9 +214,9 @@
   "education": [
     {
       "id": "edu-1",
-      "degree": "Bachelor of Engineering (B.Eng.) — Mechanical & Aerospace Engineering",
+      "degree": "Bachelor of Engineering (B.Eng.) \u2014 Mechanical & Aerospace Engineering",
       "institution": "The Hong Kong University of Science and Technology (HKUST)",
-      "period": "2025 — 2029 (Expected June 2029)",
+      "period": "2025 \u2014 2029 (Expected June 2029)",
       "location": "Hong Kong",
       "score": "Undergraduate",
       "highlights": [
@@ -269,7 +269,7 @@
   ],
   "settings": {
     "siteName": "sv7.dev",
-    "metaTitle": "Shreyaan Vashishtha — Mechanical & Aerospace Engineering | sv7.dev",
+    "metaTitle": "Shreyaan Vashishtha \u2014 Mechanical & Aerospace Engineering | sv7.dev",
     "metaDescription": "Official portfolio of Shreyaan Vashishtha. Mechanical & Aerospace Engineering at HKUST, Astrix Rocketry, mechanism design, and scientific computing.",
     "canonicalUrl": "https://sv7.dev",
     "twitterHandle": "@shreyaanv",
@@ -376,7 +376,7 @@
       "contactSubtitle": "Open for select consulting, high-impact systems architecture, and engineering advisory."
     },
     "terminal": {
-      "windowTitle": "bash — sv7.dev",
+      "windowTitle": "bash \u2014 sv7.dev",
       "commandPrompt": "curl -s https://sv7.dev/api/content | jq .profile",
       "customOutput": "{\n  \"handle\": \"shreyaanv\",\n  \"status\": \"active\",\n  \"university\": \"HKUST\",\n  \"focus\": [\n    \"Aerospace Systems\",\n    \"Descent Recovery\",\n    \"Numerical Python\",\n    \"Parametric CAD\"\n  ],\n  \"availability\": \"Open for high-impact projects & engineering research\"\n}",
       "copyButtonText": "Copy",
@@ -392,7 +392,7 @@
       "messagePlaceholder": "Tell me about your project, inquiry, or question...",
       "submitButtonText": "Send Dispatch",
       "directTitle": "Direct Channels",
-      "responseDisclaimer": "Typically replies within 24–48 hours.",
+      "responseDisclaimer": "Typically replies within 24\u201348 hours.",
       "copyAddressText": "Copy Address",
       "hideEmailAddress": true,
       "publicDisplayEmail": "contact@sv7.dev"
@@ -407,5 +407,180 @@
       "glowIntensity": "subtle"
     },
     "adminPasskey": "sv7-passkey-2026"
-  }
+  },
+  "photographySettings": {
+    "title": "Visual Archive & Photography",
+    "subtitle": "Aerospace perspectives, mechanical forms, and terrestrial observations through the lens.",
+    "bio": "A curated visual log captured on 35mm & digital sensors \u2014 featuring aviation, structural geometry, urban nocturnes, and natural textures.",
+    "pexelsProfileUrl": "https://www.pexels.com/@shreyaan-vashishtha",
+    "pexelsUsername": "shreyaan-vashishtha",
+    "pexelsCollectionId": "",
+    "categories": [
+      "All",
+      "Aerospace & Aviation",
+      "Architecture & Geometry",
+      "Urban & Nocturne",
+      "Nature & Textures"
+    ],
+    "enableExif": true,
+    "photosPerPage": 24
+  },
+  "photos": [
+    {
+      "id": "358319",
+      "title": "Turbofan Jet Propulsion Turbine",
+      "description": "Aerodynamic compressor blading and precision titanium turbine geometry.",
+      "category": "Aerospace & Aviation",
+      "width": 4500,
+      "height": 3000,
+      "url": "https://www.pexels.com/photo/close-up-of-airplane-engine-358319/",
+      "photographer": "Shreyaan Vashishtha",
+      "photographerUrl": "https://www.pexels.com/@shreyaan-vashishtha",
+      "camera": "Sony Alpha 7 IV",
+      "lens": "FE 24-70mm f/2.8 GM",
+      "focalLength": "70mm",
+      "aperture": "f/2.8",
+      "shutterSpeed": "1/1000s",
+      "iso": "100",
+      "location": "Hong Kong International Airport (HKG)",
+      "featured": true,
+      "src": {
+        "original": "https://images.pexels.com/photos/358319/pexels-photo-358319.jpeg",
+        "large2x": "https://images.pexels.com/photos/358319/pexels-photo-358319.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=1200",
+        "large": "https://images.pexels.com/photos/358319/pexels-photo-358319.jpeg?auto=compress&cs=tinysrgb&w=1000",
+        "medium": "https://images.pexels.com/photos/358319/pexels-photo-358319.jpeg?auto=compress&cs=tinysrgb&w=600",
+        "small": "https://images.pexels.com/photos/358319/pexels-photo-358319.jpeg?auto=compress&cs=tinysrgb&w=350"
+      }
+    },
+    {
+      "id": "2034335",
+      "title": "Orbital Rocket Launch Ascent",
+      "description": "Super-heated rocket exhaust plume expanding during high-altitude atmospheric trajectory.",
+      "category": "Aerospace & Aviation",
+      "width": 4000,
+      "height": 2600,
+      "url": "https://www.pexels.com/photo/rocket-launch-at-night-2034335/",
+      "photographer": "Shreyaan Vashishtha",
+      "photographerUrl": "https://www.pexels.com/@shreyaan-vashishtha",
+      "camera": "Sony Alpha 7 IV",
+      "lens": "FE 70-200mm f/2.8 GM OSS II",
+      "focalLength": "135mm",
+      "aperture": "f/4.0",
+      "shutterSpeed": "1/800s",
+      "iso": "400",
+      "location": "Cape Canaveral / Space Launch Complex",
+      "featured": true,
+      "src": {
+        "original": "https://images.pexels.com/photos/2034335/pexels-photo-2034335.jpeg",
+        "large2x": "https://images.pexels.com/photos/2034335/pexels-photo-2034335.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=1200",
+        "large": "https://images.pexels.com/photos/2034335/pexels-photo-2034335.jpeg?auto=compress&cs=tinysrgb&w=1000",
+        "medium": "https://images.pexels.com/photos/2034335/pexels-photo-2034335.jpeg?auto=compress&cs=tinysrgb&w=600",
+        "small": "https://images.pexels.com/photos/2034335/pexels-photo-2034335.jpeg?auto=compress&cs=tinysrgb&w=350"
+      }
+    },
+    {
+      "id": "378570",
+      "title": "Victoria Harbour Nocturne",
+      "description": "Dense urban illumination and marine traffic along Victoria Harbour.",
+      "category": "Urban & Nocturne",
+      "width": 4800,
+      "height": 3200,
+      "url": "https://www.pexels.com/photo/city-skyline-during-nighttime-378570/",
+      "photographer": "Shreyaan Vashishtha",
+      "photographerUrl": "https://www.pexels.com/@shreyaan-vashishtha",
+      "camera": "Sony Alpha 7 IV",
+      "lens": "FE 35mm f/1.4 GM",
+      "focalLength": "35mm",
+      "aperture": "f/8.0",
+      "shutterSpeed": "15s",
+      "iso": "100",
+      "location": "Victoria Peak, Hong Kong",
+      "featured": true,
+      "src": {
+        "original": "https://images.pexels.com/photos/378570/pexels-photo-378570.jpeg",
+        "large2x": "https://images.pexels.com/photos/378570/pexels-photo-378570.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=1200",
+        "large": "https://images.pexels.com/photos/378570/pexels-photo-378570.jpeg?auto=compress&cs=tinysrgb&w=1000",
+        "medium": "https://images.pexels.com/photos/378570/pexels-photo-378570.jpeg?auto=compress&cs=tinysrgb&w=600",
+        "small": "https://images.pexels.com/photos/378570/pexels-photo-378570.jpeg?auto=compress&cs=tinysrgb&w=350"
+      }
+    },
+    {
+      "id": "2156",
+      "title": "Milky Way Core & Deep Sky",
+      "description": "Astronomical long-exposure revealing galactic interstellar dust lanes.",
+      "category": "Aerospace & Aviation",
+      "width": 5000,
+      "height": 3300,
+      "url": "https://www.pexels.com/photo/silhouette-of-mountains-under-starry-night-2156/",
+      "photographer": "Shreyaan Vashishtha",
+      "photographerUrl": "https://www.pexels.com/@shreyaan-vashishtha",
+      "camera": "Sony Alpha 7 IV",
+      "lens": "FE 14mm f/1.8 GM",
+      "focalLength": "14mm",
+      "aperture": "f/1.8",
+      "shutterSpeed": "20s",
+      "iso": "3200",
+      "location": "Astrix Dark Sky Expedition / High Island",
+      "featured": true,
+      "src": {
+        "original": "https://images.pexels.com/photos/2156/pexels-photo-2156.jpeg",
+        "large2x": "https://images.pexels.com/photos/2156/pexels-photo-2156.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=1200",
+        "large": "https://images.pexels.com/photos/2156/pexels-photo-2156.jpeg?auto=compress&cs=tinysrgb&w=1000",
+        "medium": "https://images.pexels.com/photos/2156/pexels-photo-2156.jpeg?auto=compress&cs=tinysrgb&w=600",
+        "small": "https://images.pexels.com/photos/2156/pexels-photo-2156.jpeg?auto=compress&cs=tinysrgb&w=350"
+      }
+    },
+    {
+      "id": "1486785",
+      "title": "Structural Glass & Steel Geometry",
+      "description": "Parametric structural engineering and reflective curtain wall elevation.",
+      "category": "Architecture & Geometry",
+      "width": 4200,
+      "height": 2800,
+      "url": "https://www.pexels.com/photo/city-skyline-during-night-1486785/",
+      "photographer": "Shreyaan Vashishtha",
+      "photographerUrl": "https://www.pexels.com/@shreyaan-vashishtha",
+      "camera": "Sony Alpha 7 IV",
+      "lens": "FE 24-70mm f/2.8 GM",
+      "focalLength": "28mm",
+      "aperture": "f/5.6",
+      "shutterSpeed": "1/250s",
+      "iso": "100",
+      "location": "Central, Hong Kong",
+      "featured": false,
+      "src": {
+        "original": "https://images.pexels.com/photos/1486785/pexels-photo-1486785.jpeg",
+        "large2x": "https://images.pexels.com/photos/1486785/pexels-photo-1486785.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=1200",
+        "large": "https://images.pexels.com/photos/1486785/pexels-photo-1486785.jpeg?auto=compress&cs=tinysrgb&w=1000",
+        "medium": "https://images.pexels.com/photos/1486785/pexels-photo-1486785.jpeg?auto=compress&cs=tinysrgb&w=600",
+        "small": "https://images.pexels.com/photos/1486785/pexels-photo-1486785.jpeg?auto=compress&cs=tinysrgb&w=350"
+      }
+    },
+    {
+      "id": "1906658",
+      "title": "Atmospheric Cloud Sea & Ridge",
+      "description": "Low-pressure thermal inversion rolling across mountain topography.",
+      "category": "Nature & Textures",
+      "width": 4600,
+      "height": 3000,
+      "url": "https://www.pexels.com/photo/mountain-range-covered-in-fog-1906658/",
+      "photographer": "Shreyaan Vashishtha",
+      "photographerUrl": "https://www.pexels.com/@shreyaan-vashishtha",
+      "camera": "Sony Alpha 7 IV",
+      "lens": "FE 70-200mm f/2.8 GM OSS II",
+      "focalLength": "105mm",
+      "aperture": "f/8.0",
+      "shutterSpeed": "1/400s",
+      "iso": "100",
+      "location": "Lantau Peak, Hong Kong",
+      "featured": false,
+      "src": {
+        "original": "https://images.pexels.com/photos/1906658/pexels-photo-1906658.jpeg",
+        "large2x": "https://images.pexels.com/photos/1906658/pexels-photo-1906658.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=1200",
+        "large": "https://images.pexels.com/photos/1906658/pexels-photo-1906658.jpeg?auto=compress&cs=tinysrgb&w=1000",
+        "medium": "https://images.pexels.com/photos/1906658/pexels-photo-1906658.jpeg?auto=compress&cs=tinysrgb&w=600",
+        "small": "https://images.pexels.com/photos/1906658/pexels-photo-1906658.jpeg?auto=compress&cs=tinysrgb&w=350"
+      }
+    }
+  ]
 }

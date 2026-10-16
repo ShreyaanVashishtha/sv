@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Status, HeaderSettings } from '@/types/content';
-import { Menu, X, ArrowUpRight, FileDown } from 'lucide-react';
+import { Menu, X, ArrowUpRight, FileDown, Camera } from 'lucide-react';
 
 interface NavbarProps {
   status: Status;
@@ -15,6 +16,7 @@ interface NavbarProps {
 export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname() || '/';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,7 +30,8 @@ export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps)
   const brandTitle = headerSettings?.brandTitle || siteName || 'sv7.dev';
   const badgeSubtitle = headerSettings?.badgeSubtitle || 'HKUST Astrix';
   const ctaText = headerSettings?.ctaText || 'Get in Touch';
-  const ctaHref = headerSettings?.ctaHref || '#contact';
+  const rawCtaHref = headerSettings?.ctaHref || '#contact';
+  const ctaHref = rawCtaHref.startsWith('#') && pathname !== '/' ? `/${rawCtaHref}` : rawCtaHref;
   const resumeButtonText = headerSettings?.resumeButtonText || 'Resume / CV';
   const showResume = headerSettings?.showResumeButton !== false && Boolean(cvUrl);
 
@@ -37,12 +40,28 @@ export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps)
     { name: 'Capabilities', href: '#skills', enabled: true },
     { name: 'Experience', href: '#experience', enabled: true },
     { name: 'Education', href: '#education', enabled: true },
+    { name: 'Photography', href: '/photography', enabled: true },
     { name: 'Contact', href: '#contact', enabled: true },
   ];
 
-  const navLinks = (headerSettings?.navLinks || defaultNavLinks).filter(
-    (link) => link.enabled !== false
-  );
+  const rawNavLinks = headerSettings?.navLinks && headerSettings.navLinks.length > 0
+    ? headerSettings.navLinks
+    : defaultNavLinks;
+
+  // Ensure photography link is available if not in custom navLinks
+  const hasPhotography = rawNavLinks.some((l) => l.href.includes('photography'));
+  const effectiveNavLinks = hasPhotography
+    ? rawNavLinks
+    : [...rawNavLinks.filter((l) => l.name !== 'Contact'), { name: 'Photography', href: '/photography', enabled: true }, ...rawNavLinks.filter((l) => l.name === 'Contact')];
+
+  const navLinks = effectiveNavLinks.filter((link) => link.enabled !== false);
+
+  const resolveHref = (href: string) => {
+    if (href.startsWith('#') && pathname !== '/') {
+      return `/${href}`;
+    }
+    return href;
+  };
 
   return (
     <header
@@ -74,15 +93,23 @@ export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps)
         {/* Desktop Navigation Links */}
         {navLinks.length > 0 && (
           <nav className="hidden md:flex items-center gap-1 bg-zinc-900/60 p-1.5 rounded-full border border-white/10 backdrop-blur-md">
-            {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                className="px-4 py-1.5 rounded-full text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/5 transition-all"
-              >
-                {link.name}
-              </a>
-            ))}
+            {navLinks.map((link) => {
+              const target = resolveHref(link.href);
+              const isActive = (pathname === link.href) || (link.href === '/photography' && pathname.startsWith('/photography'));
+              return (
+                <a
+                  key={link.name}
+                  href={target}
+                  className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${
+                    isActive
+                      ? 'bg-white text-black font-semibold shadow-sm'
+                      : 'text-zinc-400 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  {link.name}
+                </a>
+              );
+            })}
           </nav>
         )}
 
@@ -124,16 +151,22 @@ export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps)
       {/* Mobile dropdown */}
       {mobileMenuOpen && (
         <div className="md:hidden glass-nav border-t border-white/10 px-6 py-4 space-y-3">
-          {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-sm font-medium text-zinc-300 hover:text-white py-1.5"
-            >
-              {link.name}
-            </a>
-          ))}
+          {navLinks.map((link) => {
+            const target = resolveHref(link.href);
+            const isActive = (pathname === link.href) || (link.href === '/photography' && pathname.startsWith('/photography'));
+            return (
+              <a
+                key={link.name}
+                href={target}
+                onClick={() => setMobileMenuOpen(false)}
+                className={`block text-sm font-medium py-1.5 ${
+                  isActive ? 'text-white font-bold' : 'text-zinc-300 hover:text-white'
+                }`}
+              >
+                {link.name}
+              </a>
+            );
+          })}
           <div className="pt-3 border-t border-white/10 flex items-center justify-between">
             {showResume && cvUrl && (
               <a

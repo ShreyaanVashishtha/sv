@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { WebsiteData, SiteSettings } from '@/types/content';
+import { WebsiteData, SiteSettings, PhotoItem, PhotographySettings } from '@/types/content';
 import { redis } from '@/lib/redis';
 
 const DATA_FILE_PATH = path.join(process.cwd(), 'data', 'content.json');
@@ -136,6 +136,18 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   },
 };
 
+export const DEFAULT_PHOTOGRAPHY_SETTINGS: PhotographySettings = {
+  title: 'Visual Archive & Photography',
+  subtitle: 'Aerospace perspectives, mechanical forms, and terrestrial observations through the lens.',
+  bio: 'A curated visual log captured on 35mm & digital sensors — featuring aviation, structural geometry, urban nocturnes, and natural textures.',
+  pexelsProfileUrl: 'https://www.pexels.com/@shreyaan-vashishtha',
+  pexelsUsername: 'shreyaan-vashishtha',
+  pexelsCollectionId: '',
+  categories: ['All', 'Aerospace & Aviation', 'Architecture', 'Urban & Nocturne', 'Nature & Textures'],
+  enableExif: true,
+  photosPerPage: 24,
+};
+
 const DEFAULT_CONTENT: WebsiteData = {
   profile: {
     name: 'Shreyaan Vashishtha',
@@ -164,13 +176,15 @@ const DEFAULT_CONTENT: WebsiteData = {
   socials: [
     { name: 'LinkedIn', url: 'https://www.linkedin.com/in/shreyaanv/', icon: 'linkedin' },
     { name: 'Email', url: 'mailto:shreyaan2007@gmail.com', icon: 'mail' },
-    { name: 'GitHub', url: 'https://github.com', icon: 'github' },
+    { name: 'GitHub', url: 'https://github.com/ShreyaanVashishtha', icon: 'github' },
   ],
   projects: [],
   skills: [],
   experience: [],
   education: [],
   certifications: [],
+  photos: [],
+  photographySettings: DEFAULT_PHOTOGRAPHY_SETTINGS,
   settings: DEFAULT_SETTINGS,
 };
 
@@ -250,6 +264,11 @@ function mergeWithDefaults(parsed: any): WebsiteData {
         ...DEFAULT_SETTINGS.theme,
         ...(parsed?.settings?.theme || {}),
       },
+    },
+    photos: Array.isArray(parsed?.photos) ? parsed.photos : [],
+    photographySettings: {
+      ...DEFAULT_PHOTOGRAPHY_SETTINGS,
+      ...(parsed?.photographySettings || {}),
     },
   };
 }

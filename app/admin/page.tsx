@@ -12,6 +12,8 @@ import {
   Social,
   Metric,
   NavLink,
+  PhotoItem,
+  PhotographySettings,
 } from '@/types/content';
 import {
   Shield,
@@ -54,6 +56,7 @@ import {
   KeyRound,
   Fingerprint,
   Search,
+  Camera,
 } from 'lucide-react';
 
 interface InboxMessage {
@@ -92,6 +95,7 @@ export default function AdminPage() {
     | 'terminal'
     | 'contact'
     | 'inbox'
+    | 'photography'
     | 'flow'
     | 'socials'
     | 'footer'
@@ -99,6 +103,9 @@ export default function AdminPage() {
     | 'rawjson'
     | 'backup'
   >('profile');
+  const [syncingPexels, setSyncingPexels] = useState(false);
+  const [pexelsSyncStatus, setPexelsSyncStatus] = useState('');
+  const [newPhotoUrl, setNewPhotoUrl] = useState('');
   const [saveStatus, setSaveStatus] = useState<{ type: 'success' | 'error' | ''; message: string }>({
     type: '',
     message: '',
@@ -493,6 +500,118 @@ export default function AdminPage() {
     }
   };
 
+  const handleSyncPexels = async () => {
+    if (!data) return;
+    setSyncingPexels(true);
+    setPexelsSyncStatus('Connecting to Pexels and fetching photography portfolio...');
+    try {
+      const res = await fetch('/api/photography/sync', {
+        method: 'POST',
+        headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify({
+          pexelsApiKey: data.photographySettings?.pexelsApiKey,
+          pexelsProfileUrl: data.photographySettings?.pexelsProfileUrl,
+          pexelsUsername: data.photographySettings?.pexelsUsername,
+          pexelsCollectionId: data.photographySettings?.pexelsCollectionId,
+        }),
+      });
+      const result = await res.json();
+      if (res.ok && result.success) {
+        setData((prev) =>
+          prev
+            ? {
+                ...prev,
+                photos: result.photos,
+                photographySettings: {
+                  ...prev.photographySettings,
+                  ...result.photographySettings,
+                },
+              }
+            : prev
+        );
+        setPexelsSyncStatus(result.message || `Successfully synced ${result.count} photos!`);
+      } else {
+        setPexelsSyncStatus(`Sync error: ${result.error || 'Failed to sync with Pexels'}`);
+      }
+    } catch (err: any) {
+      setPexelsSyncStatus(`Network error: ${err?.message || 'Sync failed'}`);
+    } finally {
+      setSyncingPexels(false);
+    }
+  };
+
+  const handleAddManualPhoto = () => {
+    if (!data) return;
+    const cleanUrl = newPhotoUrl.trim();
+    if (!cleanUrl) return;
+
+    const pexelsIdMatch = cleanUrl.match(/pexels\.com\/photo\/[^\/]*?(\d+)/i) || cleanUrl.match(/photos\/(\d+)/i);
+    const id = pexelsIdMatch ? pexelsIdMatch[1] : String(Date.now());
+
+    const isDirectImage = cleanUrl.startsWith('http') && (cleanUrl.includes('.jpeg') || cleanUrl.includes('.jpg') || cleanUrl.includes('.png') || cleanUrl.includes('images.pexels.com'));
+
+    const displayUrl = isDirectImage
+      ? cleanUrl
+      : pexelsIdMatch
+      ? `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=1200`
+      : cleanUrl;
+
+    const newPhoto: PhotoItem = {
+      id,
+      title: `Pexels Capture #${id}`,
+      description: '',
+      category: 'Aerospace & Aviation',
+      src: {
+        original: displayUrl,
+        large2x: displayUrl,
+        large: displayUrl,
+        medium: displayUrl,
+        small: displayUrl,
+      },
+      width: 4000,
+      height: 3000,
+      url: pexelsIdMatch ? `https://www.pexels.com/photo/${id}/` : cleanUrl,
+      photographer: data.profile?.name || 'Shreyaan Vashishtha',
+      photographerUrl: data.photographySettings?.pexelsProfileUrl || 'https://www.pexels.com/@shreyaan-vashishtha',
+      camera: 'Sony Alpha 7 IV',
+      lens: 'FE 24-70mm f/2.8 GM',
+      focalLength: '50mm',
+      aperture: 'f/2.8',
+      shutterSpeed: '1/500s',
+      iso: '100',
+      featured: false,
+    };
+
+    setData({
+      ...data,
+      photos: [newPhoto, ...(data.photos || [])],
+    });
+    setNewPhotoUrl('');
+  };
+
+  const handleMovePhoto = (index: number, direction: 'up' | 'down') => {
+    if (!data || !data.photos) return;
+    const newPhotos = [...data.photos];
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= newPhotos.length) return;
+    const temp = newPhotos[index];
+    newPhotos[index] = newPhotos[targetIndex];
+    newPhotos[targetIndex] = temp;
+    setData({
+      ...data,
+      photos: newPhotos,
+    });
+  };
+
+  const handleDeletePhoto = (index: number) => {
+    if (!data || !data.photos) return;
+    const updated = data.photos.filter((_, i) => i !== index);
+    setData({
+      ...data,
+      photos: updated,
+    });
+  };
+
   // Section Order reordering
   const handleMoveSection = (index: number, direction: 'up' | 'down') => {
     if (!data || !data.settings.sectionOrder) return;
@@ -757,6 +876,12 @@ export default function AdminPage() {
       label: 'Inquiries Inbox',
       icon: Inbox,
       badge: unreadCount > 0 ? `${unreadCount} new` : messages.length > 0 ? `${messages.length}` : undefined,
+    },
+    {
+      id: 'photography',
+      label: `Photography (${data.photos?.length || 0})`,
+      icon: Camera,
+      badge: data.photos?.length ? `${data.photos.length}` : undefined,
     },
     { id: 'flow', label: 'Section Flow & Toggles', icon: Eye },
     { id: 'socials', label: 'Social Channels', icon: Share2 },
@@ -2970,6 +3095,465 @@ export default function AdminPage() {
                         </div>
                       )}
                     </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* TAB: PHOTOGRAPHY & PEXELS */}
+          {activeTab === 'photography' && (
+            <div className="space-y-6">
+              {/* Header card */}
+              <div className="p-6 rounded-3xl bg-zinc-900/40 border border-white/10 space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-white/10">
+                  <div className="flex items-center gap-2.5">
+                    <Camera className="w-5 h-5 text-emerald-400" />
+                    <div>
+                      <h2 className="text-base font-bold text-white">Photography &amp; Pexels Synchronization</h2>
+                      <p className="text-xs text-zinc-400">
+                        Showcase your photography gallery at <code className="text-zinc-200">/photography</code> and auto-pull from Pexels.com.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <a
+                      href="/photography"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white text-black hover:bg-zinc-200 text-xs font-semibold transition-all shadow-sm"
+                    >
+                      <span>Preview Live Gallery</span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
+                </div>
+
+                {/* Pexels Integration Config Box */}
+                <div className="p-5 rounded-2xl bg-zinc-950 border border-white/10 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      <h3 className="text-xs font-bold text-white uppercase font-mono tracking-wider">
+                        Pexels Account Integration
+                      </h3>
+                    </div>
+                    <a
+                      href="https://www.pexels.com/api/new/"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-[10px] font-mono text-emerald-400 hover:underline flex items-center gap-1"
+                    >
+                      <span>Get Free Pexels API Key</span>
+                      <ExternalLink className="w-2.5 h-2.5" />
+                    </a>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">
+                        Pexels Profile URL
+                      </label>
+                      <input
+                        type="text"
+                        value={data.photographySettings?.pexelsProfileUrl || ''}
+                        onChange={(e) =>
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Photography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              pexelsProfileUrl: e.target.value,
+                            },
+                          })
+                        }
+                        placeholder="https://www.pexels.com/@your-username"
+                        className="w-full px-3.5 py-2 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">
+                        Pexels Username / Handle
+                      </label>
+                      <input
+                        type="text"
+                        value={data.photographySettings?.pexelsUsername || ''}
+                        onChange={(e) =>
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Photography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              pexelsUsername: e.target.value,
+                            },
+                          })
+                        }
+                        placeholder="your-username"
+                        className="w-full px-3.5 py-2 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">
+                        Pexels API Key (Free)
+                      </label>
+                      <input
+                        type="password"
+                        value={data.photographySettings?.pexelsApiKey || ''}
+                        onChange={(e) =>
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Photography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              pexelsApiKey: e.target.value,
+                            },
+                          })
+                        }
+                        placeholder="Paste your Pexels API key (or set PEXELS_API_KEY in Vercel)..."
+                        className="w-full px-3.5 py-2 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono"
+                      />
+                      <span className="text-[10px] text-zinc-500 mt-1 block">
+                        Get your API key instantly in 30 seconds at pexels.com/api/new.
+                      </span>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">
+                        Specific Collection ID (Optional)
+                      </label>
+                      <input
+                        type="text"
+                        value={data.photographySettings?.pexelsCollectionId || ''}
+                        onChange={(e) =>
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Photography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              pexelsCollectionId: e.target.value,
+                            },
+                          })
+                        }
+                        placeholder="Leave empty to sync all your uploaded photos"
+                        className="w-full px-3.5 py-2 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Sync Action Button */}
+                  <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <button
+                      type="button"
+                      onClick={handleSyncPexels}
+                      disabled={syncingPexels}
+                      className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs transition-all disabled:opacity-50 shadow-sm"
+                    >
+                      <RefreshCw className={`w-3.5 h-3.5 ${syncingPexels ? 'animate-spin' : ''}`} />
+                      <span>{syncingPexels ? 'Pulling from Pexels...' : 'Pull & Sync Photos from Pexels Now'}</span>
+                    </button>
+
+                    {pexelsSyncStatus && (
+                      <div className="text-xs font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-xl">
+                        {pexelsSyncStatus}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Page Presentation Settings */}
+                <div className="pt-4 border-t border-white/10 space-y-4">
+                  <h3 className="text-xs font-bold text-white uppercase font-mono tracking-wider">
+                    Gallery Presentation Settings
+                  </h3>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">
+                        Page Title
+                      </label>
+                      <input
+                        type="text"
+                        value={data.photographySettings?.title || ''}
+                        onChange={(e) =>
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: e.target.value,
+                              subtitle: data.photographySettings?.subtitle || '',
+                            },
+                          })
+                        }
+                        className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-xs text-white"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">
+                        Tagline / Subtitle
+                      </label>
+                      <input
+                        type="text"
+                        value={data.photographySettings?.subtitle || ''}
+                        onChange={(e) =>
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Photography',
+                              subtitle: e.target.value,
+                            },
+                          })
+                        }
+                        className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-xs text-white"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">
+                      Curator Bio / Artist Statement
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={data.photographySettings?.bio || ''}
+                      onChange={(e) =>
+                        setData({
+                          ...data,
+                          photographySettings: {
+                            ...data.photographySettings,
+                            title: data.photographySettings?.title || 'Visual Archive & Photography',
+                            subtitle: data.photographySettings?.subtitle || '',
+                            bio: e.target.value,
+                          },
+                        })
+                      }
+                      className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-xs text-white resize-none"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* PHOTOS CURATION & REORDER LIST */}
+              <div className="p-6 rounded-3xl bg-zinc-900/40 border border-white/10 space-y-5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/10">
+                  <div>
+                    <h3 className="text-base font-bold text-white">
+                      Curated Photographs ({data.photos?.length || 0})
+                    </h3>
+                    <p className="text-xs text-zinc-400">
+                      Reorder, categorize, or fine-tune captions and camera EXIF information.
+                    </p>
+                  </div>
+
+                  {/* Quick Add photo input */}
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={newPhotoUrl}
+                      onChange={(e) => setNewPhotoUrl(e.target.value)}
+                      placeholder="Paste Pexels photo URL or ID..."
+                      className="px-3 py-1.5 rounded-xl bg-zinc-950 border border-white/10 text-xs text-white min-w-[220px]"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleAddManualPhoto}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white text-black hover:bg-zinc-200 text-xs font-semibold transition-all"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Add Frame</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Photos List */}
+                {(!data.photos || data.photos.length === 0) ? (
+                  <div className="text-center py-12 text-xs text-zinc-500 font-mono">
+                    No photographs in the archive yet. Click &quot;Pull &amp; Sync Photos from Pexels Now&quot; above to import your library.
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {data.photos.map((photo, idx) => (
+                      <div
+                        key={photo.id || idx}
+                        className="p-4 rounded-2xl bg-zinc-950 border border-white/10 flex flex-col md:flex-row gap-4 items-start"
+                      >
+                        {/* Thumbnail */}
+                        <div className="w-full md:w-36 h-28 rounded-xl overflow-hidden bg-zinc-900 border border-white/10 shrink-0 relative">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={photo.src?.small || photo.src?.medium || photo.src?.original}
+                            alt={photo.title}
+                            className="w-full h-full object-cover"
+                          />
+                          {photo.featured && (
+                            <span className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-emerald-500 text-black text-[9px] font-bold font-mono uppercase">
+                              Featured
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Editable details */}
+                        <div className="flex-1 space-y-3 w-full">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                              <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
+                                Title / Headline
+                              </label>
+                              <input
+                                type="text"
+                                value={photo.title}
+                                onChange={(e) => {
+                                  const updated = [...(data.photos || [])];
+                                  updated[idx] = { ...photo, title: e.target.value };
+                                  setData({ ...data, photos: updated });
+                                }}
+                                className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-medium"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
+                                Category
+                              </label>
+                              <select
+                                value={photo.category || 'Aerospace & Aviation'}
+                                onChange={(e) => {
+                                  const updated = [...(data.photos || [])];
+                                  updated[idx] = { ...photo, category: e.target.value };
+                                  setData({ ...data, photos: updated });
+                                }}
+                                className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white"
+                              >
+                                <option value="Aerospace & Aviation">Aerospace &amp; Aviation</option>
+                                <option value="Architecture & Geometry">Architecture &amp; Geometry</option>
+                                <option value="Urban & Nocturne">Urban &amp; Nocturne</option>
+                                <option value="Nature & Textures">Nature &amp; Textures</option>
+                              </select>
+                            </div>
+                          </div>
+
+                          {/* Camera & EXIF details */}
+                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                            <div>
+                              <label className="block text-[9px] font-mono text-zinc-500 uppercase">Camera</label>
+                              <input
+                                type="text"
+                                value={photo.camera || ''}
+                                onChange={(e) => {
+                                  const updated = [...(data.photos || [])];
+                                  updated[idx] = { ...photo, camera: e.target.value };
+                                  setData({ ...data, photos: updated });
+                                }}
+                                placeholder="Sony Alpha 7 IV"
+                                className="w-full px-2 py-1 rounded-lg bg-zinc-900 border border-white/10 text-[11px] text-zinc-200"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-[9px] font-mono text-zinc-500 uppercase">Lens</label>
+                              <input
+                                type="text"
+                                value={photo.lens || ''}
+                                onChange={(e) => {
+                                  const updated = [...(data.photos || [])];
+                                  updated[idx] = { ...photo, lens: e.target.value };
+                                  setData({ ...data, photos: updated });
+                                }}
+                                placeholder="FE 24-70mm"
+                                className="w-full px-2 py-1 rounded-lg bg-zinc-900 border border-white/10 text-[11px] text-zinc-200"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-[9px] font-mono text-zinc-500 uppercase">Aperture / Shutter</label>
+                              <input
+                                type="text"
+                                value={`${photo.aperture || 'f/2.8'} • ${photo.shutterSpeed || '1/500s'}`}
+                                onChange={(e) => {
+                                  const parts = e.target.value.split('•').map((s) => s.trim());
+                                  const updated = [...(data.photos || [])];
+                                  updated[idx] = {
+                                    ...photo,
+                                    aperture: parts[0] || photo.aperture,
+                                    shutterSpeed: parts[1] || photo.shutterSpeed,
+                                  };
+                                  setData({ ...data, photos: updated });
+                                }}
+                                className="w-full px-2 py-1 rounded-lg bg-zinc-900 border border-white/10 text-[11px] text-zinc-200 font-mono"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-[9px] font-mono text-zinc-500 uppercase">Location</label>
+                              <input
+                                type="text"
+                                value={photo.location || ''}
+                                onChange={(e) => {
+                                  const updated = [...(data.photos || [])];
+                                  updated[idx] = { ...photo, location: e.target.value };
+                                  setData({ ...data, photos: updated });
+                                }}
+                                placeholder="Hong Kong SAR"
+                                className="w-full px-2 py-1 rounded-lg bg-zinc-900 border border-white/10 text-[11px] text-zinc-200"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="flex items-center justify-between pt-1">
+                            <label className="flex items-center gap-1.5 cursor-pointer text-xs text-zinc-400 hover:text-white">
+                              <input
+                                type="checkbox"
+                                checked={Boolean(photo.featured)}
+                                onChange={(e) => {
+                                  const updated = [...(data.photos || [])];
+                                  updated[idx] = { ...photo, featured: e.target.checked };
+                                  setData({ ...data, photos: updated });
+                                }}
+                                className="w-3.5 h-3.5 rounded accent-white"
+                              />
+                              <span>Feature on hero cover</span>
+                            </label>
+
+                            <div className="flex items-center gap-1">
+                              <button
+                                type="button"
+                                onClick={() => handleMovePhoto(idx, 'up')}
+                                disabled={idx === 0}
+                                className="p-1 text-zinc-500 hover:text-white disabled:opacity-30"
+                                title="Move Earlier"
+                              >
+                                <MoveUp className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleMovePhoto(idx, 'down')}
+                                disabled={idx === (data.photos?.length || 0) - 1}
+                                className="p-1 text-zinc-500 hover:text-white disabled:opacity-30"
+                                title="Move Later"
+                              >
+                                <MoveDown className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleDeletePhoto(idx)}
+                                className="p-1 text-zinc-500 hover:text-rose-400 ml-2"
+                                title="Delete Photo"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>

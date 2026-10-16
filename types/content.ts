@@ -198,6 +198,52 @@ export interface SiteSettings {
   theme?: ThemeSettings;
 }
 
+export interface PhotoItem {
+  id: string;
+  title: string;
+  description?: string;
+  category?: string;
+  src: {
+    original: string;
+    large2x: string;
+    large: string;
+    medium: string;
+    small: string;
+    portrait?: string;
+    landscape?: string;
+    tiny?: string;
+  };
+  width: number;
+  height: number;
+  url: string;
+  photographer?: string;
+  photographerUrl?: string;
+  avgColor?: string;
+  alt?: string;
+  location?: string;
+  camera?: string;
+  lens?: string;
+  focalLength?: string;
+  aperture?: string;
+  shutterSpeed?: string;
+  iso?: string;
+  featured?: boolean;
+  date?: string;
+}
+
+export interface PhotographySettings {
+  title: string;
+  subtitle: string;
+  bio?: string;
+  pexelsProfileUrl?: string;
+  pexelsUsername?: string;
+  pexelsCollectionId?: string;
+  pexelsApiKey?: string;
+  categories?: string[];
+  enableExif?: boolean;
+  photosPerPage?: number;
+}
+
 export interface WebsiteData {
   profile: Profile;
   socials: Social[];
@@ -206,5 +252,7 @@ export interface WebsiteData {
   experience: ExperienceItem[];
   education: EducationItem[];
   certifications: CertificationItem[];
+  photos?: PhotoItem[];
+  photographySettings?: PhotographySettings;
   settings: SiteSettings;
 }
