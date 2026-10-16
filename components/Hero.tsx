@@ -67,8 +67,8 @@ export function Hero({
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-white/[0.02] blur-[120px] rounded-full pointer-events-none" />
 
       <div className="max-w-5xl mx-auto px-6 relative z-10">
-        {/* Availability Badge */}
-        {profile.status && (
+        {/* Availability Badge (Hidden by default, toggleable in admin) */}
+        {Boolean(heroSettings?.showStatusBadge) && profile.status && profile.status.text && (
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-900/80 border border-white/10 text-xs text-zinc-300 mb-8 backdrop-blur-md shadow-sm">
             <span className="relative flex h-2 w-2">
               <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${profile.status.available ? 'bg-emerald-400' : 'bg-amber-400'}`} />

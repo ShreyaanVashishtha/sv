@@ -825,6 +825,7 @@ export default function AdminPage() {
     showResumeButton: true,
   };
   const hero = settings.hero || {
+    showStatusBadge: false,
     statusBadgePrefix: 'Status',
     exploreButtonText: 'Explore Work',
     exploreButtonHref: '#projects',
@@ -1226,7 +1227,29 @@ export default function AdminPage() {
 
               {/* Status Beacon & Hero Buttons */}
               <div className="p-6 rounded-3xl bg-zinc-900/40 border border-white/10 space-y-4">
-                <h2 className="text-base font-bold text-white mb-2">Live Availability Beacon & Hero Buttons</h2>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/10">
+                  <div>
+                    <h2 className="text-base font-bold text-white">Live Availability Beacon & Hero Buttons</h2>
+                    <p className="text-xs text-zinc-400">Configure status announcement pill and action buttons on your homepage.</p>
+                  </div>
+                  <label className="flex items-center gap-2 cursor-pointer text-xs text-zinc-300 bg-zinc-950 px-3 py-1.5 rounded-xl border border-white/10 hover:border-white/20 transition-all">
+                    <input
+                      type="checkbox"
+                      checked={Boolean(hero.showStatusBadge)}
+                      onChange={(e) =>
+                        setData({
+                          ...data,
+                          settings: {
+                            ...data.settings,
+                            hero: { ...hero, showStatusBadge: e.target.checked },
+                          },
+                        })
+                      }
+                      className="w-4 h-4 rounded accent-emerald-500"
+                    />
+                    <span>Show Status Badge on Hero</span>
+                  </label>
+                </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div className="flex items-center gap-2 pt-6">

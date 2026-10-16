@@ -107,6 +107,7 @@ export interface HeaderSettings {
 }
 
 export interface HeroSettings {
+  showStatusBadge?: boolean;
   statusBadgePrefix: string;
   exploreButtonText: string;
   exploreButtonHref: string;

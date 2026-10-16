@@ -70,6 +70,7 @@ export const DEFAULT_SETTINGS: SiteSettings = {
     showResumeButton: true,
   },
   hero: {
+    showStatusBadge: false,
     statusBadgePrefix: 'Status',
     exploreButtonText: 'Explore Work',
     exploreButtonHref: '#projects',

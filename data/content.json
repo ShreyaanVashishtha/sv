@@ -349,6 +349,7 @@
       "showResumeButton": true
     },
     "hero": {
+      "showStatusBadge": false,
       "statusBadgePrefix": "Status",
       "exploreButtonText": "Explore Work",
       "exploreButtonHref": "#projects",
