@@ -52,6 +52,7 @@ import {
   Globe,
   Database,
   KeyRound,
+  Fingerprint,
 } from 'lucide-react';
 
 interface InboxMessage {
@@ -76,6 +77,8 @@ export default function AdminPage() {
   const [messages, setMessages] = useState<InboxMessage[]>([]);
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [selectedMessage, setSelectedMessage] = useState<InboxMessage | null>(null);
+  const [hasRegisteredBiometrics, setHasRegisteredBiometrics] = useState(false);
+  const [biometricsStatus, setBiometricsStatus] = useState('');
   const [activeTab, setActiveTab] = useState<
     | 'profile'
     | 'navigation'
@@ -102,6 +105,7 @@ export default function AdminPage() {
 
   useEffect(() => {
     checkAuthAndLoad();
+    checkBiometricsStatus();
   }, []);
 
   const getAuthHeaders = (extra: Record<string, string> = {}) => {
@@ -113,6 +117,186 @@ export default function AdminPage() {
       }
     }
     return headers;
+  };
+
+  const getRpId = () => {
+    if (typeof window === 'undefined') return 'localhost';
+    const hostname = window.location.hostname;
+    if (hostname === 'localhost' || hostname === '127.0.0.1') return 'localhost';
+    if (hostname.endsWith('sv7.dev')) return 'sv7.dev';
+    return hostname;
+  };
+
+  const checkBiometricsStatus = async () => {
+    try {
+      const res = await fetch('/api/auth/biometrics');
+      if (res.ok) {
+        const json = await res.json();
+        const storedId = typeof window !== 'undefined' ? localStorage.getItem('sv7_biometric_id') : null;
+        setHasRegisteredBiometrics(!!json.isConfigured || !!storedId);
+      }
+    } catch {
+      // ignore
+    }
+  };
+
+  const handleRegisterBiometrics = async () => {
+    if (typeof window === 'undefined' || !window.PublicKeyCredential) {
+      alert('Touch ID / Biometric authentication is not supported on this device/browser.');
+      return;
+    }
+    setLoading(true);
+    setBiometricsStatus('Scanning Touch ID / fingerprint sensor...');
+    try {
+      const challenge = new Uint8Array(32);
+      window.crypto.getRandomValues(challenge);
+      const userId = new Uint8Array([115, 118, 55, 95, 97, 100, 109, 105, 110]); // 'sv7_admin'
+
+      const credential = (await navigator.credentials.create({
+        publicKey: {
+          challenge,
+          rp: {
+            name: 'sv7.dev Admin Console',
+            id: getRpId(),
+          },
+          user: {
+            id: userId,
+            name: 'admin@sv7.dev',
+            displayName: 'sv7.dev Administrator',
+          },
+          pubKeyCredParams: [
+            { alg: -7, type: 'public-key' },
+            { alg: -257, type: 'public-key' },
+          ],
+          authenticatorSelection: {
+            authenticatorAttachment: 'platform',
+            userVerification: 'required',
+            residentKey: 'preferred',
+          },
+          timeout: 60000,
+        },
+      })) as PublicKeyCredential;
+
+      if (!credential || !credential.id) {
+        throw new Error('No credential generated');
+      }
+
+      const res = await fetch('/api/auth/biometrics/register', {
+        method: 'POST',
+        headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
+        credentials: 'include',
+        body: JSON.stringify({ credentialId: credential.id }),
+      });
+
+      const json = await res.json();
+      if (res.ok && json.success) {
+        localStorage.setItem('sv7_biometric_id', credential.id);
+        setHasRegisteredBiometrics(true);
+        setBiometricsStatus('Fingerprint registered successfully! You can now log in with Touch ID.');
+        setTimeout(() => setBiometricsStatus(''), 5000);
+      } else {
+        setBiometricsStatus(json.error || 'Failed to save biometric passkey.');
+      }
+    } catch (err: any) {
+      if (err.name === 'NotAllowedError') {
+        setBiometricsStatus('Touch ID registration cancelled.');
+      } else {
+        setBiometricsStatus(err.message || 'Touch ID setup encountered an error.');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleBiometricLogin = async () => {
+    setLoading(true);
+    setLoginError('');
+    try {
+      if (typeof window === 'undefined' || !window.PublicKeyCredential) {
+        setLoginError('Biometric passkeys are not supported on this browser.');
+        return;
+      }
+
+      const statusRes = await fetch('/api/auth/biometrics');
+      const { credentialIds } = await statusRes.json();
+      const storedId = localStorage.getItem('sv7_biometric_id');
+      const allowIds =
+        credentialIds && credentialIds.length > 0
+          ? credentialIds
+          : storedId
+          ? [storedId]
+          : [];
+
+      if (allowIds.length === 0) {
+        setLoginError(
+          'No fingerprint registered yet. Please log in with your Master Passkey first, then click "Register Fingerprint" in Site Settings.'
+        );
+        return;
+      }
+
+      const challenge = new Uint8Array(32);
+      window.crypto.getRandomValues(challenge);
+
+      const assertion = (await navigator.credentials.get({
+        publicKey: {
+          challenge,
+          rpId: getRpId(),
+          userVerification: 'required',
+          timeout: 60000,
+        },
+      })) as PublicKeyCredential;
+
+      if (!assertion || !assertion.id) {
+        throw new Error('Biometric verification cancelled');
+      }
+
+      const verifyRes = await fetch('/api/auth/biometrics/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ credentialId: assertion.id }),
+      });
+
+      const verifyJson = await verifyRes.json();
+      if (verifyRes.ok && verifyJson.success) {
+        if (verifyJson.token) {
+          localStorage.setItem('sv7_admin_token', verifyJson.token);
+        }
+        setIsAuthenticated(true);
+        setPasswordInput('');
+        fetchContent();
+        fetchMessages();
+      } else {
+        setLoginError(verifyJson.error || 'Biometric authentication failed.');
+      }
+    } catch (err: any) {
+      if (err.name === 'NotAllowedError') {
+        setLoginError('Touch ID verification cancelled or timed out.');
+      } else {
+        setLoginError(err.message || 'Biometric verification failed.');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleClearBiometrics = async () => {
+    if (!confirm('Remove all registered biometric passkeys for this console?')) return;
+    try {
+      const res = await fetch('/api/auth/biometrics', {
+        method: 'DELETE',
+        headers: getAuthHeaders(),
+        credentials: 'include',
+      });
+      if (res.ok) {
+        localStorage.removeItem('sv7_biometric_id');
+        setHasRegisteredBiometrics(false);
+        setBiometricsStatus('Biometric passkeys removed.');
+        setTimeout(() => setBiometricsStatus(''), 4000);
+      }
+    } catch {
+      alert('Failed to remove biometric passkeys');
+    }
   };
 
   const checkAuthAndLoad = async () => {
@@ -386,8 +570,46 @@ export default function AdminPage() {
             </div>
             <h1 className="text-2xl font-bold tracking-tight text-white">sv7.dev Master Admin</h1>
             <p className="text-xs text-zinc-400 mt-1">
-              Enter your Master Passkey for administrative access.
+              Authenticate via Biometric Passkey or Master Key.
             </p>
+          </div>
+
+          {/* FINGERPRINT / TOUCH ID FAST UNLOCK */}
+          <div className="mb-5">
+            <button
+              type="button"
+              onClick={handleBiometricLogin}
+              disabled={loading}
+              className="w-full relative group overflow-hidden bg-gradient-to-r from-zinc-800 to-zinc-900 hover:from-zinc-700/80 hover:to-zinc-800 text-white font-medium text-xs py-3.5 px-4 rounded-2xl border border-white/10 hover:border-emerald-500/50 transition-all shadow-lg flex items-center justify-between disabled:opacity-50"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
+                  <Fingerprint className="w-5 h-5" />
+                </div>
+                <div className="text-left">
+                  <div className="font-semibold text-white flex items-center gap-1.5">
+                    Sign in with Fingerprint
+                    <span className="text-[9px] font-mono text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 font-bold">
+                      Touch ID
+                    </span>
+                  </div>
+                  <div className="text-[10px] text-zinc-400">
+                    Instant biometric hardware unlock
+                  </div>
+                </div>
+              </div>
+              <span className="text-[11px] font-mono text-zinc-400 group-hover:text-emerald-400 transition-colors">
+                Tap →
+              </span>
+            </button>
+          </div>
+
+          <div className="relative flex items-center justify-center mb-5">
+            <div className="border-t border-white/10 w-full"></div>
+            <span className="bg-zinc-900/90 px-3 text-[10px] font-mono text-zinc-500 uppercase tracking-wider relative">
+              Or Master Passkey
+            </span>
+            <div className="border-t border-white/10 w-full"></div>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
@@ -3119,6 +3341,61 @@ export default function AdminPage() {
                   <p>
                     Set your custom passkey above and click <strong>Save All Changes</strong>. You can also permanently enforce it in Vercel using the <code className="text-zinc-200 bg-zinc-900 px-1.5 py-0.5 rounded border border-white/10 font-mono">ADMIN_PASSKEY</code> environment variable.
                   </p>
+                </div>
+              </div>
+
+              {/* BIOMETRIC / TOUCH ID PASSKEY CARD */}
+              <div className="pt-6 border-t border-white/10 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Fingerprint className="w-4 h-4 text-emerald-400" />
+                    <label className="block text-xs font-mono text-zinc-300 uppercase font-semibold">
+                      Biometric Passkey (Touch ID / Fingerprint)
+                    </label>
+                  </div>
+                  {hasRegisteredBiometrics ? (
+                    <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full font-bold flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                      Touch ID Active
+                    </span>
+                  ) : (
+                    <span className="text-[10px] font-mono text-zinc-500 bg-zinc-800 border border-white/10 px-2 py-0.5 rounded-full">
+                      Not Configured
+                    </span>
+                  )}
+                </div>
+
+                <p className="text-[11px] text-zinc-400 leading-relaxed">
+                  Register your device&apos;s fingerprint sensor (Apple Touch ID, Android Biometrics, or Windows Hello) to sign in to this admin console with a single tap.
+                </p>
+
+                {biometricsStatus && (
+                  <div className="text-xs font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 p-2.5 rounded-xl">
+                    {biometricsStatus}
+                  </div>
+                )}
+
+                <div className="flex items-center gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={handleRegisterBiometrics}
+                    disabled={loading}
+                    className="flex items-center gap-2 text-xs font-semibold px-4 py-2.5 rounded-xl bg-white text-black hover:bg-zinc-200 transition-all shadow-sm disabled:opacity-50"
+                  >
+                    <Fingerprint className="w-3.5 h-3.5 text-zinc-900" />
+                    <span>{hasRegisteredBiometrics ? 'Add / Re-register This Device' : 'Register Fingerprint / Touch ID'}</span>
+                  </button>
+
+                  {hasRegisteredBiometrics && (
+                    <button
+                      type="button"
+                      onClick={handleClearBiometrics}
+                      disabled={loading}
+                      className="text-xs font-mono text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 px-3 py-2.5 rounded-xl border border-rose-500/20 transition-all"
+                    >
+                      Remove Biometrics
+                    </button>
+                  )}
                 </div>
               </div>
 

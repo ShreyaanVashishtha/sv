@@ -177,6 +177,7 @@ export interface SiteSettings {
   metaDescription: string;
   adminPassword?: string;
   adminPasskey?: string;
+  biometricCredentialIds?: string[];
   accentColor: string;
   cvUrl?: string;
   contactMessage: string;

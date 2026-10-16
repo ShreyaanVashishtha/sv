@@ -19,6 +19,7 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   metaDescription: 'Official portfolio of Shreyaan Vashishtha. Mechanical & Aerospace Engineering at HKUST, Astrix Rocketry, mechanism design, and scientific computing.',
   adminPasskey: DEFAULT_PASSKEY,
   adminPassword: DEFAULT_PASSKEY,
+  biometricCredentialIds: [],
   accentColor: '#ffffff',
   cvUrl: '/CV-Shreyaan-Vashishtha.pdf',
   contactMessage: 'Interested in aerospace engineering, Astrix rocketry, IB tutoring, or technical collaboration? Reach out directly.',
@@ -191,6 +192,9 @@ function mergeWithDefaults(parsed: any): WebsiteData {
           ? raw.toString().trim()
           : DEFAULT_PASSKEY;
       })(),
+      biometricCredentialIds: Array.isArray(parsed?.settings?.biometricCredentialIds)
+        ? parsed.settings.biometricCredentialIds
+        : [],
       sectionVisibility: {
         ...DEFAULT_SETTINGS.sectionVisibility,
         ...(parsed?.settings?.sectionVisibility || {}),
