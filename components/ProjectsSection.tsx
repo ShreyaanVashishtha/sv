@@ -41,41 +41,58 @@ export function ProjectsSection({
     <section id="projects" className="py-24 border-t border-white/5 relative">
       <div className="max-w-5xl mx-auto px-6">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-          <div>
-            <div className="flex items-center gap-2 text-xs font-mono text-zinc-400 uppercase tracking-widest mb-2">
-              <FolderGit2 className="w-4 h-4 text-white" />
-              <span>{eyebrow}</span>
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white">
-              {title}
-            </h2>
-            {subtitle && (
-              <p className="text-sm md:text-base text-zinc-400 mt-2 max-w-2xl">
-                {subtitle}
-              </p>
-            )}
+        <div className="mb-8">
+          <div className="flex items-center gap-2 text-xs font-mono text-zinc-400 uppercase tracking-widest mb-2">
+            <FolderGit2 className="w-4 h-4 text-white" />
+            <span>{eyebrow}</span>
           </div>
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white">
+            {title}
+          </h2>
+          {subtitle && (
+            <p className="text-sm md:text-base text-zinc-400 mt-2 max-w-2xl leading-relaxed">
+              {subtitle}
+            </p>
+          )}
+        </div>
 
-          {/* Category Filter Tabs */}
-          {categories.length > 1 && (
-            <div className="flex flex-wrap gap-1.5 p-1 rounded-xl bg-zinc-900/60 border border-white/10 backdrop-blur-md">
-              {categories.map((cat) => (
+        {/* Category Filter Pills (Individual pill chips with live project counts) */}
+        {categories.length > 1 && (
+          <div className="flex flex-wrap items-center gap-2 mb-10">
+            {categories.map((cat) => {
+              const isSelected = selectedCategory === cat;
+              const count =
+                cat === 'All'
+                  ? safeProjects.length
+                  : safeProjects.filter(
+                      (p) => (p.category || '').toLowerCase() === cat.toLowerCase()
+                    ).length;
+
+              return (
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${
-                    selectedCategory === cat
-                      ? 'bg-white text-black shadow-sm font-semibold'
-                      : 'text-zinc-400 hover:text-white hover:bg-white/5'
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-200 flex items-center gap-2 ${
+                    isSelected
+                      ? 'bg-white text-black font-semibold shadow-sm scale-[1.02]'
+                      : 'bg-zinc-900/80 text-zinc-400 border border-white/10 hover:text-white hover:border-white/20 hover:bg-zinc-800'
                   }`}
                 >
-                  {cat}
+                  <span>{cat}</span>
+                  <span
+                    className={`text-[10px] font-mono px-1.5 py-0.5 rounded-full ${
+                      isSelected
+                        ? 'bg-black/15 text-black font-bold'
+                        : 'bg-zinc-800 text-zinc-400'
+                    }`}
+                  >
+                    {count}
+                  </span>
                 </button>
-              ))}
-            </div>
-          )}
-        </div>
+              );
+            })}
+          </div>
+        )}
 
         {/* Project Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -83,16 +100,16 @@ export function ProjectsSection({
             <div
               key={project.id}
               onClick={() => setActiveModalProject(project)}
-              className="group relative rounded-2xl bg-zinc-900/40 border border-white/10 hover:border-white/25 p-6 transition-all duration-300 hover:shadow-card-hover hover:-translate-y-1.5 flex flex-col justify-between cursor-pointer backdrop-blur-sm"
+              className="group relative rounded-2xl bg-zinc-900/40 border border-white/10 hover:border-white/25 p-6 sm:p-7 transition-all duration-300 hover:shadow-card-hover hover:-translate-y-1.5 flex flex-col justify-between cursor-pointer backdrop-blur-sm"
             >
               <div>
                 <div className="flex items-start justify-between gap-4 mb-4">
-                  <span className="text-xs font-mono text-zinc-400 px-2.5 py-0.5 rounded-full bg-zinc-800/80 border border-white/5">
+                  <span className="text-xs font-mono text-zinc-300 px-3 py-1 rounded-full bg-zinc-800/80 border border-white/10">
                     {project.category || 'General'}
                   </span>
 
                   {project.featured && (
-                    <span className="flex items-center gap-1 text-[11px] font-medium text-amber-300 bg-amber-400/10 border border-amber-400/20 px-2.5 py-0.5 rounded-full">
+                    <span className="flex items-center gap-1.5 text-[11px] font-medium text-amber-300 bg-amber-400/10 border border-amber-400/20 px-3 py-1 rounded-full">
                       <Sparkles className="w-3 h-3" />
                       Featured
                     </span>
