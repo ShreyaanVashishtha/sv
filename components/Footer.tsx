@@ -4,6 +4,8 @@ import React from 'react';
 import Link from 'next/link';
 import { FooterSettings } from '@/types/content';
 
+import { BrandLogo } from '@/components/BrandLogo';
+
 interface FooterProps {
   footerNote?: string;
   siteName?: string;
@@ -44,9 +46,14 @@ export function Footer({
     <footer className="py-12 border-t border-white/5 bg-black/60 relative z-10">
       <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-zinc-500">
         {/* Brand & Copyright */}
-        <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 text-center md:text-left">
-          <span className="font-mono text-zinc-300 font-semibold">{siteName || 'sv7.dev'}</span>
-          <span>•</span>
+        <div className="flex flex-wrap items-center justify-center md:justify-start gap-2.5 text-center md:text-left">
+          <Link href="/" className="inline-flex items-center gap-2 group">
+            <BrandLogo style="tc1-balanced" className="w-5 h-5 rounded-md p-0.5" />
+            <span className="font-semibold text-zinc-300 group-hover:text-white transition-colors">
+              {siteName || 'sv7.dev'}
+            </span>
+          </Link>
+          <span className="text-zinc-600">•</span>
           <span>© {currentYear} {copyrightName}. All rights reserved.</span>
         </div>
 

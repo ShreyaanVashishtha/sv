@@ -522,7 +522,7 @@
       "ctaText": "Get in Touch",
       "ctaHref": "#contact",
       "resumeButtonText": "LinkedIn",
-      "showResumeButton": false
+      "showResumeButton": true
     },
     "hero": {
       "showStatusBadge": false,

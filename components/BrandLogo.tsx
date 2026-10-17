@@ -360,7 +360,7 @@ export function BrandLogo({
     return (
       <div
         className={`relative w-9 h-9 rounded-xl bg-zinc-950 border border-zinc-700 p-1.5 flex items-center justify-center shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:shadow-[0_0_18px_rgba(255,255,255,0.15)] group-hover:-translate-y-0.5 overflow-hidden shrink-0 ${className}`}
-        title="sv7 Tapered Chamfered Master"
+        title="sv7.dev"
       >
         <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none" className="w-full h-full transition-transform duration-300 group-hover:scale-105">
           <g fill="#ffffff" transform="rotate(45 18 18)">

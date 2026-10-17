@@ -21,9 +21,11 @@ export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps)
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      const isScrolled = window.scrollY > 20;
+      setScrolled((prev) => (prev !== isScrolled ? isScrolled : prev));
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -102,16 +104,23 @@ export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps)
                 (pathname === link.href) ||
                 (link.href === '/cad' && pathname.startsWith('/cad')) ||
                 (link.href === '/photography' && pathname.startsWith('/photography'));
+              const isInternalPage = target.startsWith('/') && !target.includes('#');
+              const linkClass = `px-4 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
+                isActive
+                  ? 'bg-white text-black font-semibold shadow-sm'
+                  : 'text-zinc-400 hover:text-white hover:bg-white/5 active:scale-95'
+              }`;
+
+              if (isInternalPage) {
+                return (
+                  <Link key={link.name} href={target} className={linkClass}>
+                    {link.name}
+                  </Link>
+                );
+              }
+
               return (
-                <a
-                  key={link.name}
-                  href={target}
-                  className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
-                    isActive
-                      ? 'bg-white text-black font-semibold shadow-sm'
-                      : 'text-zinc-400 hover:text-white hover:bg-white/5 active:scale-95'
-                  }`}
-                >
+                <a key={link.name} href={target} className={linkClass}>
                   {link.name}
                 </a>
               );
@@ -156,21 +165,37 @@ export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps)
 
       {/* Mobile dropdown */}
       {mobileMenuOpen && (
-        <div className="md:hidden glass-nav border-t border-white/10 px-6 py-4 space-y-3">
+        <div className="md:hidden glass-nav border-t border-white/10 px-6 py-4 space-y-3 animate-fadeIn">
           {navLinks.map((link) => {
             const target = resolveHref(link.href);
             const isActive =
               (pathname === link.href) ||
               (link.href === '/cad' && pathname.startsWith('/cad')) ||
               (link.href === '/photography' && pathname.startsWith('/photography'));
+            const isInternalPage = target.startsWith('/') && !target.includes('#');
+            const linkClass = `block text-sm font-medium py-1.5 ${
+              isActive ? 'text-white font-bold' : 'text-zinc-300 hover:text-white'
+            }`;
+
+            if (isInternalPage) {
+              return (
+                <Link
+                  key={link.name}
+                  href={target}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={linkClass}
+                >
+                  {link.name}
+                </Link>
+              );
+            }
+
             return (
               <a
                 key={link.name}
                 href={target}
                 onClick={() => setMobileMenuOpen(false)}
-                className={`block text-sm font-medium py-1.5 ${
-                  isActive ? 'text-white font-bold' : 'text-zinc-300 hover:text-white'
-                }`}
+                className={linkClass}
               >
                 {link.name}
               </a>

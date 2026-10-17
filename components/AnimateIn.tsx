@@ -36,8 +36,8 @@ export function AnimateIn({
         });
       },
       {
-        threshold: 0.08,
-        rootMargin: '0px 0px -40px 0px',
+        threshold: 0.05,
+        rootMargin: '0px 0px 60px 0px',
       }
     );
 
@@ -51,8 +51,8 @@ export function AnimateIn({
 
   const getTransform = () => {
     if (!isVisible) {
-      if (direction === 'up') return 'translate-y-6 opacity-0';
-      if (direction === 'down') return '-translate-y-6 opacity-0';
+      if (direction === 'up') return 'translate-y-4 opacity-0';
+      if (direction === 'down') return '-translate-y-4 opacity-0';
       return 'opacity-0';
     }
     return 'translate-y-0 opacity-100';
@@ -62,7 +62,7 @@ export function AnimateIn({
     <div
       ref={domRef}
       style={{ transitionDelay: `${delay}ms` }}
-      className={`transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[transform,opacity] ${getTransform()} ${className}`}
+      className={`transition-[opacity,transform] duration-600 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[transform,opacity] ${getTransform()} ${className}`}
     >
       {children}
     </div>

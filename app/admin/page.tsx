@@ -17,6 +17,7 @@ import {
   PhotographySettings,
   CADModelItem,
 } from '@/types/content';
+import { BrandLogo } from '@/components/BrandLogo';
 import {
   Box,
   Shield,
@@ -1036,6 +1037,7 @@ export default function AdminPage() {
     logoBadge: 'sv7',
     brandTitle: 'sv7.dev',
     badgeSubtitle: '',
+    logoStyle: 'tc1-balanced',
     navLinks: [],
     ctaText: 'Get in Touch',
     ctaHref: '#contact',
@@ -1754,6 +1756,92 @@ export default function AdminPage() {
                   <span className="text-[11px] text-zinc-500 mt-1 block">
                     Optional beacon subtitle beside your brand title. Leave blank to hide.
                   </span>
+                </div>
+              </div>
+
+              {/* Brand Logo Style Selection */}
+              <div className="pt-4 border-t border-white/5 space-y-3">
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <div>
+                    <label className="block text-xs font-mono text-zinc-300 uppercase font-semibold">
+                      Brand Mark &amp; Logo Style
+                    </label>
+                    <p className="text-[11px] text-zinc-400 mt-0.5">
+                      Select which logo is rendered in the global navbar, favicon, and mobile icon.
+                    </p>
+                  </div>
+                  <Link
+                    href="/brand"
+                    target="_blank"
+                    className="inline-flex items-center gap-1 text-xs text-emerald-400 hover:text-emerald-300 font-mono"
+                  >
+                    <span>Brand Guidelines &amp; Assets</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </Link>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                  {[
+                    {
+                      id: 'tc1-balanced',
+                      name: 'TC-1 Balanced (Official)',
+                      desc: 'Clean geometric mark with balanced chevrons',
+                    },
+                    {
+                      id: 'tc2-choke',
+                      name: 'TC-2 Deep Choke',
+                      desc: 'Compressed central throat gap',
+                    },
+                    {
+                      id: 'tc3-heavy',
+                      name: 'TC-3 Heavy Mass',
+                      desc: 'Bolder apex weight and thickness',
+                    },
+                    {
+                      id: 'classic',
+                      name: 'Classic Text Badge',
+                      desc: 'White square with [sv7] monogram',
+                    },
+                  ].map((styleOption) => {
+                    const isSelected = (header.logoStyle || 'tc1-balanced') === styleOption.id;
+                    return (
+                      <button
+                        key={styleOption.id}
+                        type="button"
+                        onClick={() =>
+                          setData({
+                            ...data,
+                            settings: {
+                              ...data.settings,
+                              header: { ...header, logoStyle: styleOption.id as any },
+                            },
+                          })
+                        }
+                        className={`p-3.5 rounded-2xl border text-left transition-all flex items-start gap-3 ${
+                          isSelected
+                            ? 'bg-zinc-800/90 border-white text-white shadow-md ring-1 ring-white/20'
+                            : 'bg-zinc-950/60 border-white/10 text-zinc-400 hover:border-white/20 hover:text-zinc-200'
+                        }`}
+                      >
+                        <BrandLogo
+                          style={styleOption.id as any}
+                          badgeText={header.logoBadge}
+                          className="w-10 h-10 rounded-xl shrink-0"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-semibold text-white truncate">
+                              {styleOption.name}
+                            </span>
+                            {isSelected && <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />}
+                          </div>
+                          <span className="text-[11px] text-zinc-400 line-clamp-2 mt-0.5 leading-snug">
+                            {styleOption.desc}
+                          </span>
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -6298,7 +6386,7 @@ export default function AdminPage() {
                   Website Favicon &amp; Browser Tab Icon
                 </label>
                 <div className="flex items-center gap-3">
-                  <div className="w-11 h-11 rounded-xl bg-white border border-white/20 flex items-center justify-center shrink-0 shadow-sm overflow-hidden">
+                  <div className="w-11 h-11 rounded-xl bg-zinc-950 border border-zinc-700 flex items-center justify-center shrink-0 shadow-sm overflow-hidden">
                     {data.settings.faviconUrl ? (
                       /* eslint-disable-next-line @next/next/no-img-element */
                       <img
@@ -6310,9 +6398,11 @@ export default function AdminPage() {
                         }}
                       />
                     ) : (
-                      <span className="font-archivo font-black text-xs text-black uppercase tracking-tight">
-                        {data.settings?.header?.logoBadge || 'sv7'}
-                      </span>
+                      <BrandLogo
+                        style={data.settings?.header?.logoStyle || 'tc1-balanced'}
+                        badgeText={data.settings?.header?.logoBadge || 'sv7'}
+                        className="w-full h-full"
+                      />
                     )}
                   </div>
                   <div className="flex-1">

@@ -14,9 +14,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const data = await getContent();
   const siteName = data.settings?.siteName || 'sv7.dev';
   return {
-    title: `Brand Guidelines & Aerospace Visual Identity | ${siteName}`,
+    title: `Brand Guidelines | ${siteName}`,
     description:
-      'Official brand architecture, geometric drafting specifications, zero-letter philosophy, and vector assets for sv7.dev (Shreyaan Vashishtha).',
+      'Official brand assets, logo specifications, color system, and usage guidelines for sv7.dev (Shreyaan Vashishtha).',
     alternates: {
       canonical: `${data.settings?.canonicalUrl || 'https://sv7.dev'}/brand`,
     },

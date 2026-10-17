@@ -88,12 +88,24 @@ export default async function Image() {
           >
             <div
               style={{
-                width: '10px',
-                height: '10px',
-                borderRadius: '50%',
-                backgroundColor: '#10b981',
+                width: '32px',
+                height: '32px',
+                borderRadius: '8px',
+                backgroundColor: '#09090b',
+                border: '1px solid #3f3f46',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '5px',
               }}
-            />
+            >
+              <svg viewBox="0 0 36 36" width="22" height="22" fill="none">
+                <g fill="#ffffff" transform="rotate(45 18 18)">
+                  <path d="M9.5 7.5 L18 13.0 L26.5 7.5 L28 9.0 L18 17.2 L8 9.0 Z" />
+                  <path d="M8 27.0 L18 18.8 L28 27.0 L26.5 28.5 L18 23.0 L9.5 28.5 Z" />
+                </g>
+              </svg>
+            </div>
             <span
               style={{
                 fontSize: '20px',
