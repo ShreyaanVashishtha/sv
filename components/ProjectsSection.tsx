@@ -56,8 +56,8 @@ export function ProjectsSection({
           )}
         </div>
 
-        {/* Category Filter Pills (Individual pill chips with live project counts) */}
-        {categories.length > 1 && (
+        {/* Category Filter Pills (Only shown when there are more than 3 projects across distinct categories) */}
+        {safeProjects.length > 3 && categories.length > 2 && (
           <div className="flex flex-wrap items-center gap-2 mb-10">
             {categories.map((cat) => {
               const isSelected = selectedCategory === cat;

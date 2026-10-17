@@ -498,13 +498,8 @@
       "badgeSubtitle": "",
       "navLinks": [
         {
-          "name": "Projects",
+          "name": "Work",
           "href": "#projects",
-          "enabled": true
-        },
-        {
-          "name": "Capabilities",
-          "href": "#skills",
           "enabled": true
         },
         {
@@ -513,13 +508,13 @@
           "enabled": true
         },
         {
-          "name": "Education",
-          "href": "#education",
+          "name": "3D CAD",
+          "href": "/cad",
           "enabled": true
         },
         {
-          "name": "Contact",
-          "href": "#contact",
+          "name": "Photography",
+          "href": "/photography",
           "enabled": true
         }
       ],
@@ -591,7 +586,7 @@
   },
   "cadSettings": {
     "title": "CAD Lab & Mechanical Assemblies",
-    "subtitle": "TO BE UPDATED",
+    "subtitle": "Interactive 3D WebGL assemblies, parametric rocketry mechanisms, and STL models engineered in Autodesk Fusion 360.",
     "enableDownloads": true,
     "wireframeDefault": false,
     "printablesProfileUrl": "https://www.printables.com"

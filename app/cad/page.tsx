@@ -27,8 +27,9 @@ export default async function CADPage() {
   const data = await getContent();
   const title = data.cadSettings?.title || 'CAD Lab & Mechanical Assemblies';
   const subtitle =
-    data.cadSettings?.subtitle ||
-    'Interactive 3D WebGL models, rocketry dual-deploy recovery modules, and precision aerospace hardware engineered in SolidWorks and Fusion 360.';
+    data.cadSettings?.subtitle && data.cadSettings.subtitle !== 'TO BE UPDATED'
+      ? data.cadSettings.subtitle
+      : 'Interactive 3D WebGL assemblies, parametric rocketry mechanisms, and STL models engineered in Autodesk Fusion 360.';
   const models = data.models || [];
 
   return (

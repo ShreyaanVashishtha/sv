@@ -50,24 +50,28 @@ export function CADShowcaseClient({ initialModels, cadSettings }: CADShowcaseCli
           <Box className="w-8 h-8 text-cyan-400" />
         </div>
         <div className="space-y-2">
-          <h2 className="text-xl font-bold text-white tracking-tight">No 3D Models Configured Yet</h2>
+          <h2 className="text-xl font-bold text-white tracking-tight">Assemblies in Preparation</h2>
           <p className="text-xs text-zinc-400 leading-relaxed font-mono">
-            3D mechanical models and Fusion 360 STL files are managed through the Admin Studio.
+            Parametric 3D assemblies and Autodesk Fusion 360 STL files are currently undergoing preparation and slicing verification.
           </p>
         </div>
         <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
-          <a
-            href="/admin"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-white text-black font-semibold text-xs hover:bg-zinc-200 transition-all shadow-md"
-          >
-            <span>Open Admin Studio</span>
-            <ChevronRight className="w-3.5 h-3.5" />
-          </a>
+          {cadSettings?.printablesProfileUrl && (
+            <a
+              href={cadSettings.printablesProfileUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-white text-black font-semibold text-xs hover:bg-zinc-200 transition-all shadow-md"
+            >
+              <span>View Printables Profile</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+          )}
           <a
             href="/#contact"
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-zinc-900 border border-white/10 text-zinc-300 hover:text-white font-medium text-xs transition-all"
           >
-            <span>Contact Dispatch</span>
+            <span>Inquire Directly</span>
           </a>
         </div>
       </div>

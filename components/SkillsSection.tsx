@@ -67,14 +67,9 @@ export function SkillsSection({
                   {categoryGroup.items.map((skill, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-900/90 border border-white/5 text-xs text-zinc-300 hover:text-white hover:border-white/20 hover:bg-zinc-800 hover:scale-[1.03] active:scale-95 transition-all duration-200"
+                      className="px-3 py-1.5 rounded-xl bg-zinc-900/90 border border-white/5 text-xs font-medium text-zinc-300 hover:text-white hover:border-white/20 hover:bg-zinc-800/80 transition-all duration-200"
                     >
-                      <span className="font-medium">{skill.name}</span>
-                      {skill.level && (
-                        <span className="text-[10px] font-mono text-zinc-500 bg-zinc-800/80 px-1.5 py-0.5 rounded">
-                          {skill.level}
-                        </span>
-                      )}
+                      {skill.name}
                     </div>
                   ))}
                 </div>

@@ -35,36 +35,32 @@ export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps)
   const showResume = Boolean(headerSettings?.showResumeButton);
 
   const defaultNavLinks = [
-    { name: 'Projects', href: '#projects', enabled: true },
-    { name: 'Capabilities', href: '#skills', enabled: true },
-    { name: '3D CAD', href: '/cad', enabled: true },
+    { name: 'Work', href: '#projects', enabled: true },
     { name: 'Experience', href: '#experience', enabled: true },
-    { name: 'Education', href: '#education', enabled: true },
+    { name: '3D CAD', href: '/cad', enabled: true },
     { name: 'Photography', href: '/photography', enabled: true },
-    { name: 'Contact', href: '#contact', enabled: true },
   ];
 
   const rawNavLinks = headerSettings?.navLinks && headerSettings.navLinks.length > 0
     ? headerSettings.navLinks
     : defaultNavLinks;
 
-  // Ensure photography and CAD links are available if not in custom navLinks
-  let effectiveNavLinks = [...rawNavLinks];
+  // Filter out redundant items if legacy 7-item menu is saved
+  let effectiveNavLinks = rawNavLinks.filter((l) => {
+    const n = l.name.toLowerCase();
+    // Capabilities and Education are scroll sub-sections under Work and Experience
+    if (n === 'capabilities' || n === 'skills') return false;
+    if (n === 'education') return false;
+    // Contact is already served by the dedicated primary CTA button
+    if (n === 'contact') return false;
+    return true;
+  });
+
   if (!effectiveNavLinks.some((l) => l.href.includes('cad'))) {
-    const contactIdx = effectiveNavLinks.findIndex((l) => l.name === 'Contact');
-    if (contactIdx !== -1) {
-      effectiveNavLinks.splice(contactIdx, 0, { name: '3D CAD', href: '/cad', enabled: true });
-    } else {
-      effectiveNavLinks.push({ name: '3D CAD', href: '/cad', enabled: true });
-    }
+    effectiveNavLinks.push({ name: '3D CAD', href: '/cad', enabled: true });
   }
   if (!effectiveNavLinks.some((l) => l.href.includes('photography'))) {
-    const contactIdx = effectiveNavLinks.findIndex((l) => l.name === 'Contact');
-    if (contactIdx !== -1) {
-      effectiveNavLinks.splice(contactIdx, 0, { name: 'Photography', href: '/photography', enabled: true });
-    } else {
-      effectiveNavLinks.push({ name: 'Photography', href: '/photography', enabled: true });
-    }
+    effectiveNavLinks.push({ name: 'Photography', href: '/photography', enabled: true });
   }
 
   const navLinks = effectiveNavLinks.filter((link) => link.enabled !== false);
@@ -100,7 +96,10 @@ export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps)
           <nav className="hidden md:flex items-center gap-1 bg-zinc-900/60 p-1.5 rounded-full border border-white/10 backdrop-blur-md shadow-sm">
             {navLinks.map((link) => {
               const target = resolveHref(link.href);
-              const isActive = (pathname === link.href) || (link.href === '/photography' && pathname.startsWith('/photography'));
+              const isActive =
+                (pathname === link.href) ||
+                (link.href === '/cad' && pathname.startsWith('/cad')) ||
+                (link.href === '/photography' && pathname.startsWith('/photography'));
               return (
                 <a
                   key={link.name}
@@ -158,7 +157,10 @@ export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps)
         <div className="md:hidden glass-nav border-t border-white/10 px-6 py-4 space-y-3">
           {navLinks.map((link) => {
             const target = resolveHref(link.href);
-            const isActive = (pathname === link.href) || (link.href === '/photography' && pathname.startsWith('/photography'));
+            const isActive =
+              (pathname === link.href) ||
+              (link.href === '/cad' && pathname.startsWith('/cad')) ||
+              (link.href === '/photography' && pathname.startsWith('/photography'));
             return (
               <a
                 key={link.name}
