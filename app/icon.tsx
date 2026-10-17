@@ -371,8 +371,8 @@ export default async function Icon() {
     );
   }
 
-  // Precision Monolith (High-DPI Retina Tune)
-  if (logoStyle === 'precision-monolith') {
+  // P1. Precision Monolith (High-DPI Retina Tune)
+  if (logoStyle === 'precision-monolith' || logoStyle === 'p1-standard') {
     return new ImageResponse(
       (
         <div
@@ -392,6 +392,152 @@ export default async function Icon() {
             <g fill="#ffffff" transform="rotate(45 18 18)">
               <path d="M8 8.5 L18 13.5 L28 8.5 L28 12 L18 16.8 L8 12 Z" />
               <path d="M8 27.5 L18 22.5 L28 27.5 L28 24 L18 19.2 L8 24 Z" />
+            </g>
+          </svg>
+        </div>
+      ),
+      { ...size }
+    );
+  }
+
+  // P2. The Slim Razor Spec
+  if (logoStyle === 'p2-slim') {
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#09090b',
+            borderRadius: '8px',
+            border: '1px solid #3f3f46',
+            padding: '3px',
+          }}
+        >
+          <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none">
+            <g fill="#ffffff" transform="rotate(45 18 18)">
+              <path d="M8 9.5 L18 14.2 L28 9.5 L28 12 L18 16.7 L8 12 Z" />
+              <path d="M8 26.5 L18 21.8 L28 26.5 L28 24 L18 19.3 L8 24 Z" />
+            </g>
+          </svg>
+        </div>
+      ),
+      { ...size }
+    );
+  }
+
+  // P3. Chamfered Wingtips
+  if (logoStyle === 'p3-chamfer') {
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#09090b',
+            borderRadius: '8px',
+            border: '1px solid #3f3f46',
+            padding: '3px',
+          }}
+        >
+          <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none">
+            <g fill="#ffffff" transform="rotate(45 18 18)">
+              <path d="M9.5 8.5 L18 13 L26.5 8.5 L28 10 L18 16.8 L8 10 Z" />
+              <path d="M8 26 L18 19.2 L28 26 L26.5 27.5 L18 23 L9.5 27.5 Z" />
+            </g>
+          </svg>
+        </div>
+      ),
+      { ...size }
+    );
+  }
+
+  // P4. The Datum Core Reticle
+  if (logoStyle === 'p4-datum') {
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#09090b',
+            borderRadius: '8px',
+            border: '1px solid #3f3f46',
+            padding: '3px',
+          }}
+        >
+          <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none">
+            <g fill="#ffffff" transform="rotate(45 18 18)">
+              <path d="M8 8.5 L18 13.5 L28 8.5 L28 12 L18 16.8 L8 12 Z" />
+              <path d="M8 27.5 L18 22.5 L28 27.5 L28 24 L18 19.2 L8 24 Z" />
+              <rect x="16.9" y="16.9" width="2.2" height="2.2" rx="0.4" />
+            </g>
+          </svg>
+        </div>
+      ),
+      { ...size }
+    );
+  }
+
+  // P5. The Heavy Thrust Spec
+  if (logoStyle === 'p5-bold') {
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#09090b',
+            borderRadius: '8px',
+            border: '1px solid #3f3f46',
+            padding: '3px',
+          }}
+        >
+          <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none">
+            <g fill="#ffffff" transform="rotate(45 18 18)">
+              <path d="M7 7.5 L18 12.5 L29 7.5 L29 12 L18 16.7 L7 12 Z" />
+              <path d="M7 28.5 L18 23.5 L29 28.5 L29 24 L18 19.3 L7 24 Z" />
+            </g>
+          </svg>
+        </div>
+      ),
+      { ...size }
+    );
+  }
+
+  // P6. Hypersonic Delta Cone
+  if (logoStyle === 'p6-acute') {
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#09090b',
+            borderRadius: '8px',
+            border: '1px solid #3f3f46',
+            padding: '3px',
+          }}
+        >
+          <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none">
+            <g fill="#ffffff" transform="rotate(45 18 18)">
+              <path d="M9 7 L18 14.5 L27 7 L27 10 L18 17.2 L9 10 Z" />
+              <path d="M9 29 L18 21.5 L27 29 L27 26 L18 18.8 L9 26 Z" />
             </g>
           </svg>
         </div>

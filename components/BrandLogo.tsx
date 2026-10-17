@@ -9,6 +9,12 @@ export type LogoStyle =
   | 'monolith-crest'
   | 'vector-monolith'
   | 'precision-monolith'
+  | 'p1-standard'
+  | 'p2-slim'
+  | 'p3-chamfer'
+  | 'p4-datum'
+  | 'p5-bold'
+  | 'p6-acute'
   | 'nozzle'
   | 'nozzle-linear'
   | 'nozzle-bell'
@@ -134,8 +140,8 @@ export function BrandLogo({
     );
   }
 
-  // Precision Monolith (High-DPI Retina Tune)
-  if (style === 'precision-monolith') {
+  // P1. Precision Monolith (Standard Baseline / High-DPI Retina Tune)
+  if (style === 'precision-monolith' || style === 'p1-standard') {
     return (
       <div
         className={`relative w-9 h-9 rounded-xl bg-zinc-950 border border-zinc-700 p-1.5 flex items-center justify-center shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:shadow-[0_0_18px_rgba(255,255,255,0.15)] group-hover:-translate-y-0.5 overflow-hidden shrink-0 ${className}`}
@@ -145,6 +151,92 @@ export function BrandLogo({
           <g fill="#ffffff" transform="rotate(45 18 18)">
             <path d="M8 8.5 L18 13.5 L28 8.5 L28 12 L18 16.8 L8 12 Z"/>
             <path d="M8 27.5 L18 22.5 L28 27.5 L28 24 L18 19.2 L8 24 Z"/>
+          </g>
+        </svg>
+      </div>
+    );
+  }
+
+  // P2. The Slim Razor Spec (Slender 2.4px line weight)
+  if (style === 'p2-slim') {
+    return (
+      <div
+        className={`relative w-9 h-9 rounded-xl bg-zinc-950 border border-zinc-700 p-1.5 flex items-center justify-center shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:shadow-[0_0_18px_rgba(255,255,255,0.15)] group-hover:-translate-y-0.5 overflow-hidden shrink-0 ${className}`}
+        title="sv7 Slim Razor Monolith"
+      >
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full transition-transform duration-300 group-hover:scale-105">
+          <g fill="#ffffff" transform="rotate(45 18 18)">
+            <path d="M8 9.5 L18 14.2 L28 9.5 L28 12 L18 16.7 L8 12 Z"/>
+            <path d="M8 26.5 L18 21.8 L28 26.5 L28 24 L18 19.3 L8 24 Z"/>
+          </g>
+        </svg>
+      </div>
+    );
+  }
+
+  // P3. Chamfered Wingtips (Machined 45° CAD chamfer)
+  if (style === 'p3-chamfer') {
+    return (
+      <div
+        className={`relative w-9 h-9 rounded-xl bg-zinc-950 border border-zinc-700 p-1.5 flex items-center justify-center shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:shadow-[0_0_18px_rgba(255,255,255,0.15)] group-hover:-translate-y-0.5 overflow-hidden shrink-0 ${className}`}
+        title="sv7 Chamfered Monolith"
+      >
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full transition-transform duration-300 group-hover:scale-105">
+          <g fill="#ffffff" transform="rotate(45 18 18)">
+            <path d="M9.5 8.5 L18 13 L26.5 8.5 L28 10 L18 16.8 L8 10 Z"/>
+            <path d="M8 26 L18 19.2 L28 26 L26.5 27.5 L18 23 L9.5 27.5 Z"/>
+          </g>
+        </svg>
+      </div>
+    );
+  }
+
+  // P4. The Datum Core Reticle (Micro 2.2px origin diamond)
+  if (style === 'p4-datum') {
+    return (
+      <div
+        className={`relative w-9 h-9 rounded-xl bg-zinc-950 border border-zinc-700 p-1.5 flex items-center justify-center shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:shadow-[0_0_18px_rgba(255,255,255,0.15)] group-hover:-translate-y-0.5 overflow-hidden shrink-0 ${className}`}
+        title="sv7 Datum Core Monolith"
+      >
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full transition-transform duration-300 group-hover:scale-105">
+          <g fill="#ffffff" transform="rotate(45 18 18)">
+            <path d="M8 8.5 L18 13.5 L28 8.5 L28 12 L18 16.8 L8 12 Z"/>
+            <path d="M8 27.5 L18 22.5 L28 27.5 L28 24 L18 19.2 L8 24 Z"/>
+            <rect x="16.9" y="16.9" width="2.2" height="2.2" rx="0.4"/>
+          </g>
+        </svg>
+      </div>
+    );
+  }
+
+  // P5. The Heavy Thrust Spec (Bold 4.5px solid vector mass)
+  if (style === 'p5-bold') {
+    return (
+      <div
+        className={`relative w-9 h-9 rounded-xl bg-zinc-950 border border-zinc-700 p-1.5 flex items-center justify-center shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:shadow-[0_0_18px_rgba(255,255,255,0.15)] group-hover:-translate-y-0.5 overflow-hidden shrink-0 ${className}`}
+        title="sv7 Heavy Thrust Monolith"
+      >
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full transition-transform duration-300 group-hover:scale-105">
+          <g fill="#ffffff" transform="rotate(45 18 18)">
+            <path d="M7 7.5 L18 12.5 L29 7.5 L29 12 L18 16.7 L7 12 Z"/>
+            <path d="M7 28.5 L18 23.5 L29 28.5 L29 24 L18 19.3 L7 24 Z"/>
+          </g>
+        </svg>
+      </div>
+    );
+  }
+
+  // P6. Hypersonic Delta Cone (Acute 60° sweep angle)
+  if (style === 'p6-acute') {
+    return (
+      <div
+        className={`relative w-9 h-9 rounded-xl bg-zinc-950 border border-zinc-700 p-1.5 flex items-center justify-center shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:shadow-[0_0_18px_rgba(255,255,255,0.15)] group-hover:-translate-y-0.5 overflow-hidden shrink-0 ${className}`}
+        title="sv7 Hypersonic Monolith"
+      >
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full transition-transform duration-300 group-hover:scale-105">
+          <g fill="#ffffff" transform="rotate(45 18 18)">
+            <path d="M9 7 L18 14.5 L27 7 L27 10 L18 17.2 L9 10 Z"/>
+            <path d="M9 29 L18 21.5 L27 29 L27 26 L18 18.8 L9 26 Z"/>
           </g>
         </svg>
       </div>
