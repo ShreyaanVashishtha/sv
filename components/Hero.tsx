@@ -70,7 +70,7 @@ export function Hero({
   });
 
   return (
-    <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-mesh">
+    <section className="relative pt-32 pb-10 md:pt-36 md:pb-12 overflow-hidden bg-mesh">
       {/* Subtle ambient lighting drift */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[380px] bg-white/[0.03] blur-[130px] rounded-full pointer-events-none animate-ambient-drift" />
 
@@ -200,7 +200,7 @@ export function Hero({
 
         {/* High-level metrics / focus credentials bar */}
         {showMetrics && validMetrics.length > 0 && (
-          <div className="mt-12 pt-8 border-t border-white/5 animate-hero-fade delay-500">
+          <div className="mt-8 pt-6 border-t border-white/5 animate-hero-fade delay-500">
             <div className="flex flex-wrap items-center gap-3">
               {validMetrics.map((metric, i) => (
                 <div

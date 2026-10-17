@@ -38,7 +38,7 @@ export function ProjectsSection({
   }
 
   return (
-    <section id="projects" className="py-24 border-t border-white/5 relative">
+    <section id="projects" className="pt-10 pb-20 md:pt-14 md:pb-24 border-t border-white/5 relative">
       <div className="max-w-5xl mx-auto px-6">
         {/* Section Header */}
         <div className="mb-8">
