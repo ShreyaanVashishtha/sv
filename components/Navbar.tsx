@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Status, HeaderSettings } from '@/types/content';
 import { Menu, X, ArrowUpRight, Linkedin, Camera } from 'lucide-react';
+import { BrandLogo } from '@/components/BrandLogo';
 
 interface NavbarProps {
   status: Status;
@@ -83,9 +84,10 @@ export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps)
       <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
         {/* Brand / Logo */}
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-9 h-9 rounded-xl bg-white text-black font-archivo font-black text-xs tracking-tighter uppercase flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_0_15px_rgba(255,255,255,0.15)] shadow-sm">
-            {logoBadge}
-          </div>
+          <BrandLogo
+            style={headerSettings?.logoStyle || 'delta'}
+            badgeText={logoBadge}
+          />
           <span className="font-semibold text-sm tracking-tight text-white group-hover:text-zinc-200 transition-colors">
             {brandTitle}
           </span>
