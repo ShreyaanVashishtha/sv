@@ -3,8 +3,8 @@
 import React from 'react';
 import Link from 'next/link';
 import { FooterSettings } from '@/types/content';
-
 import { BrandLogo } from '@/components/BrandLogo';
+import { ArrowUp } from 'lucide-react';
 
 interface FooterProps {
   footerNote?: string;
@@ -42,67 +42,85 @@ export function Footer({
     { name: 'Legal Notice', href: '/legal' },
   ];
 
+  const scrollToTop = () => {
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
-    <footer className="py-12 border-t border-white/5 bg-black/60 relative z-10">
-      <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-zinc-500">
-        {/* Brand & Copyright */}
-        <div className="flex flex-wrap items-center justify-center md:justify-start gap-2.5 text-center md:text-left">
-          <Link href="/" className="inline-flex items-center gap-2 group">
-            <BrandLogo style="tc1-balanced" className="w-5 h-5 rounded-md p-0.5" />
-            <span className="font-semibold text-zinc-300 group-hover:text-white transition-colors">
-              {siteName || 'sv7.dev'}
-            </span>
-          </Link>
-          <span className="text-zinc-600">•</span>
-          <span>© {currentYear} {copyrightName}. All rights reserved.</span>
-        </div>
+    <footer className="pt-14 pb-12 border-t border-white/10 bg-black/70 relative z-10">
+      <div className="max-w-6xl mx-auto px-6 space-y-10">
+        {/* Main Row */}
+        <div className="flex flex-col md:flex-row md:items-start justify-between gap-8">
+          {/* Brand & Mission Tagline */}
+          <div className="space-y-3 max-w-md">
+            <Link href="/" className="inline-flex items-center gap-2.5 group">
+              <BrandLogo style="tc1-balanced" className="w-6 h-6 rounded-lg p-1" />
+              <span className="font-semibold text-sm tracking-tight text-white group-hover:text-zinc-200 transition-colors">
+                {siteName || 'sv7.dev'}
+              </span>
+            </Link>
+            <p className="text-xs text-zinc-400 leading-relaxed">
+              {displayNote}
+            </p>
+          </div>
 
-        {/* Legal & Navigation Links */}
-        <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs">
-          {shouldShowLegal &&
-            legalLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-zinc-400 hover:text-white transition-colors"
-              >
-                {link.name}
-              </Link>
-            ))}
+          {/* Navigation & Legal Links */}
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-xs text-zinc-400">
+            {shouldShowLegal &&
+              legalLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="hover:text-white transition-colors whitespace-nowrap"
+                >
+                  {link.name}
+                </Link>
+              ))}
 
-          {customLinks.length > 0 &&
-            customLinks.map((link, idx) => {
-              const isInternal =
-                link.url.startsWith('/') || link.url.startsWith('#');
-              if (isInternal) {
+            {customLinks.length > 0 &&
+              customLinks.map((link, idx) => {
+                const isInternal =
+                  link.url.startsWith('/') || link.url.startsWith('#');
+                if (isInternal) {
+                  return (
+                    <Link
+                      key={idx}
+                      href={link.url}
+                      className="hover:text-white transition-colors whitespace-nowrap"
+                    >
+                      {link.name}
+                    </Link>
+                  );
+                }
                 return (
-                  <Link
+                  <a
                     key={idx}
                     href={link.url}
-                    className="text-zinc-400 hover:text-white transition-colors"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="hover:text-white transition-colors whitespace-nowrap inline-flex items-center gap-1"
                   >
-                    {link.name}
-                  </Link>
+                    <span>{link.name}</span>
+                  </a>
                 );
-              }
-              return (
-                <a
-                  key={idx}
-                  href={link.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-zinc-400 hover:text-white transition-colors inline-flex items-center gap-1"
-                >
-                  <span>{link.name}</span>
-                </a>
-              );
-            })}
+              })}
+          </div>
         </div>
 
-        {/* Tagline / Disclaimer */}
-        <p className="text-zinc-500 text-center md:text-right max-w-sm text-[11px] leading-relaxed">
-          {displayNote}
-        </p>
+        {/* Bottom Sub-bar */}
+        <div className="pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
+          <p>© {currentYear} {copyrightName}. All rights reserved.</p>
+
+          <button
+            onClick={scrollToTop}
+            className="flex items-center gap-1.5 text-zinc-500 hover:text-white transition-colors text-xs group"
+          >
+            <span>Back to top</span>
+            <ArrowUp className="w-3.5 h-3.5 transition-transform group-hover:-translate-y-0.5" />
+          </button>
+        </div>
       </div>
     </footer>
   );
