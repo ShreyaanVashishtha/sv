@@ -85,7 +85,7 @@ export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps)
         {/* Brand / Logo */}
         <Link href="/" className="flex items-center gap-3 group">
           <BrandLogo
-            style={headerSettings?.logoStyle || 'delta'}
+            style={headerSettings?.logoStyle || 'monoline'}
             badgeText={logoBadge}
           />
           <span className="font-semibold text-sm tracking-tight text-white group-hover:text-zinc-200 transition-colors">

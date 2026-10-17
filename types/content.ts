@@ -99,7 +99,7 @@ export interface HeaderSettings {
   logoBadge: string;
   brandTitle: string;
   badgeSubtitle?: string;
-  logoStyle?: 'delta' | 'classic';
+  logoStyle?: 'monoline' | 'stencil' | 'exponent' | 'delta' | 'classic';
   navLinks: NavLink[];
   ctaText: string;
   ctaHref: string;

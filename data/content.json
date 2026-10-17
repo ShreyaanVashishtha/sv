@@ -496,7 +496,7 @@
       "logoBadge": "sv7",
       "brandTitle": "sv7.dev",
       "badgeSubtitle": "",
-      "logoStyle": "delta",
+      "logoStyle": "monoline",
       "navLinks": [
         {
           "name": "Work",
