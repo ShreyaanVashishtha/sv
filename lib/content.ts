@@ -307,7 +307,7 @@ const DEFAULT_CONTENT: WebsiteData = {
   certifications: [],
   photos: [],
   videos: DEFAULT_VIDEOS,
-  models: DEFAULT_MODELS,
+  models: [],
   cadSettings: DEFAULT_CAD_SETTINGS,
   photographySettings: DEFAULT_PHOTOGRAPHY_SETTINGS,
   settings: DEFAULT_SETTINGS,
@@ -393,7 +393,7 @@ function mergeWithDefaults(parsed: any): WebsiteData {
     },
     photos: Array.isArray(parsed?.photos) ? parsed.photos : [],
     videos: Array.isArray(parsed?.videos) ? parsed.videos : DEFAULT_VIDEOS,
-    models: Array.isArray(parsed?.models) ? parsed.models : DEFAULT_MODELS,
+    models: Array.isArray(parsed?.models) ? parsed.models : [],
     cadSettings: {
       ...DEFAULT_CAD_SETTINGS,
       ...(parsed?.cadSettings || {}),

@@ -43,10 +43,33 @@ export function CADShowcaseClient({ initialModels, cadSettings }: CADShowcaseCli
   const activeModel =
     visibleModels.find((m) => m.id === activeModelId) || visibleModels[0] || null;
 
-  if (!activeModel) {
+  if (!activeModel || visibleModels.length === 0) {
     return (
-      <div className="text-center py-24 text-zinc-500 font-mono text-sm">
-        No 3D CAD models published yet. Add models in the Admin Studio.
+      <div className="py-20 px-6 max-w-lg mx-auto text-center space-y-6">
+        <div className="w-16 h-16 rounded-3xl bg-zinc-900 border border-white/10 mx-auto flex items-center justify-center text-zinc-500 shadow-xl">
+          <Box className="w-8 h-8 text-cyan-400" />
+        </div>
+        <div className="space-y-2">
+          <h2 className="text-xl font-bold text-white tracking-tight">No 3D Models Configured Yet</h2>
+          <p className="text-xs text-zinc-400 leading-relaxed font-mono">
+            3D mechanical models and Fusion 360 STL files are managed through the Admin Studio.
+          </p>
+        </div>
+        <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <a
+            href="/admin"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-white text-black font-semibold text-xs hover:bg-zinc-200 transition-all shadow-md"
+          >
+            <span>Open Admin Studio</span>
+            <ChevronRight className="w-3.5 h-3.5" />
+          </a>
+          <a
+            href="/#contact"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-zinc-900 border border-white/10 text-zinc-300 hover:text-white font-medium text-xs transition-all"
+          >
+            <span>Contact Dispatch</span>
+          </a>
+        </div>
       </div>
     );
   }

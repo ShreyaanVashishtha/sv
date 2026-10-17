@@ -7,6 +7,8 @@ import Link from 'next/link';
 import { ArrowLeft, Box, Compass, Sparkles } from 'lucide-react';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await getContent();

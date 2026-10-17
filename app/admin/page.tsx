@@ -5066,8 +5066,103 @@ export default function AdminPage() {
 
                 {/* Models List */}
                 {(!data.models || data.models.length === 0) ? (
-                  <div className="text-center py-12 text-xs text-zinc-500 font-mono">
-                    No 3D models added yet. Click &quot;Add 3D Model&quot; to configure your first CAD assembly.
+                  <div className="text-center py-12 px-4 rounded-2xl bg-zinc-950/40 border border-white/5 space-y-4">
+                    <Box className="w-10 h-10 text-zinc-600 mx-auto" />
+                    <div className="space-y-1">
+                      <p className="text-sm font-semibold text-white">No 3D models added yet.</p>
+                      <p className="text-xs text-zinc-400 font-mono">
+                        Configure your first CAD assembly, upload an STL from Fusion 360, or load sample assemblies.
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap items-center justify-center gap-2.5 pt-1">
+                      <button
+                        type="button"
+                        onClick={handleAddModel}
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:opacity-90 text-white text-xs font-semibold shadow-md transition-all"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                        <span>Add 3D Model</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const sampleModels: CADModelItem[] = [
+                            {
+                              id: 'cad-1',
+                              title: 'Astrix Dual-Deploy Recovery Avionics Module',
+                              description: 'Precision dual-deployment parachute ejection bay engineered for the Astrix Rocketry vehicle.',
+                              category: 'Aerospace & Rocketry',
+                              modelUrl: 'procedural:avionics-bay',
+                              format: 'glb',
+                              thumbnailUrl: 'https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?w=800&auto=format&fit=crop&q=80',
+                              cadSoftware: 'SolidWorks 2024',
+                              material: 'Carbon Fiber / 6061-T6 Al Standoffs',
+                              manufacturing: 'CNC Turning & Waterjet Bulkheads',
+                              tolerances: '±0.05 mm',
+                              mass: '340 g',
+                              dimensions: 'Ø 98 mm × 220 mm',
+                              downloadUrl: '',
+                              printablesUrl: '',
+                              upAxis: 'y',
+                              featured: true,
+                              hidden: false,
+                              order: 1,
+                            },
+                            {
+                              id: 'cad-2',
+                              title: 'Supersonic Aerodynamic Fin Can Assembly',
+                              description: 'Structural fin can assembly with slotted 4-fin retention sleeves and motor casing retaining ring.',
+                              category: 'Aerospace & Rocketry',
+                              modelUrl: 'procedural:fin-can',
+                              format: 'glb',
+                              thumbnailUrl: 'https://images.unsplash.com/photo-1517976487502-5f657a8bf606?w=800&auto=format&fit=crop&q=80',
+                              cadSoftware: 'SolidWorks & ANSYS Fluent',
+                              material: '6061-T6 Billet Aluminum & G10 Fins',
+                              manufacturing: '4-Axis CNC Milling',
+                              tolerances: '±0.02 mm',
+                              mass: '580 g',
+                              dimensions: 'Ø 102 mm × 310 mm',
+                              downloadUrl: '',
+                              printablesUrl: '',
+                              upAxis: 'y',
+                              featured: false,
+                              hidden: false,
+                              order: 2,
+                            },
+                            {
+                              id: 'cad-3',
+                              title: 'Two-Axis Precision Sensor Gimbal',
+                              description: 'Ultra-compact, low-backlash dual-axis gimbal mechanism engineered for high-g vibration isolation.',
+                              category: 'Robotics & Mechanisms',
+                              modelUrl: 'procedural:sensor-gimbal',
+                              format: 'stl',
+                              thumbnailUrl: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop&q=80',
+                              cadSoftware: 'Autodesk Fusion 360',
+                              material: 'Anodized 7075-T6 Al & Titanium Fasteners',
+                              manufacturing: '5-Axis CNC & Wire EDM',
+                              tolerances: '±0.015 mm',
+                              mass: '165 g',
+                              dimensions: '85 × 72 × 55 mm',
+                              downloadUrl: '',
+                              printablesUrl: 'https://www.printables.com',
+                              upAxis: 'z',
+                              featured: false,
+                              hidden: false,
+                              order: 3,
+                            },
+                          ];
+                          setData({
+                            ...data,
+                            models: sampleModels,
+                          });
+                        }}
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-zinc-900 border border-white/10 hover:border-white/20 text-xs font-mono text-zinc-300 hover:text-white transition-all"
+                      >
+                        <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+                        <span>Load Sample Rocketry Models</span>
+                      </button>
+                    </div>
                   </div>
                 ) : (
                   <div className="space-y-4">
