@@ -201,6 +201,7 @@ export const DEFAULT_CAD_SETTINGS: CADSettings = {
   subtitle: 'Interactive 3D models, rocketry dual-deploy recovery modules, and precision aerospace hardware.',
   enableDownloads: true,
   wireframeDefault: false,
+  printablesProfileUrl: 'https://www.printables.com',
 };
 
 export const DEFAULT_MODELS: CADModelItem[] = [
@@ -219,6 +220,8 @@ export const DEFAULT_MODELS: CADModelItem[] = [
     mass: '340 g',
     dimensions: 'Ø 98 mm × 220 mm',
     downloadUrl: '',
+    printablesUrl: '',
+    upAxis: 'y',
     featured: true,
     hidden: false,
     order: 1,
@@ -238,6 +241,8 @@ export const DEFAULT_MODELS: CADModelItem[] = [
     mass: '580 g',
     dimensions: 'Ø 102 mm × 310 mm',
     downloadUrl: '',
+    printablesUrl: '',
+    upAxis: 'y',
     featured: false,
     hidden: false,
     order: 2,
@@ -248,7 +253,7 @@ export const DEFAULT_MODELS: CADModelItem[] = [
     description: 'Ultra-compact, low-backlash dual-axis gimbal mechanism engineered for high-g flight telemetry vibration isolation, housing IMU and optical guidance sensors.',
     category: 'Robotics & Mechanisms',
     modelUrl: 'procedural:sensor-gimbal',
-    format: 'glb',
+    format: 'stl',
     thumbnailUrl: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop&q=80',
     cadSoftware: 'Autodesk Fusion 360',
     material: 'Anodized 7075-T6 Al & Titanium Fasteners',
@@ -257,6 +262,8 @@ export const DEFAULT_MODELS: CADModelItem[] = [
     mass: '165 g',
     dimensions: '85 × 72 × 55 mm',
     downloadUrl: '',
+    printablesUrl: 'https://www.printables.com',
+    upAxis: 'z',
     featured: false,
     hidden: false,
     order: 3,

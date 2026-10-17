@@ -19,6 +19,9 @@ import {
   Sun,
   Eye,
   Compass,
+  Upload,
+  RefreshCw,
+  X,
 } from 'lucide-react';
 
 interface CADModelViewerProps {
@@ -47,6 +50,17 @@ export function CADModelViewer({
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [lightingPreset, setLightingPreset] = useState<'hangar' | 'studio' | 'blueprint'>('hangar');
   const [activeFaceCount, setActiveFaceCount] = useState<number>(0);
+  const [isZUp, setIsZUp] = useState<boolean>(
+    model.upAxis === 'z' || (model.cadSoftware || '').toLowerCase().includes('fusion')
+  );
+  const [localFileUrl, setLocalFileUrl] = useState<string | null>(null);
+  const [localFileName, setLocalFileName] = useState<string | null>(null);
+
+  useEffect(() => {
+    setIsZUp(model.upAxis === 'z' || (model.cadSoftware || '').toLowerCase().includes('fusion'));
+    setLocalFileUrl(null);
+    setLocalFileName(null);
+  }, [model]);
 
   // Procedural fallback generators for rocketry & mechanical models
   const buildProceduralModel = useCallback((type: string): THREE.Group => {
@@ -356,19 +370,80 @@ export function CADModelViewer({
         scene.remove(currentModelGroup.current);
       }
 
-      const isExternalUrl =
-        model.modelUrl.startsWith('http') ||
-        model.modelUrl.endsWith('.glb') ||
-        model.modelUrl.endsWith('.gltf') ||
-        model.modelUrl.endsWith('.stl');
+      const targetUrl = localFileUrl || model.modelUrl;
+      const isStl =
+        (localFileName && localFileName.toLowerCase().endsWith('.stl')) ||
+        model.format === 'stl' ||
+        targetUrl.toLowerCase().endsWith('.stl');
 
-      if (isExternalUrl && (model.format === 'glb' || model.format === 'gltf')) {
+      const isExternalUrl =
+        targetUrl.startsWith('http') ||
+        targetUrl.startsWith('/') ||
+        targetUrl.startsWith('blob:') ||
+        targetUrl.startsWith('data:') ||
+        targetUrl.endsWith('.glb') ||
+        targetUrl.endsWith('.gltf') ||
+        targetUrl.endsWith('.stl');
+
+      if (isExternalUrl && isStl) {
+        const stlLoader = new STLLoader();
+        stlLoader.load(
+          targetUrl,
+          (geometry) => {
+            geometry.center();
+            geometry.computeVertexNormals();
+
+            const material = new THREE.MeshStandardMaterial({
+              color: 0xc8d0d8,
+              metalness: 0.8,
+              roughness: 0.35,
+              wireframe: isWireframe,
+              side: THREE.DoubleSide,
+            });
+            const mesh = new THREE.Mesh(geometry, material);
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+
+            // Fusion 360 default orientation is Z-Up. Rotate -90 deg around X to align with Three.js Y-Up
+            if (isZUp) {
+              mesh.rotation.x = -Math.PI / 2;
+            }
+
+            const box = new THREE.Box3().setFromObject(mesh);
+            const size = box.getSize(new THREE.Vector3());
+            const maxDim = Math.max(size.x, size.y, size.z);
+            mesh.scale.setScalar(4.5 / (maxDim || 1));
+
+            if (geometry.index) {
+              setActiveFaceCount(Math.round(geometry.index.count / 3));
+            } else if (geometry.attributes.position) {
+              setActiveFaceCount(Math.round(geometry.attributes.position.count / 3));
+            }
+
+            const group = new THREE.Group();
+            group.add(mesh);
+            currentModelGroup.current = group;
+            scene.add(group);
+            setIsLoading(false);
+          },
+          undefined,
+          (err) => {
+            console.warn('Could not load custom STL file, falling back to procedural:', err);
+            const procedural = buildProceduralModel(model.modelUrl || model.id);
+            currentModelGroup.current = procedural;
+            scene.add(procedural);
+            setIsLoading(false);
+          }
+        );
+      } else if (isExternalUrl && (model.format === 'glb' || model.format === 'gltf' || (!isStl && !targetUrl.startsWith('procedural:')))) {
         const gltfLoader = new GLTFLoader();
         gltfLoader.load(
-          model.modelUrl,
+          targetUrl,
           (gltf) => {
             const root = gltf.scene;
-            // Center & normalize model size
+            if (isZUp) {
+              root.rotation.x = -Math.PI / 2;
+            }
             const box = new THREE.Box3().setFromObject(root);
             const size = box.getSize(new THREE.Vector3());
             const maxDim = Math.max(size.x, size.y, size.z);
@@ -378,43 +453,25 @@ export function CADModelViewer({
             const center = box.getCenter(new THREE.Vector3());
             root.position.sub(center.multiplyScalar(scale));
 
+            let faceCount = 0;
+            root.traverse((child) => {
+              if ((child as THREE.Mesh).isMesh) {
+                const m = child as THREE.Mesh;
+                m.castShadow = true;
+                m.receiveShadow = true;
+                if (m.geometry) {
+                  if (m.geometry.index) {
+                    faceCount += m.geometry.index.count / 3;
+                  } else if (m.geometry.attributes.position) {
+                    faceCount += m.geometry.attributes.position.count / 3;
+                  }
+                }
+              }
+            });
+            setActiveFaceCount(Math.round(faceCount));
+
             currentModelGroup.current = root;
             scene.add(root);
-            setIsLoading(false);
-          },
-          undefined,
-          () => {
-            // Fallback to high-detail procedural assembly
-            const procedural = buildProceduralModel(model.modelUrl || model.id);
-            currentModelGroup.current = procedural;
-            scene.add(procedural);
-            setIsLoading(false);
-          }
-        );
-      } else if (isExternalUrl && model.format === 'stl') {
-        const stlLoader = new STLLoader();
-        stlLoader.load(
-          model.modelUrl,
-          (geometry) => {
-            const material = new THREE.MeshStandardMaterial({
-              color: 0xd4d8dd,
-              metalness: 0.85,
-              roughness: 0.3,
-              wireframe: isWireframe,
-            });
-            const mesh = new THREE.Mesh(geometry, material);
-            geometry.center();
-            geometry.computeVertexNormals();
-
-            const box = new THREE.Box3().setFromObject(mesh);
-            const size = box.getSize(new THREE.Vector3());
-            const maxDim = Math.max(size.x, size.y, size.z);
-            mesh.scale.setScalar(4.5 / (maxDim || 1));
-
-            const group = new THREE.Group();
-            group.add(mesh);
-            currentModelGroup.current = group;
-            scene.add(group);
             setIsLoading(false);
           },
           undefined,
@@ -475,7 +532,7 @@ export function CADModelViewer({
         rendererRef.current.dispose();
       }
     };
-  }, [model, buildProceduralModel, isRotating, isWireframe]);
+  }, [model, buildProceduralModel, isRotating, isWireframe, isZUp, localFileUrl]);
 
   // Toggle wireframe on active model materials
   useEffect(() => {
@@ -537,14 +594,38 @@ export function CADModelViewer({
       {/* Top HUD Telemetry Bar */}
       <div className="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none z-10">
         <div className="flex items-center gap-2 pointer-events-auto">
-          <div className="px-3 py-1.5 rounded-xl bg-zinc-950/80 border border-white/10 backdrop-blur-md flex items-center gap-2 text-xs font-mono text-zinc-300">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="font-semibold text-white">WebGL // 60 FPS</span>
-            <span className="text-zinc-600">•</span>
-            <span className="text-[11px] text-zinc-400 uppercase tracking-wider">
-              {model.cadSoftware || 'SolidWorks'}
-            </span>
-          </div>
+          {localFileName ? (
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-cyan-500/15 border border-cyan-500/40 backdrop-blur-md text-xs font-mono text-cyan-300">
+              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+              <span className="font-semibold text-white truncate max-w-[150px] sm:max-w-[220px]">
+                {localFileName}
+              </span>
+              <span className="text-zinc-600">•</span>
+              <span className="text-[10px] text-cyan-400 uppercase tracking-wider font-bold">
+                Local Preview
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  setLocalFileUrl(null);
+                  setLocalFileName(null);
+                }}
+                className="text-cyan-400 hover:text-white p-0.5 rounded transition-colors"
+                title="Exit local preview"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            </div>
+          ) : (
+            <div className="px-3 py-1.5 rounded-xl bg-zinc-950/80 border border-white/10 backdrop-blur-md flex items-center gap-2 text-xs font-mono text-zinc-300">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="font-semibold text-white">WebGL // 60 FPS</span>
+              <span className="text-zinc-600">•</span>
+              <span className="text-[11px] text-zinc-400 uppercase tracking-wider">
+                {model.cadSoftware || 'SolidWorks'}
+              </span>
+            </div>
+          )}
 
           {activeFaceCount > 0 && (
             <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinc-950/80 border border-white/10 backdrop-blur-md text-[11px] font-mono text-zinc-400">
@@ -556,6 +637,52 @@ export function CADModelViewer({
 
         {/* Viewport Control Actions */}
         <div className="flex items-center gap-1.5 pointer-events-auto">
+          {/* Preview Local STL / CAD file from Fusion 360 */}
+          <label
+            className="p-2 rounded-xl bg-zinc-950/80 border border-white/10 text-zinc-400 hover:text-white backdrop-blur-md transition-all cursor-pointer flex items-center justify-center hover:border-cyan-500/40"
+            title="Upload & Preview Local STL from Fusion 360"
+          >
+            <Upload className="w-3.5 h-3.5 text-cyan-400" />
+            <input
+              type="file"
+              accept=".stl,.glb,.gltf"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                const url = URL.createObjectURL(file);
+                setLocalFileUrl(url);
+                setLocalFileName(file.name);
+                if (file.name.toLowerCase().endsWith('.stl')) {
+                  setIsZUp(true);
+                }
+              }}
+              className="hidden"
+            />
+          </label>
+
+          {/* Flip Z-Up / Y-Up Orientation (Autodesk Fusion 360) */}
+          <button
+            type="button"
+            onClick={() => {
+              setIsZUp(!isZUp);
+              if (currentModelGroup.current) {
+                currentModelGroup.current.rotation.x = !isZUp ? -Math.PI / 2 : 0;
+              }
+            }}
+            className={`p-2 rounded-xl border backdrop-blur-md transition-all ${
+              isZUp
+                ? 'bg-amber-500/15 border-amber-500/40 text-amber-300 shadow-sm'
+                : 'bg-zinc-950/80 border-white/10 text-zinc-400 hover:text-white'
+            }`}
+            title={
+              isZUp
+                ? 'Orientation: Z-Up (Fusion 360) — Click for Y-Up'
+                : 'Orientation: Y-Up (Standard) — Click for Z-Up (Fusion 360)'
+            }
+          >
+            <RefreshCw className="w-3.5 h-3.5" />
+          </button>
+
           {/* Turntable Auto-rotate */}
           <button
             type="button"

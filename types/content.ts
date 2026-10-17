@@ -289,6 +289,8 @@ export interface CADModelItem {
   mass?: string; // e.g. "340 g"
   dimensions?: string; // e.g. "Ø 98 mm × 220 mm"
   downloadUrl?: string; // Optional STEP, STL, or CAD file download link
+  printablesUrl?: string; // Direct link to Printables.com listing (e.g. https://www.printables.com/model/...)
+  upAxis?: 'y' | 'z'; // Orientation: 'z' for Fusion 360 Z-Up, 'y' for standard Three.js Y-Up
   featured?: boolean;
   hidden?: boolean;
   order?: number;
@@ -299,6 +301,7 @@ export interface CADSettings {
   subtitle: string;
   enableDownloads?: boolean;
   wireframeDefault?: boolean;
+  printablesProfileUrl?: string; // Maker profile URL on Printables (e.g. https://www.printables.com/@shreyaan)
 }
 
 export interface WebsiteData {

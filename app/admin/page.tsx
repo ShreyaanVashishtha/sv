@@ -128,6 +128,7 @@ export default function AdminPage() {
   const [newVideoUrl, setNewVideoUrl] = useState('');
   const [modelSearchQuery, setModelSearchQuery] = useState('');
   const [modelCategoryFilter, setModelCategoryFilter] = useState('all');
+  const [uploadingCadIndex, setUploadingCadIndex] = useState<number | null>(null);
   const [saveStatus, setSaveStatus] = useState<{ type: 'success' | 'error' | ''; message: string }>({
     type: '',
     message: '',
@@ -758,14 +759,16 @@ export default function AdminPage() {
       description: 'Precision mechanical assembly engineered for aerospace / robotics applications.',
       category: 'Aerospace & Rocketry',
       modelUrl: 'procedural:avionics-bay',
-      format: 'glb',
-      cadSoftware: 'SolidWorks 2024',
+      format: 'stl',
+      cadSoftware: 'Autodesk Fusion 360',
       material: '6061-T6 Aluminum',
       manufacturing: 'CNC Milling',
       tolerances: '±0.05 mm',
       mass: '250 g',
       dimensions: '100 × 50 × 40 mm',
       downloadUrl: '',
+      printablesUrl: '',
+      upAxis: 'z',
       featured: false,
       hidden: false,
     };
@@ -773,6 +776,42 @@ export default function AdminPage() {
       ...data,
       models: [newMod, ...(data.models || [])],
     });
+  };
+
+  const handleUploadCadFile = async (index: number, file: File) => {
+    setUploadingCadIndex(index);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const token = typeof window !== 'undefined' ? localStorage.getItem('sv7_admin_token') : '';
+      const headers: Record<string, string> = {};
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
+      const res = await fetch('/api/cad/upload', {
+        method: 'POST',
+        headers,
+        body: formData,
+      });
+      const json = await res.json();
+      if (res.ok && json.success) {
+        const isStl = json.format === 'stl';
+        handleUpdateModel(index, {
+          modelUrl: json.url,
+          format: isStl ? 'stl' : 'glb',
+          cadSoftware:
+            isStl && (!data?.models?.[index]?.cadSoftware || data?.models?.[index]?.cadSoftware === 'SolidWorks 2024')
+              ? 'Autodesk Fusion 360'
+              : data?.models?.[index]?.cadSoftware,
+          upAxis: isStl ? 'z' : 'y',
+        });
+      } else {
+        alert(`Upload error: ${json.error || 'Failed to upload CAD file'}`);
+      }
+    } catch (err: any) {
+      alert(`Upload error: ${err?.message || 'Failed to upload CAD file'}`);
+    } finally {
+      setUploadingCadIndex(null);
+    }
   };
 
   const handleUpdateModel = (index: number, patch: Partial<CADModelItem>) => {
@@ -4869,7 +4908,7 @@ export default function AdminPage() {
                 </div>
 
                 {/* Settings inputs */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
                     <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">CAD Page Headline</label>
                     <input
@@ -4879,9 +4918,9 @@ export default function AdminPage() {
                         setData({
                           ...data,
                           cadSettings: {
+                            ...data.cadSettings,
                             title: e.target.value,
                             subtitle: data.cadSettings?.subtitle || '',
-                            enableDownloads: data.cadSettings?.enableDownloads ?? true,
                           },
                         })
                       }
@@ -4899,14 +4938,37 @@ export default function AdminPage() {
                         setData({
                           ...data,
                           cadSettings: {
+                            ...data.cadSettings,
                             title: data.cadSettings?.title || 'CAD Lab & Mechanical Assemblies',
                             subtitle: e.target.value,
-                            enableDownloads: data.cadSettings?.enableDownloads ?? true,
                           },
                         })
                       }
                       placeholder="Interactive 3D WebGL models, rocketry recovery modules, and precision aerospace hardware..."
                       className="w-full px-3.5 py-2 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-mono text-[#fa6400] mb-1 uppercase font-bold flex items-center justify-between">
+                      <span>Printables Maker Profile</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={data.cadSettings?.printablesProfileUrl || ''}
+                      onChange={(e) =>
+                        setData({
+                          ...data,
+                          cadSettings: {
+                            ...data.cadSettings,
+                            title: data.cadSettings?.title || 'CAD Lab & Mechanical Assemblies',
+                            subtitle: data.cadSettings?.subtitle || '',
+                            printablesProfileUrl: e.target.value,
+                          },
+                        })
+                      }
+                      placeholder="https://www.printables.com/@shreyaan"
+                      className="w-full px-3.5 py-2 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white focus:border-orange-500/50"
                     />
                   </div>
                 </div>
@@ -5161,29 +5223,49 @@ export default function AdminPage() {
                                 </div>
                               </div>
 
-                              {/* Row 2: Model URL & 3D Format */}
-                              <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
-                                <div className="sm:col-span-3">
+                              {/* Row 2: Model URL, Quick Upload, 3D Format & Orientation */}
+                              <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
+                                <div className="sm:col-span-6">
                                   <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1 flex items-center justify-between">
                                     <span>3D Model URL (.glb, .stl, or procedural:identifier)</span>
                                   </label>
-                                  <input
-                                    type="text"
-                                    value={model.modelUrl || ''}
-                                    onChange={(e) =>
-                                      handleUpdateModel(originalIndex, { modelUrl: e.target.value })
-                                    }
-                                    placeholder="/models/rocket-bay.glb or https://.../part.stl"
-                                    className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono focus:border-cyan-500/50"
-                                  />
+                                  <div className="flex items-center gap-2">
+                                    <input
+                                      type="text"
+                                      value={model.modelUrl || ''}
+                                      onChange={(e) =>
+                                        handleUpdateModel(originalIndex, { modelUrl: e.target.value })
+                                      }
+                                      placeholder="/models/part.stl or procedural:avionics-bay"
+                                      className="flex-1 px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono focus:border-cyan-500/50"
+                                    />
+                                    <label
+                                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-xs font-mono text-cyan-300 cursor-pointer transition-all shrink-0"
+                                      title="Upload an .stl or .glb file from Fusion 360 directly"
+                                    >
+                                      <Upload className="w-3.5 h-3.5" />
+                                      <span>
+                                        {uploadingCadIndex === originalIndex ? 'Uploading...' : 'Upload STL'}
+                                      </span>
+                                      <input
+                                        type="file"
+                                        accept=".stl,.glb,.gltf,.step,.stp"
+                                        onChange={(e) => {
+                                          const file = e.target.files?.[0];
+                                          if (file) handleUploadCadFile(originalIndex, file);
+                                        }}
+                                        className="hidden"
+                                      />
+                                    </label>
+                                  </div>
                                 </div>
 
-                                <div>
+                                <div className="sm:col-span-3">
                                   <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
                                     Format
                                   </label>
                                   <select
-                                    value={model.format || 'glb'}
+                                    value={model.format || 'stl'}
                                     onChange={(e) =>
                                       handleUpdateModel(originalIndex, {
                                         format: e.target.value as any,
@@ -5191,9 +5273,27 @@ export default function AdminPage() {
                                     }
                                     className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono"
                                   >
-                                    <option value="glb">GLB / glTF (PBR)</option>
-                                    <option value="stl">STL (Raw CAD Mesh)</option>
+                                    <option value="stl">STL (Raw Fusion 360 Mesh)</option>
+                                    <option value="glb">GLB / glTF (PBR Assembly)</option>
                                     <option value="gltf">glTF JSON</option>
+                                  </select>
+                                </div>
+
+                                <div className="sm:col-span-3">
+                                  <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
+                                    Coordinate Orientation
+                                  </label>
+                                  <select
+                                    value={model.upAxis || 'z'}
+                                    onChange={(e) =>
+                                      handleUpdateModel(originalIndex, {
+                                        upAxis: e.target.value as any,
+                                      })
+                                    }
+                                    className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono"
+                                  >
+                                    <option value="z">Z-Up (Autodesk Fusion 360)</option>
+                                    <option value="y">Y-Up (SolidWorks / Standard)</option>
                                   </select>
                                 </div>
                               </div>
@@ -5210,7 +5310,7 @@ export default function AdminPage() {
                                     onChange={(e) =>
                                       handleUpdateModel(originalIndex, { cadSoftware: e.target.value })
                                     }
-                                    placeholder="SolidWorks 2024"
+                                    placeholder="Autodesk Fusion 360"
                                     className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white"
                                   />
                                 </div>
@@ -5246,8 +5346,8 @@ export default function AdminPage() {
                                 </div>
                               </div>
 
-                              {/* Row 4: Manufacturing, Mass, Dimensions, Download URL */}
-                              <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                              {/* Row 4: Manufacturing, Mass, Dimensions */}
+                              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                 <div>
                                   <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
                                     Manufacturing
@@ -5258,7 +5358,7 @@ export default function AdminPage() {
                                     onChange={(e) =>
                                       handleUpdateModel(originalIndex, { manufacturing: e.target.value })
                                     }
-                                    placeholder="5-Axis CNC Milling"
+                                    placeholder="FDM 3D Printing / CNC Milling"
                                     className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white"
                                   />
                                 </div>
@@ -5292,10 +5392,56 @@ export default function AdminPage() {
                                     className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono"
                                   />
                                 </div>
+                              </div>
+
+                              {/* Row 5: Printables Listing URL & Direct CAD Download Link */}
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 rounded-2xl bg-orange-500/[0.04] border border-orange-500/20">
+                                <div>
+                                  <label className="block text-[10px] font-mono text-[#fa6400] font-bold uppercase mb-1 flex items-center justify-between">
+                                    <span className="flex items-center gap-1.5">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-[#fa6400]" />
+                                      <span>Printables.com Listing URL</span>
+                                    </span>
+                                    {model.printablesUrl && (
+                                      <a
+                                        href={model.printablesUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-[10px] text-orange-400 hover:underline flex items-center gap-1 normal-case font-normal"
+                                      >
+                                        <span>Test Listing</span>
+                                        <ExternalLink className="w-2.5 h-2.5" />
+                                      </a>
+                                    )}
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={model.printablesUrl || ''}
+                                    onChange={(e) =>
+                                      handleUpdateModel(originalIndex, { printablesUrl: e.target.value })
+                                    }
+                                    placeholder="https://www.printables.com/model/12345-rocket-avionics-bay"
+                                    className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono focus:border-orange-500/50"
+                                  />
+                                  <p className="text-[10px] text-zinc-500 mt-1">
+                                    When provided, the &quot;Download&quot; button on the CAD showcase links directly to this Printables release.
+                                  </p>
+                                </div>
 
                                 <div>
-                                  <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
-                                    Download File Link
+                                  <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1 flex items-center justify-between">
+                                    <span>Direct CAD File Link (Optional STEP / STL)</span>
+                                    {model.downloadUrl && (
+                                      <a
+                                        href={model.downloadUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-[10px] text-cyan-400 hover:underline flex items-center gap-1 normal-case font-normal"
+                                      >
+                                        <span>Test Link</span>
+                                        <ExternalLink className="w-2.5 h-2.5" />
+                                      </a>
+                                    )}
                                   </label>
                                   <input
                                     type="text"
@@ -5303,9 +5449,12 @@ export default function AdminPage() {
                                     onChange={(e) =>
                                       handleUpdateModel(originalIndex, { downloadUrl: e.target.value })
                                     }
-                                    placeholder="https://.../assembly.step"
-                                    className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono"
+                                    placeholder="https://.../assembly.step or /models/part.stl"
+                                    className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono focus:border-cyan-500/50"
                                   />
+                                  <p className="text-[10px] text-zinc-500 mt-1">
+                                    Direct file download fallback or secondary CAD package link.
+                                  </p>
                                 </div>
                               </div>
 
