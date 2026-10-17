@@ -495,7 +495,7 @@
     "header": {
       "logoBadge": "sv7",
       "brandTitle": "sv7.dev",
-      "badgeSubtitle": "HKUST Astrix",
+      "badgeSubtitle": "",
       "navLinks": [
         {
           "name": "Projects",

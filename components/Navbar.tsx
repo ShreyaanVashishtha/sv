@@ -28,7 +28,6 @@ export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps)
 
   const logoBadge = headerSettings?.logoBadge || 'sv7';
   const brandTitle = headerSettings?.brandTitle || siteName || 'sv7.dev';
-  const badgeSubtitle = headerSettings?.badgeSubtitle?.trim() || '';
   const ctaText = headerSettings?.ctaText || 'Get in Touch';
   const rawCtaHref = headerSettings?.ctaHref || '#contact';
   const ctaHref = rawCtaHref.startsWith('#') && pathname !== '/' ? `/${rawCtaHref}` : rawCtaHref;
@@ -91,21 +90,9 @@ export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps)
           <div className="w-9 h-9 rounded-xl bg-white text-black font-archivo font-black text-xs tracking-tighter uppercase flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_0_15px_rgba(255,255,255,0.15)] shadow-sm">
             {logoBadge}
           </div>
-          {badgeSubtitle && status?.available ? (
-            <div className="flex flex-col">
-              <span className="font-semibold text-sm tracking-tight text-white group-hover:text-zinc-200 transition-colors">
-                {brandTitle}
-              </span>
-              <span className="flex items-center gap-1.5 text-[11px] text-emerald-400 font-medium">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                {badgeSubtitle}
-              </span>
-            </div>
-          ) : (
-            <span className="font-semibold text-sm tracking-tight text-white group-hover:text-zinc-200 transition-colors">
-              {brandTitle}
-            </span>
-          )}
+          <span className="font-semibold text-sm tracking-tight text-white group-hover:text-zinc-200 transition-colors">
+            {brandTitle}
+          </span>
         </Link>
 
         {/* Desktop Navigation Links */}

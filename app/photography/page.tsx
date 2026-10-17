@@ -8,6 +8,8 @@ import { Footer } from '@/components/Footer';
 import { PhotographyGallery } from '@/components/PhotographyGallery';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 async function getVideosWithLiveFallback(data: any): Promise<VideoItem[]> {
   const existingVideos: VideoItem[] = data.videos || [];
