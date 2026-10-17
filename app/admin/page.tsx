@@ -15,8 +15,10 @@ import {
   PhotoItem,
   VideoItem,
   PhotographySettings,
+  CADModelItem,
 } from '@/types/content';
 import {
+  Box,
   Shield,
   Save,
   LogOut,
@@ -104,6 +106,7 @@ export default function AdminPage() {
     | 'contact'
     | 'inbox'
     | 'photography'
+    | 'cad'
     | 'flow'
     | 'socials'
     | 'footer'
@@ -123,6 +126,8 @@ export default function AdminPage() {
   const [videoSearchQuery, setVideoSearchQuery] = useState('');
   const [videoCategoryFilter, setVideoCategoryFilter] = useState('all');
   const [newVideoUrl, setNewVideoUrl] = useState('');
+  const [modelSearchQuery, setModelSearchQuery] = useState('');
+  const [modelCategoryFilter, setModelCategoryFilter] = useState('all');
   const [saveStatus, setSaveStatus] = useState<{ type: 'success' | 'error' | ''; message: string }>({
     type: '',
     message: '',
@@ -745,6 +750,66 @@ export default function AdminPage() {
     });
   };
 
+  const handleAddModel = () => {
+    if (!data) return;
+    const newMod: CADModelItem = {
+      id: `cad-${Date.now()}`,
+      title: 'New CAD Mechanical Assembly',
+      description: 'Precision mechanical assembly engineered for aerospace / robotics applications.',
+      category: 'Aerospace & Rocketry',
+      modelUrl: 'procedural:avionics-bay',
+      format: 'glb',
+      cadSoftware: 'SolidWorks 2024',
+      material: '6061-T6 Aluminum',
+      manufacturing: 'CNC Milling',
+      tolerances: '±0.05 mm',
+      mass: '250 g',
+      dimensions: '100 × 50 × 40 mm',
+      downloadUrl: '',
+      featured: false,
+      hidden: false,
+    };
+    setData({
+      ...data,
+      models: [newMod, ...(data.models || [])],
+    });
+  };
+
+  const handleUpdateModel = (index: number, patch: Partial<CADModelItem>) => {
+    if (!data || !data.models) return;
+    const updated = [...data.models];
+    updated[index] = { ...updated[index], ...patch };
+    setData({
+      ...data,
+      models: updated,
+    });
+  };
+
+  const handleMoveModel = (index: number, direction: 'up' | 'down') => {
+    if (!data || !data.models) return;
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= data.models.length) return;
+    const updated = [...data.models];
+    const temp = updated[index];
+    updated[index] = updated[targetIndex];
+    updated[targetIndex] = temp;
+    setData({
+      ...data,
+      models: updated,
+    });
+  };
+
+  const handleDeleteModel = (index: number) => {
+    if (!data || !data.models) return;
+    const title = data.models[index]?.title || 'this 3D model';
+    if (!window.confirm(`Are you sure you want to remove "${title}"?`)) return;
+    const updated = data.models.filter((_, i) => i !== index);
+    setData({
+      ...data,
+      models: updated,
+    });
+  };
+
   // Section Order reordering
   const handleMoveSection = (index: number, direction: 'up' | 'down') => {
     if (!data || !data.settings.sectionOrder) return;
@@ -1019,6 +1084,12 @@ export default function AdminPage() {
         (data.photos?.length || 0) + (data.videos?.length || 0)
           ? `${(data.photos?.length || 0) + (data.videos?.length || 0)}`
           : undefined,
+    },
+    {
+      id: 'cad',
+      label: `3D CAD Models (${data.models?.length || 0})`,
+      icon: Box,
+      badge: data.models?.length ? `${data.models.length}` : undefined,
     },
     { id: 'flow', label: 'Section Flow & Toggles', icon: Eye },
     { id: 'socials', label: 'Social Channels', icon: Share2 },
@@ -4748,6 +4819,546 @@ export default function AdminPage() {
                                     <Trash2 className="w-3.5 h-3.5" />
                                   </button>
                                 </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* TAB: 3D CAD MODELS & LAB */}
+          {activeTab === 'cad' && (
+            <div className="space-y-6">
+              {/* Header & Global Settings Card */}
+              <div className="p-6 rounded-3xl bg-zinc-900/40 border border-white/10 space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
+                  <div>
+                    <h2 className="text-base font-bold text-white flex items-center gap-2">
+                      <Box className="w-4 h-4 text-cyan-400" />
+                      <span>3D CAD Models &amp; Assemblies ({data.models?.length || 0})</span>
+                    </h2>
+                    <p className="text-xs text-zinc-400 mt-0.5">
+                      Manage interactive 3D WebGL models, SolidWorks / Fusion 360 assemblies, and engineering specs.
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <a
+                      href="/cad"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinc-950 border border-white/10 hover:border-cyan-500/40 text-xs text-cyan-400 font-mono transition-all"
+                    >
+                      <span>View Live 3D Lab</span>
+                      <ExternalLink className="w-3 h-3 text-cyan-400" />
+                    </a>
+
+                    <button
+                      type="button"
+                      onClick={handleAddModel}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:opacity-90 text-white text-xs font-semibold transition-all shrink-0 shadow-md"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Add 3D Model</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Settings inputs */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">CAD Page Headline</label>
+                    <input
+                      type="text"
+                      value={data.cadSettings?.title || ''}
+                      onChange={(e) =>
+                        setData({
+                          ...data,
+                          cadSettings: {
+                            title: e.target.value,
+                            subtitle: data.cadSettings?.subtitle || '',
+                            enableDownloads: data.cadSettings?.enableDownloads ?? true,
+                          },
+                        })
+                      }
+                      placeholder="CAD Lab & Mechanical Assemblies"
+                      className="w-full px-3.5 py-2 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">CAD Page Subtitle</label>
+                    <input
+                      type="text"
+                      value={data.cadSettings?.subtitle || ''}
+                      onChange={(e) =>
+                        setData({
+                          ...data,
+                          cadSettings: {
+                            title: data.cadSettings?.title || 'CAD Lab & Mechanical Assemblies',
+                            subtitle: e.target.value,
+                            enableDownloads: data.cadSettings?.enableDownloads ?? true,
+                          },
+                        })
+                      }
+                      placeholder="Interactive 3D WebGL models, rocketry recovery modules, and precision aerospace hardware..."
+                      className="w-full px-3.5 py-2 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-6 pt-2">
+                  <label className="flex items-center gap-2 text-xs text-zinc-300 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={data.cadSettings?.enableDownloads !== false}
+                      onChange={(e) =>
+                        setData({
+                          ...data,
+                          cadSettings: {
+                            title: data.cadSettings?.title || 'CAD Lab & Mechanical Assemblies',
+                            subtitle: data.cadSettings?.subtitle || '',
+                            enableDownloads: e.target.checked,
+                          },
+                        })
+                      }
+                      className="w-4 h-4 rounded accent-cyan-500"
+                    />
+                    <span>Allow Visitors to Download CAD Files (when link is provided)</span>
+                  </label>
+
+                  <label className="flex items-center gap-2 text-xs text-zinc-300 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={Boolean(data.cadSettings?.wireframeDefault)}
+                      onChange={(e) =>
+                        setData({
+                          ...data,
+                          cadSettings: {
+                            title: data.cadSettings?.title || 'CAD Lab & Mechanical Assemblies',
+                            subtitle: data.cadSettings?.subtitle || '',
+                            enableDownloads: data.cadSettings?.enableDownloads ?? true,
+                            wireframeDefault: e.target.checked,
+                          },
+                        })
+                      }
+                      className="w-4 h-4 rounded accent-cyan-500"
+                    />
+                    <span>Default Viewport to CAD Wireframe Topology Mode</span>
+                  </label>
+                </div>
+              </div>
+
+              {/* Filter and Search Bar for Models */}
+              <div className="p-6 rounded-3xl bg-zinc-900/40 border border-white/10 space-y-6">
+                <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+                  <div className="flex flex-1 items-center gap-2">
+                    <div className="relative flex-1 max-w-md">
+                      <Search className="w-3.5 h-3.5 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="text"
+                        value={modelSearchQuery}
+                        onChange={(e) => setModelSearchQuery(e.target.value)}
+                        placeholder="Search 3D models by title, material, software, category..."
+                        className="w-full pl-9 pr-3 py-1.5 rounded-xl bg-zinc-950 border border-white/10 text-xs text-white placeholder-zinc-500 focus:border-cyan-500/50"
+                      />
+                      {modelSearchQuery && (
+                        <button
+                          type="button"
+                          onClick={() => setModelSearchQuery('')}
+                          className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-zinc-500 hover:text-white"
+                        >
+                          ✕
+                        </button>
+                      )}
+                    </div>
+
+                    <select
+                      value={modelCategoryFilter}
+                      onChange={(e) => setModelCategoryFilter(e.target.value)}
+                      className="px-3 py-1.5 rounded-xl bg-zinc-950 border border-white/10 text-xs text-zinc-300 font-mono"
+                    >
+                      <option value="all">All CAD Categories</option>
+                      {Array.from(
+                        new Set(
+                          (data.models || [])
+                            .map((m) => m.category)
+                            .filter((c): c is string => Boolean(c))
+                        )
+                      ).map((cat) => (
+                        <option key={cat} value={cat}>
+                          {cat}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="text-[11px] font-mono text-zinc-400">
+                    Showing <strong className="text-white">{(data.models || []).length}</strong> models
+                  </div>
+                </div>
+
+                {/* Models List */}
+                {(!data.models || data.models.length === 0) ? (
+                  <div className="text-center py-12 text-xs text-zinc-500 font-mono">
+                    No 3D models added yet. Click &quot;Add 3D Model&quot; to configure your first CAD assembly.
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {(data.models || [])
+                      .map((model, originalIndex) => ({ model, originalIndex }))
+                      .filter(({ model }) => {
+                        if (
+                          modelCategoryFilter !== 'all' &&
+                          (model.category || '').toLowerCase() !== modelCategoryFilter.toLowerCase()
+                        ) {
+                          return false;
+                        }
+                        if (modelSearchQuery.trim()) {
+                          const q = modelSearchQuery.toLowerCase();
+                          const match =
+                            (model.title || '').toLowerCase().includes(q) ||
+                            (model.description || '').toLowerCase().includes(q) ||
+                            (model.category || '').toLowerCase().includes(q) ||
+                            (model.cadSoftware || '').toLowerCase().includes(q) ||
+                            (model.material || '').toLowerCase().includes(q);
+                          if (!match) return false;
+                        }
+                        return true;
+                      })
+                      .map(({ model, originalIndex }) => (
+                        <div
+                          key={model.id || originalIndex}
+                          className={`p-4 sm:p-5 rounded-2xl border transition-all ${
+                            model.hidden
+                              ? 'bg-zinc-950/60 border-white/5 opacity-70'
+                              : 'bg-zinc-950 border-white/10 shadow-sm'
+                          }`}
+                        >
+                          <div className="flex flex-col lg:flex-row gap-5 items-start">
+                            {/* Model Thumbnail Badge & Actions */}
+                            <div className="w-full lg:w-44 shrink-0 space-y-2">
+                              <div className="w-full h-32 rounded-xl overflow-hidden bg-zinc-900 border border-white/10 relative group flex items-center justify-center">
+                                {model.thumbnailUrl ? (
+                                  /* eslint-disable-next-line @next/next/no-img-element */
+                                  <img
+                                    src={model.thumbnailUrl}
+                                    alt={model.title}
+                                    className="w-full h-full object-cover"
+                                  />
+                                ) : (
+                                  <div className="w-full h-full bg-[#07090e] flex flex-col items-center justify-center gap-1.5 text-zinc-500">
+                                    <Box className="w-8 h-8 text-cyan-400" />
+                                    <span className="text-[10px] font-mono text-zinc-400 uppercase">3D CAD Model</span>
+                                  </div>
+                                )}
+
+                                {/* Top Badges */}
+                                <div className="absolute top-2 left-2 flex flex-col gap-1 items-start">
+                                  <span className="px-1.5 py-0.5 rounded bg-black/80 backdrop-blur-md text-white text-[9px] font-mono font-bold">
+                                    #{originalIndex + 1}
+                                  </span>
+                                  {model.featured && (
+                                    <span className="px-1.5 py-0.5 rounded bg-amber-500 text-black text-[9px] font-bold font-mono uppercase flex items-center gap-0.5 shadow-sm">
+                                      <Star className="w-2.5 h-2.5 fill-black" />
+                                      <span>Cover</span>
+                                    </span>
+                                  )}
+                                  {model.hidden && (
+                                    <span className="px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-300 text-[9px] font-bold font-mono uppercase flex items-center gap-1">
+                                      <EyeOff className="w-2.5 h-2.5" />
+                                      <span>Hidden</span>
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+
+                              {/* Toggles below thumbnail */}
+                              <div className="grid grid-cols-2 gap-1.5 pt-1">
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    handleUpdateModel(originalIndex, { featured: !model.featured })
+                                  }
+                                  className={`px-2 py-1.5 rounded-lg text-[10px] font-mono font-semibold flex items-center justify-center gap-1 transition-all border ${
+                                    model.featured
+                                      ? 'bg-amber-500/15 border-amber-500/40 text-amber-300'
+                                      : 'bg-zinc-900 border-white/10 text-zinc-400 hover:text-white'
+                                  }`}
+                                  title="Feature as hero 3D model"
+                                >
+                                  <Star
+                                    className={`w-3 h-3 ${
+                                      model.featured ? 'fill-amber-400 text-amber-400' : 'text-zinc-500'
+                                    }`}
+                                  />
+                                  <span>{model.featured ? 'Featured' : 'Feature'}</span>
+                                </button>
+
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    handleUpdateModel(originalIndex, { hidden: !model.hidden })
+                                  }
+                                  className={`px-2 py-1.5 rounded-lg text-[10px] font-mono font-semibold flex items-center justify-center gap-1 transition-all border ${
+                                    model.hidden
+                                      ? 'bg-zinc-900 border-white/10 text-zinc-500 hover:text-zinc-300'
+                                      : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                                  }`}
+                                  title={model.hidden ? 'Click to Publish' : 'Click to Hide'}
+                                >
+                                  {model.hidden ? (
+                                    <>
+                                      <EyeOff className="w-3 h-3 text-zinc-500" />
+                                      <span>Hidden</span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Eye className="w-3 h-3 text-emerald-400" />
+                                      <span>Published</span>
+                                    </>
+                                  )}
+                                </button>
+                              </div>
+                            </div>
+
+                            {/* Full Model Information Editor */}
+                            <div className="flex-1 space-y-3.5 w-full">
+                              {/* Row 1: Title, Category, CAD Software */}
+                              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <div className="sm:col-span-2">
+                                  <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
+                                    Assembly Title / Headline
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={model.title || ''}
+                                    onChange={(e) =>
+                                      handleUpdateModel(originalIndex, { title: e.target.value })
+                                    }
+                                    placeholder="e.g. Astrix Dual-Deploy Recovery Avionics Bay"
+                                    className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-medium focus:border-cyan-500/50"
+                                  />
+                                </div>
+
+                                <div>
+                                  <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
+                                    Category
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={model.category || ''}
+                                    onChange={(e) =>
+                                      handleUpdateModel(originalIndex, { category: e.target.value })
+                                    }
+                                    placeholder="Aerospace & Rocketry"
+                                    className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white focus:border-cyan-500/50"
+                                  />
+                                </div>
+                              </div>
+
+                              {/* Row 2: Model URL & 3D Format */}
+                              <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                                <div className="sm:col-span-3">
+                                  <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1 flex items-center justify-between">
+                                    <span>3D Model URL (.glb, .stl, or procedural:identifier)</span>
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={model.modelUrl || ''}
+                                    onChange={(e) =>
+                                      handleUpdateModel(originalIndex, { modelUrl: e.target.value })
+                                    }
+                                    placeholder="/models/rocket-bay.glb or https://.../part.stl"
+                                    className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono focus:border-cyan-500/50"
+                                  />
+                                </div>
+
+                                <div>
+                                  <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
+                                    Format
+                                  </label>
+                                  <select
+                                    value={model.format || 'glb'}
+                                    onChange={(e) =>
+                                      handleUpdateModel(originalIndex, {
+                                        format: e.target.value as any,
+                                      })
+                                    }
+                                    className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono"
+                                  >
+                                    <option value="glb">GLB / glTF (PBR)</option>
+                                    <option value="stl">STL (Raw CAD Mesh)</option>
+                                    <option value="gltf">glTF JSON</option>
+                                  </select>
+                                </div>
+                              </div>
+
+                              {/* Row 3: Material, Manufacturing, Tolerances */}
+                              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <div>
+                                  <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
+                                    CAD Software
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={model.cadSoftware || ''}
+                                    onChange={(e) =>
+                                      handleUpdateModel(originalIndex, { cadSoftware: e.target.value })
+                                    }
+                                    placeholder="SolidWorks 2024"
+                                    className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white"
+                                  />
+                                </div>
+
+                                <div>
+                                  <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
+                                    Material Specification
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={model.material || ''}
+                                    onChange={(e) =>
+                                      handleUpdateModel(originalIndex, { material: e.target.value })
+                                    }
+                                    placeholder="Carbon Fiber / 6061-T6 Al"
+                                    className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white"
+                                  />
+                                </div>
+
+                                <div>
+                                  <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
+                                    Machining Tolerances
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={model.tolerances || ''}
+                                    onChange={(e) =>
+                                      handleUpdateModel(originalIndex, { tolerances: e.target.value })
+                                    }
+                                    placeholder="±0.05 mm"
+                                    className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono"
+                                  />
+                                </div>
+                              </div>
+
+                              {/* Row 4: Manufacturing, Mass, Dimensions, Download URL */}
+                              <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                                <div>
+                                  <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
+                                    Manufacturing
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={model.manufacturing || ''}
+                                    onChange={(e) =>
+                                      handleUpdateModel(originalIndex, { manufacturing: e.target.value })
+                                    }
+                                    placeholder="5-Axis CNC Milling"
+                                    className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white"
+                                  />
+                                </div>
+
+                                <div>
+                                  <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
+                                    Mass
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={model.mass || ''}
+                                    onChange={(e) =>
+                                      handleUpdateModel(originalIndex, { mass: e.target.value })
+                                    }
+                                    placeholder="340 g"
+                                    className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono"
+                                  />
+                                </div>
+
+                                <div>
+                                  <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
+                                    Dimensions
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={model.dimensions || ''}
+                                    onChange={(e) =>
+                                      handleUpdateModel(originalIndex, { dimensions: e.target.value })
+                                    }
+                                    placeholder="Ø 98 mm × 220 mm"
+                                    className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono"
+                                  />
+                                </div>
+
+                                <div>
+                                  <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
+                                    Download File Link
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={model.downloadUrl || ''}
+                                    onChange={(e) =>
+                                      handleUpdateModel(originalIndex, { downloadUrl: e.target.value })
+                                    }
+                                    placeholder="https://.../assembly.step"
+                                    className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono"
+                                  />
+                                </div>
+                              </div>
+
+                              {/* Row 5: Description */}
+                              <div>
+                                <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
+                                  Engineering Design Description &amp; Notes
+                                </label>
+                                <textarea
+                                  rows={2}
+                                  value={model.description || ''}
+                                  onChange={(e) =>
+                                    handleUpdateModel(originalIndex, { description: e.target.value })
+                                  }
+                                  placeholder="Mechanism kinematics, flight aerodynamic requirements, dual-deploy altimeter housing..."
+                                  className="w-full px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white leading-relaxed resize-none focus:border-cyan-500/50"
+                                />
+                              </div>
+
+                              {/* Card Action Controls & Status */}
+                              <div className="flex items-center justify-between pt-2 border-t border-white/10">
+                                <div className="flex items-center gap-2">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleMoveModel(originalIndex, 'up')}
+                                    disabled={originalIndex === 0}
+                                    className="p-1 rounded-lg bg-zinc-900 border border-white/10 text-zinc-400 hover:text-white disabled:opacity-30 disabled:pointer-events-none"
+                                    title="Move Model Up"
+                                  >
+                                    <MoveUp className="w-3.5 h-3.5" />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleMoveModel(originalIndex, 'down')}
+                                    disabled={originalIndex === (data.models || []).length - 1}
+                                    className="p-1 rounded-lg bg-zinc-900 border border-white/10 text-zinc-400 hover:text-white disabled:opacity-30 disabled:pointer-events-none"
+                                    title="Move Model Down"
+                                  >
+                                    <MoveDown className="w-3.5 h-3.5" />
+                                  </button>
+                                  <span className="text-[10px] font-mono text-zinc-500 pl-1">
+                                    ID: {model.id}
+                                  </span>
+                                </div>
+
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteModel(originalIndex)}
+                                  className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-xs transition-colors"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                  <span>Remove Assembly</span>
+                                </button>
                               </div>
                             </div>
                           </div>

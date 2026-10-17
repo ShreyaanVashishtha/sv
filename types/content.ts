@@ -274,6 +274,33 @@ export interface PhotographySettings {
   photosPerPage?: number;
 }
 
+export interface CADModelItem {
+  id: string;
+  title: string;
+  description: string;
+  category?: string;
+  modelUrl: string; // path or URL to .glb, .gltf, or .stl
+  format: 'glb' | 'gltf' | 'stl';
+  thumbnailUrl?: string;
+  cadSoftware?: string; // e.g. "SolidWorks 2024", "Autodesk Fusion 360"
+  material?: string; // e.g. "6061-T6 Aluminum", "Carbon Fiber"
+  manufacturing?: string; // e.g. "5-Axis CNC Milling", "FDM 3D Printing"
+  tolerances?: string; // e.g. "±0.05 mm"
+  mass?: string; // e.g. "340 g"
+  dimensions?: string; // e.g. "Ø 98 mm × 220 mm"
+  downloadUrl?: string; // Optional STEP, STL, or CAD file download link
+  featured?: boolean;
+  hidden?: boolean;
+  order?: number;
+}
+
+export interface CADSettings {
+  title: string;
+  subtitle: string;
+  enableDownloads?: boolean;
+  wireframeDefault?: boolean;
+}
+
 export interface WebsiteData {
   profile: Profile;
   socials: Social[];
@@ -284,6 +311,8 @@ export interface WebsiteData {
   certifications: CertificationItem[];
   photos?: PhotoItem[];
   videos?: VideoItem[];
+  models?: CADModelItem[];
+  cadSettings?: CADSettings;
   photographySettings?: PhotographySettings;
   settings: SiteSettings;
 }

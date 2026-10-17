@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { WebsiteData, SiteSettings, PhotoItem, VideoItem, PhotographySettings } from '@/types/content';
+import { WebsiteData, SiteSettings, PhotoItem, VideoItem, PhotographySettings, CADModelItem, CADSettings } from '@/types/content';
 import { redis } from '@/lib/redis';
 
 const DATA_FILE_PATH = path.join(process.cwd(), 'data', 'content.json');
@@ -196,6 +196,73 @@ export const DEFAULT_PHOTOGRAPHY_SETTINGS: PhotographySettings = {
   photosPerPage: 24,
 };
 
+export const DEFAULT_CAD_SETTINGS: CADSettings = {
+  title: 'CAD Lab & Mechanical Assemblies',
+  subtitle: 'Interactive 3D models, rocketry dual-deploy recovery modules, and precision aerospace hardware.',
+  enableDownloads: true,
+  wireframeDefault: false,
+};
+
+export const DEFAULT_MODELS: CADModelItem[] = [
+  {
+    id: 'cad-1',
+    title: 'Astrix Dual-Deploy Recovery Avionics Module',
+    description: 'Precision dual-deployment parachute ejection bay engineered for the Astrix Rocketry vehicle. Features dual-redundant barometric altimeter sleds, dual carbon-composite bulkheads, and high-tolerance shear-pin retention rings.',
+    category: 'Aerospace & Rocketry',
+    modelUrl: 'procedural:avionics-bay',
+    format: 'glb',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?w=800&auto=format&fit=crop&q=80',
+    cadSoftware: 'SolidWorks 2024',
+    material: 'Carbon Fiber / 6061-T6 Al Standoffs',
+    manufacturing: 'CNC Turning & Waterjet Bulkheads',
+    tolerances: '±0.05 mm',
+    mass: '340 g',
+    dimensions: 'Ø 98 mm × 220 mm',
+    downloadUrl: '',
+    featured: true,
+    hidden: false,
+    order: 1,
+  },
+  {
+    id: 'cad-2',
+    title: 'Supersonic Aerodynamic Fin Can Assembly',
+    description: 'Structural fin can assembly with slotted 4-fin retention sleeves, motor casing retaining ring, and 6061-T6 leading-edge supersonic bevels designed to withstand transonic flutter loads.',
+    category: 'Aerospace & Rocketry',
+    modelUrl: 'procedural:fin-can',
+    format: 'glb',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1517976487502-5f657a8bf606?w=800&auto=format&fit=crop&q=80',
+    cadSoftware: 'SolidWorks & ANSYS Fluent',
+    material: '6061-T6 Billet Aluminum & G10 Fins',
+    manufacturing: '4-Axis CNC Milling',
+    tolerances: '±0.02 mm',
+    mass: '580 g',
+    dimensions: 'Ø 102 mm × 310 mm',
+    downloadUrl: '',
+    featured: false,
+    hidden: false,
+    order: 2,
+  },
+  {
+    id: 'cad-3',
+    title: 'Two-Axis Precision Sensor Gimbal',
+    description: 'Ultra-compact, low-backlash dual-axis gimbal mechanism engineered for high-g flight telemetry vibration isolation, housing IMU and optical guidance sensors.',
+    category: 'Robotics & Mechanisms',
+    modelUrl: 'procedural:sensor-gimbal',
+    format: 'glb',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop&q=80',
+    cadSoftware: 'Autodesk Fusion 360',
+    material: 'Anodized 7075-T6 Al & Titanium Fasteners',
+    manufacturing: '5-Axis CNC & Wire EDM',
+    tolerances: '±0.015 mm',
+    mass: '165 g',
+    dimensions: '85 × 72 × 55 mm',
+    downloadUrl: '',
+    featured: false,
+    hidden: false,
+    order: 3,
+  },
+];
+
 const DEFAULT_CONTENT: WebsiteData = {
   profile: {
     name: 'Shreyaan Vashishtha',
@@ -233,6 +300,8 @@ const DEFAULT_CONTENT: WebsiteData = {
   certifications: [],
   photos: [],
   videos: DEFAULT_VIDEOS,
+  models: DEFAULT_MODELS,
+  cadSettings: DEFAULT_CAD_SETTINGS,
   photographySettings: DEFAULT_PHOTOGRAPHY_SETTINGS,
   settings: DEFAULT_SETTINGS,
 };
@@ -317,6 +386,11 @@ function mergeWithDefaults(parsed: any): WebsiteData {
     },
     photos: Array.isArray(parsed?.photos) ? parsed.photos : [],
     videos: Array.isArray(parsed?.videos) ? parsed.videos : DEFAULT_VIDEOS,
+    models: Array.isArray(parsed?.models) ? parsed.models : DEFAULT_MODELS,
+    cadSettings: {
+      ...DEFAULT_CAD_SETTINGS,
+      ...(parsed?.cadSettings || {}),
+    },
     photographySettings: {
       ...DEFAULT_PHOTOGRAPHY_SETTINGS,
       ...(parsed?.photographySettings || {}),

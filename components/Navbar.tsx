@@ -38,6 +38,7 @@ export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps)
   const defaultNavLinks = [
     { name: 'Projects', href: '#projects', enabled: true },
     { name: 'Capabilities', href: '#skills', enabled: true },
+    { name: '3D CAD', href: '/cad', enabled: true },
     { name: 'Experience', href: '#experience', enabled: true },
     { name: 'Education', href: '#education', enabled: true },
     { name: 'Photography', href: '/photography', enabled: true },
@@ -48,11 +49,24 @@ export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps)
     ? headerSettings.navLinks
     : defaultNavLinks;
 
-  // Ensure photography link is available if not in custom navLinks
-  const hasPhotography = rawNavLinks.some((l) => l.href.includes('photography'));
-  const effectiveNavLinks = hasPhotography
-    ? rawNavLinks
-    : [...rawNavLinks.filter((l) => l.name !== 'Contact'), { name: 'Photography', href: '/photography', enabled: true }, ...rawNavLinks.filter((l) => l.name === 'Contact')];
+  // Ensure photography and CAD links are available if not in custom navLinks
+  let effectiveNavLinks = [...rawNavLinks];
+  if (!effectiveNavLinks.some((l) => l.href.includes('cad'))) {
+    const contactIdx = effectiveNavLinks.findIndex((l) => l.name === 'Contact');
+    if (contactIdx !== -1) {
+      effectiveNavLinks.splice(contactIdx, 0, { name: '3D CAD', href: '/cad', enabled: true });
+    } else {
+      effectiveNavLinks.push({ name: '3D CAD', href: '/cad', enabled: true });
+    }
+  }
+  if (!effectiveNavLinks.some((l) => l.href.includes('photography'))) {
+    const contactIdx = effectiveNavLinks.findIndex((l) => l.name === 'Contact');
+    if (contactIdx !== -1) {
+      effectiveNavLinks.splice(contactIdx, 0, { name: 'Photography', href: '/photography', enabled: true });
+    } else {
+      effectiveNavLinks.push({ name: 'Photography', href: '/photography', enabled: true });
+    }
+  }
 
   const navLinks = effectiveNavLinks.filter((link) => link.enabled !== false);
 
