@@ -12,7 +12,6 @@ import {
   ShieldCheck,
   CheckCircle2,
   AlertCircle,
-  MapPin,
   ExternalLink,
   Instagram,
   Github,
@@ -316,24 +315,6 @@ export function ContactSection({
                   <span>Compose</span>
                   <ExternalLink className="w-3.5 h-3.5" />
                 </a>
-              </div>
-            </div>
-
-            {/* Base Location Card */}
-            <div className="p-5 rounded-3xl bg-zinc-900/40 border border-white/10 backdrop-blur-xl shadow-lg">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-zinc-400">
-                  <MapPin className="w-3.5 h-3.5 text-amber-400" />
-                  <span>Base Location</span>
-                </div>
-                <span className="text-[10px] font-mono text-zinc-500">Academic &amp; Research</span>
-              </div>
-
-              <div>
-                <div className="text-base font-bold text-white">Hong Kong SAR</div>
-                <div className="text-xs text-zinc-400 font-mono mt-0.5">
-                  HKUST • Department of Mechanical &amp; Aerospace Engineering
-                </div>
               </div>
             </div>
 
