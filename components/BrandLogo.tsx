@@ -13,7 +13,7 @@ export function BrandLogo({
   badgeText = 'sv7',
   className = '',
 }: BrandLogoProps) {
-  // Classic fallback: original white square with black monospace text
+  // Classic style: High-contrast solid white square with bold monospace brand text
   if (style === 'classic') {
     return (
       <div
@@ -24,50 +24,38 @@ export function BrandLogo({
     );
   }
 
-  // Concept 1: "Supersonic Delta" (Aerospace aerodynamic precision mark)
+  // Refined Concept 1: High-Contrast Supersonic Delta
+  // Features a brilliant white squircle matching the original logo's contrast,
+  // housing an ultra-sharp, laser-cut aerodynamic supersonic delta vector with an integrated '7'.
   return (
     <div
-      className={`relative w-9 h-9 rounded-xl bg-gradient-to-b from-zinc-800/90 to-zinc-950 border border-white/15 p-1.5 flex items-center justify-center shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:border-white/40 group-hover:shadow-[0_0_18px_rgba(255,255,255,0.15)] group-hover:scale-[1.05] group-hover:-translate-y-0.5 overflow-hidden shrink-0 ${className}`}
-      title="sv7 Aerospace Vector Mark"
+      className={`relative w-9 h-9 rounded-xl bg-white p-1.5 flex items-center justify-center shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:shadow-[0_0_18px_rgba(255,255,255,0.25)] group-hover:-translate-y-0.5 overflow-hidden shrink-0 ${className}`}
+      title="sv7 Supersonic Delta"
     >
-      {/* Specular sheen sweep on hover */}
-      <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out bg-gradient-to-r from-transparent via-white/15 to-transparent pointer-events-none" />
-
-      {/* Supersonic Delta SV-7 SVG Vector */}
+      {/* Precision Aerodynamic Supersonic Delta SV-7 Vector */}
       <svg
-        viewBox="0 0 36 36"
+        viewBox="0 0 32 32"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="w-full h-full text-white transition-transform duration-300 group-hover:rotate-[2deg]"
+        className="w-full h-full transition-transform duration-300 group-hover:rotate-[2deg]"
       >
-        <defs>
-          <linearGradient id="supersonicSilver" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#FFFFFF" />
-            <stop offset="65%" stopColor="#E4E4E7" />
-            <stop offset="100%" stopColor="#A1A1AA" />
-          </linearGradient>
-          <linearGradient id="supersonicAccent" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#FFFFFF" />
-            <stop offset="100%" stopColor="#71717A" />
-          </linearGradient>
-        </defs>
-
-        {/* Left Winglet / S-V Vector */}
+        {/* Starboard Wing & Supersonic 7 Vector */}
         <path
-          d="M9 10.5 H16.2 L11.6 17.5 H17.8 L12.2 26 H7.5 L12.5 18.8 H7.8 Z"
-          fill="url(#supersonicSilver)"
-          className="transition-opacity duration-300 group-hover:opacity-100"
+          d="M17 5 L26.5 25 H20.5 L17 18 V5 Z"
+          fill="#09090b"
         />
 
-        {/* Right Wing / Supersonic Delta 7 */}
+        {/* Port Wing & Swept Aerodynamic Fin */}
         <path
-          d="M18.8 10.5 H28.5 L19.2 26 H14.4 L23.2 14.2 H18.8 Z"
-          fill="url(#supersonicSilver)"
-          className="transition-opacity duration-300 group-hover:opacity-100"
+          d="M15 9 L5.5 25 H11.5 L15 18 V9 Z"
+          fill="#09090b"
         />
 
-        {/* Subtle Mach-Cone Apex Vector Point */}
-        <circle cx="18.5" cy="7.2" r="1.1" fill="url(#supersonicAccent)" />
+        {/* Supersonic 7 Canard Crossbar */}
+        <path
+          d="M17 9 H23.5 L21.5 12.5 H17 V9 Z"
+          fill="#09090b"
+        />
       </svg>
     </div>
   );

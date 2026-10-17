@@ -24,7 +24,7 @@ export default async function Icon() {
     // fallback
   }
 
-  // Classic style fallback
+  // Classic style: white square with black monospace text
   if (logoStyle === 'classic') {
     return new ImageResponse(
       (
@@ -51,7 +51,7 @@ export default async function Icon() {
     );
   }
 
-  // Supersonic Delta style
+  // Refined Supersonic Delta style (High Contrast)
   return new ImageResponse(
     (
       <div
@@ -61,27 +61,29 @@ export default async function Icon() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: '#09090b',
+          backgroundColor: '#ffffff',
           borderRadius: '7px',
-          border: '1px solid rgba(255, 255, 255, 0.22)',
-          padding: '3px',
+          padding: '4px',
         }}
       >
         <svg
-          viewBox="0 0 36 36"
+          viewBox="0 0 32 32"
           width="100%"
           height="100%"
           fill="none"
         >
           <path
-            d="M9 10.5 H16.2 L11.6 17.5 H17.8 L12.2 26 H7.5 L12.5 18.8 H7.8 Z"
-            fill="#FFFFFF"
+            d="M17 5 L26.5 25 H20.5 L17 18 V5 Z"
+            fill="#09090b"
           />
           <path
-            d="M18.8 10.5 H28.5 L19.2 26 H14.4 L23.2 14.2 H18.8 Z"
-            fill="#FFFFFF"
+            d="M15 9 L5.5 25 H11.5 L15 18 V9 Z"
+            fill="#09090b"
           />
-          <circle cx="18.5" cy="7.2" r="1.1" fill="#FFFFFF" />
+          <path
+            d="M17 9 H23.5 L21.5 12.5 H17 V9 Z"
+            fill="#09090b"
+          />
         </svg>
       </div>
     ),
