@@ -222,7 +222,127 @@ export default async function AppleIcon() {
     );
   }
 
-  // 2D. Inverted Titanium Monolith
+  // M1. Monolith Stealth Tri-Vector (S-N-V)
+  if (logoStyle === 'monolith-tri') {
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#09090b',
+            borderRadius: '44px',
+            border: '2px solid #3f3f46',
+            padding: '24px',
+          }}
+        >
+          <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none">
+            <g fill="#ffffff">
+              <path d="M10 9 H18 L24 13.5 L24 16 L18 16 L14 13 L10 13 Z" />
+              <path d="M11 15 L14 15 L25 23 L22 23 Z" />
+              <path d="M12 27 L18 22.5 L24 27 L24 24 L18 19.5 L12 24 Z" />
+            </g>
+          </svg>
+        </div>
+      ),
+      { ...size }
+    );
+  }
+
+  // M2. Monolith Continuous Mach Ribbon
+  if (logoStyle === 'monolith-ribbon') {
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#09090b',
+            borderRadius: '44px',
+            border: '2px solid #3f3f46',
+            padding: '24px',
+          }}
+        >
+          <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none">
+            <path
+              d="M10 9 H20 L15 14 H22 L22 17 L14 23 H21 L18 27.5 L12 27.5 L15 23 H8 L16 17 H9 L14 12 H10 Z"
+              fill="#ffffff"
+              fillRule="evenodd"
+            />
+          </svg>
+        </div>
+      ),
+      { ...size }
+    );
+  }
+
+  // M3. Monolith Laser Blueprint Superimposed
+  if (logoStyle === 'monolith-blueprint') {
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#09090b',
+            borderRadius: '44px',
+            border: '2px solid #3f3f46',
+            padding: '24px',
+          }}
+        >
+          <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none">
+            <g fill="#ffffff" transform="rotate(45 18 18)">
+              <path d="M8 9 L18 13.5 L28 9 L28 12.5 L18 17 L8 12.5 Z M12 10.5 H16 V11.5 H12 Z M20 14 H24 V15 H20 Z" fillRule="evenodd" />
+              <rect x="17.2" y="16.5" width="1.6" height="3" />
+              <path d="M8 27 L18 22.5 L28 27 L28 23.5 L18 19 L8 23.5 Z M17.2 21 H18.8 V25 H17.2 Z" fillRule="evenodd" />
+            </g>
+          </svg>
+        </div>
+      ),
+      { ...size }
+    );
+  }
+
+  // M4. Monolith Coordinate Crest
+  if (logoStyle === 'monolith-crest') {
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#09090b',
+            borderRadius: '44px',
+            border: '2px solid #3f3f46',
+            padding: '24px',
+          }}
+        >
+          <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none">
+            <g fill="#ffffff">
+              <path d="M12 8.5 H21 L16 12.5 H24 L24 14.5 H15 L20 10.5 H12 Z" />
+              <path d="M10 16 H13.5 L22.5 21 H26 L26 16 H24 L24 19 L15 14 H10 Z" />
+              <path d="M11 25.5 L18 21.5 L25 25.5 L25 23 L18 19 L11 23 Z" />
+            </g>
+          </svg>
+        </div>
+      ),
+      { ...size }
+    );
+  }
+
+  // 2D. Inverted Titanium Monolith (Baseline)
   if (logoStyle === 'vector-monolith') {
     return new ImageResponse(
       (

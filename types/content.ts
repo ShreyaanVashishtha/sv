@@ -100,6 +100,11 @@ export interface HeaderSettings {
   brandTitle: string;
   badgeSubtitle?: string;
   logoStyle?:
+    | 'monolith-tri'
+    | 'monolith-ribbon'
+    | 'monolith-blueprint'
+    | 'monolith-crest'
+    | 'vector-monolith'
     | 'nozzle'
     | 'nozzle-linear'
     | 'nozzle-bell'
@@ -109,7 +114,6 @@ export interface HeaderSettings {
     | 'vector-polestar'
     | 'vector-kinetic'
     | 'vector-shock'
-    | 'vector-monolith'
     | 'diamond'
     | 'chevron'
     | 'delta'

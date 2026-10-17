@@ -3,6 +3,11 @@
 import React from 'react';
 
 export type LogoStyle =
+  | 'monolith-tri'
+  | 'monolith-ribbon'
+  | 'monolith-blueprint'
+  | 'monolith-crest'
+  | 'vector-monolith'
   | 'nozzle'
   | 'nozzle-linear'
   | 'nozzle-bell'
@@ -12,7 +17,6 @@ export type LogoStyle =
   | 'vector-polestar'
   | 'vector-kinetic'
   | 'vector-shock'
-  | 'vector-monolith'
   | 'diamond'
   | 'chevron'
   | 'delta'
@@ -44,7 +48,92 @@ export function BrandLogo({
     );
   }
 
-  // 1B. Parabolic Bell Nozzle (Rao expansion contour)
+  // M1. Monolith Stealth Tri-Vector (S upper chevron, N throat bridge, V lower chevron)
+  if (style === 'monolith-tri') {
+    return (
+      <div
+        className={`relative w-9 h-9 rounded-xl bg-zinc-950 border border-zinc-700 p-1.5 flex items-center justify-center shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:shadow-[0_0_18px_rgba(255,255,255,0.15)] group-hover:-translate-y-0.5 overflow-hidden shrink-0 ${className}`}
+        title="sv7 Stealth Tri-Vector (S-N-V)"
+      >
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full transition-transform duration-300 group-hover:scale-105">
+          <g fill="#ffffff">
+            <path d="M10 9 H18 L24 13.5 L24 16 L18 16 L14 13 L10 13 Z"/>
+            <path d="M11 15 L14 15 L25 23 L22 23 Z"/>
+            <path d="M12 27 L18 22.5 L24 27 L24 24 L18 19.5 L12 24 Z"/>
+          </g>
+        </svg>
+      </div>
+    );
+  }
+
+  // M2. Monolith Continuous Mach Ribbon
+  if (style === 'monolith-ribbon') {
+    return (
+      <div
+        className={`relative w-9 h-9 rounded-xl bg-zinc-950 border border-zinc-700 p-1.5 flex items-center justify-center shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:shadow-[0_0_18px_rgba(255,255,255,0.15)] group-hover:-translate-y-0.5 overflow-hidden shrink-0 ${className}`}
+        title="sv7 Continuous Mach Ribbon (S-N-V)"
+      >
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full transition-transform duration-300 group-hover:scale-105">
+          <path d="M10 9 H20 L15 14 H22 L22 17 L14 23 H21 L18 27.5 L12 27.5 L15 23 H8 L16 17 H9 L14 12 H10 Z" fill="#ffffff" fillRule="evenodd"/>
+        </svg>
+      </div>
+    );
+  }
+
+  // M3. Monolith Laser Blueprint Superimposed
+  if (style === 'monolith-blueprint') {
+    return (
+      <div
+        className={`relative w-9 h-9 rounded-xl bg-zinc-950 border border-zinc-700 p-1.5 flex items-center justify-center shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:shadow-[0_0_18px_rgba(255,255,255,0.15)] group-hover:-translate-y-0.5 overflow-hidden shrink-0 ${className}`}
+        title="sv7 Laser Blueprint (S-N-V)"
+      >
+        <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none" className="w-full h-full transition-transform duration-300 group-hover:scale-105">
+          <g fill="#ffffff" transform="rotate(45 18 18)">
+            <path d="M8 9 L18 13.5 L28 9 L28 12.5 L18 17 L8 12.5 Z M12 10.5 H16 V11.5 H12 Z M20 14 H24 V15 H20 Z" fillRule="evenodd"/>
+            <rect x="17.2" y="16.5" width="1.6" height="3" />
+            <path d="M8 27 L18 22.5 L28 27 L28 23.5 L18 19 L8 23.5 Z M17.2 21 H18.8 V25 H17.2 Z" fillRule="evenodd"/>
+          </g>
+        </svg>
+      </div>
+    );
+  }
+
+  // M4. Monolith Coordinate Crest
+  if (style === 'monolith-crest') {
+    return (
+      <div
+        className={`relative w-9 h-9 rounded-xl bg-zinc-950 border border-zinc-700 p-1.5 flex items-center justify-center shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:shadow-[0_0_18px_rgba(255,255,255,0.15)] group-hover:-translate-y-0.5 overflow-hidden shrink-0 ${className}`}
+        title="sv7 Coordinate Crest (S-N-V)"
+      >
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full transition-transform duration-300 group-hover:scale-105">
+          <g fill="#ffffff">
+            <path d="M12 8.5 H21 L16 12.5 H24 L24 14.5 H15 L20 10.5 H12 Z"/>
+            <path d="M10 16 H13.5 L22.5 21 H26 L26 16 H24 L24 19 L15 14 H10 Z"/>
+            <path d="M11 25.5 L18 21.5 L25 25.5 L25 23 L18 19 L11 23 Z"/>
+          </g>
+        </svg>
+      </div>
+    );
+  }
+
+  // M0 / 2D. Inverted Titanium Monolith (Original pure baseline)
+  if (style === 'vector-monolith') {
+    return (
+      <div
+        className={`relative w-9 h-9 rounded-xl bg-zinc-950 border border-zinc-700 p-1.5 flex items-center justify-center shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:shadow-[0_0_18px_rgba(255,255,255,0.15)] group-hover:-translate-y-0.5 overflow-hidden shrink-0 ${className}`}
+        title="sv7 Titanium Monolith"
+      >
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full transition-transform duration-300 group-hover:scale-105">
+          <g fill="#ffffff" transform="rotate(45 18 18)">
+            <path d="M8 9 L18 13.5 L28 9 L28 12.5 L18 17 L8 12.5 Z"/>
+            <path d="M8 27 L18 22.5 L28 27 L28 23.5 L18 19 L8 23.5 Z"/>
+          </g>
+        </svg>
+      </div>
+    );
+  }
+
+  // Parabolic Bell Nozzle
   if (style === 'nozzle-bell') {
     return (
       <div
@@ -61,7 +150,7 @@ export function BrandLogo({
     );
   }
 
-  // 1C. Injector Datum Core Nozzle
+  // Injector Datum Core
   if (style === 'nozzle-core') {
     return (
       <div
@@ -79,24 +168,7 @@ export function BrandLogo({
     );
   }
 
-  // 1D. Vertical Thrust Column
-  if (style === 'nozzle-column') {
-    return (
-      <div
-        className={`relative w-9 h-9 rounded-xl bg-white p-1.5 flex items-center justify-center shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:shadow-[0_0_18px_rgba(255,255,255,0.25)] group-hover:-translate-y-0.5 overflow-hidden shrink-0 ${className}`}
-        title="sv7 Vertical Thrust Column"
-      >
-        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full transition-transform duration-300 group-hover:scale-105">
-          <g fill="#09090b">
-            <path d="M9 27.5 L14 18 L9 8.5 L12.5 8.5 L17 18 L12.5 27.5 Z"/>
-            <path d="M27 27.5 L22 18 L27 8.5 L23.5 8.5 L19 18 L23.5 27.5 Z"/>
-          </g>
-        </svg>
-      </div>
-    );
-  }
-
-  // 2A. Polestar Guidance Star
+  // Polestar Guidance Star
   if (style === 'polestar' || style === 'vector-polestar') {
     return (
       <div
@@ -113,7 +185,7 @@ export function BrandLogo({
     );
   }
 
-  // 2B. Kinetic Forward Vector
+  // Kinetic Forward Vector
   if (style === 'vector-kinetic') {
     return (
       <div
@@ -124,42 +196,6 @@ export function BrandLogo({
           <g fill="#09090b">
             <path d="M7 7.5 L18 14 L29 7.5 L29 11 L18 17.5 L7 11 Z"/>
             <path d="M10 27.5 L18 23.5 L26 27.5 L26 24.5 L18 20.5 L10 24.5 Z"/>
-          </g>
-        </svg>
-      </div>
-    );
-  }
-
-  // 2C. Stratified Multi-Shock Wave
-  if (style === 'vector-shock') {
-    return (
-      <div
-        className={`relative w-9 h-9 rounded-xl bg-white p-1.5 flex items-center justify-center shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:shadow-[0_0_18px_rgba(255,255,255,0.25)] group-hover:-translate-y-0.5 overflow-hidden shrink-0 ${className}`}
-        title="sv7 Multi-Shock Wave"
-      >
-        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full transition-transform duration-300 group-hover:scale-105">
-          <g fill="#09090b">
-            <path d="M7 8 L18 12.5 L29 8 L29 10.5 L18 15 L7 10.5 Z"/>
-            <path d="M7 28 L18 23.5 L29 28 L29 25.5 L18 21 L7 25.5 Z"/>
-            <path d="M11 14.5 L18 17 L25 14.5 L25 16 L18 18.5 L11 16 Z"/>
-            <path d="M11 21.5 L18 19 L25 21.5 L25 20 L18 17.5 L11 20 Z"/>
-          </g>
-        </svg>
-      </div>
-    );
-  }
-
-  // 2D. Inverted Titanium Monolith
-  if (style === 'vector-monolith') {
-    return (
-      <div
-        className={`relative w-9 h-9 rounded-xl bg-zinc-950 border border-zinc-700 p-1.5 flex items-center justify-center shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:shadow-[0_0_18px_rgba(255,255,255,0.15)] group-hover:-translate-y-0.5 overflow-hidden shrink-0 ${className}`}
-        title="sv7 Titanium Monolith"
-      >
-        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full transition-transform duration-300 group-hover:scale-105">
-          <g fill="#ffffff" transform="rotate(45 18 18)">
-            <path d="M8 9 L18 13.5 L28 9 L28 12.5 L18 17 L8 12.5 Z"/>
-            <path d="M8 27 L18 22.5 L28 27 L28 23.5 L18 19 L8 23.5 Z"/>
           </g>
         </svg>
       </div>
