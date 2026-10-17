@@ -720,6 +720,122 @@ export default async function AppleIcon() {
     );
   }
 
+  // TC-1. Tapered Airfoil × Chamfered Wedge (The Balanced Master)
+  if (logoStyle === 'tc1-balanced') {
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#09090b',
+            borderRadius: '44px',
+            border: '2px solid #3f3f46',
+            padding: '24px',
+          }}
+        >
+          <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none">
+            <g fill="#ffffff" transform="rotate(45 18 18)">
+              <path d="M9.5 7.5 L18 13.0 L26.5 7.5 L28 9.0 L18 17.2 L8 9.0 Z" />
+              <path d="M8 27.0 L18 18.8 L28 27.0 L26.5 28.5 L18 23.0 L9.5 28.5 Z" />
+            </g>
+          </svg>
+        </div>
+      ),
+      { ...size }
+    );
+  }
+
+  // TC-2. Deep-Choke Compression
+  if (logoStyle === 'tc2-choke') {
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#09090b',
+            borderRadius: '44px',
+            border: '2px solid #3f3f46',
+            padding: '24px',
+          }}
+        >
+          <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none">
+            <g fill="#ffffff" transform="rotate(45 18 18)">
+              <path d="M9.5 7.5 L18 13.0 L26.5 7.5 L28 8.8 L18 17.35 L8 8.8 Z" />
+              <path d="M8 27.2 L18 18.65 L28 27.2 L26.5 28.5 L18 23.0 L9.5 28.5 Z" />
+            </g>
+          </svg>
+        </div>
+      ),
+      { ...size }
+    );
+  }
+
+  // TC-3. Heavy Mass Wedge
+  if (logoStyle === 'tc3-heavy') {
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#09090b',
+            borderRadius: '44px',
+            border: '2px solid #3f3f46',
+            padding: '24px',
+          }}
+        >
+          <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none">
+            <g fill="#ffffff" transform="rotate(45 18 18)">
+              <path d="M9.0 7.0 L18 12.4 L27.0 7.0 L28.5 8.8 L18 17.2 L7.5 8.8 Z" />
+              <path d="M7.5 27.2 L18 18.8 L28.5 27.2 L27.0 29.0 L18 23.6 L9.0 29.0 Z" />
+            </g>
+          </svg>
+        </div>
+      ),
+      { ...size }
+    );
+  }
+
+  // TC-4. Wide-Span Flare
+  if (logoStyle === 'tc4-wide') {
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#09090b',
+            borderRadius: '44px',
+            border: '2px solid #3f3f46',
+            padding: '24px',
+          }}
+        >
+          <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none">
+            <g fill="#ffffff" transform="rotate(45 18 18)">
+              <path d="M10.0 6.5 L18 13.0 L26.0 6.5 L28.5 8.5 L18 17.2 L7.5 8.5 Z" />
+              <path d="M7.5 27.5 L18 18.8 L28.5 27.5 L26.0 29.5 L18 23.0 L10.0 29.5 Z" />
+            </g>
+          </svg>
+        </div>
+      ),
+      { ...size }
+    );
+  }
+
   // 3. Mach Diamond
   if (logoStyle === 'diamond') {
     return new ImageResponse(

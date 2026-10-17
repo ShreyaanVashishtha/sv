@@ -21,6 +21,10 @@ export type LogoStyle =
   | 'h4-knife'
   | 'h5-stealth'
   | 'h6-notch'
+  | 'tc1-balanced'
+  | 'tc2-choke'
+  | 'tc3-heavy'
+  | 'tc4-wide'
   | 'nozzle'
   | 'nozzle-linear'
   | 'nozzle-bell'
@@ -345,6 +349,74 @@ export function BrandLogo({
           <g fill="#ffffff" transform="rotate(45 18 18)">
             <path d="M8 7 L18 13.5 L28 7 L28 11.5 L19 16.8 L17 16.8 L8 11.5 Z"/>
             <path d="M8 29 L18 22.5 L28 29 L28 24.5 L19 19.2 L17 19.2 L8 24.5 Z"/>
+          </g>
+        </svg>
+      </div>
+    );
+  }
+
+  // TC-1. Tapered Airfoil × Chamfered Wedge (The Balanced Master Synthesis)
+  if (style === 'tc1-balanced') {
+    return (
+      <div
+        className={`relative w-9 h-9 rounded-xl bg-zinc-950 border border-zinc-700 p-1.5 flex items-center justify-center shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:shadow-[0_0_18px_rgba(255,255,255,0.15)] group-hover:-translate-y-0.5 overflow-hidden shrink-0 ${className}`}
+        title="sv7 Tapered Chamfered Master"
+      >
+        <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none" className="w-full h-full transition-transform duration-300 group-hover:scale-105">
+          <g fill="#ffffff" transform="rotate(45 18 18)">
+            <path d="M9.5 7.5 L18 13.0 L26.5 7.5 L28 9.0 L18 17.2 L8 9.0 Z"/>
+            <path d="M8 27.0 L18 18.8 L28 27.0 L26.5 28.5 L18 23.0 L9.5 28.5 Z"/>
+          </g>
+        </svg>
+      </div>
+    );
+  }
+
+  // TC-2. Deep-Choke Compression
+  if (style === 'tc2-choke') {
+    return (
+      <div
+        className={`relative w-9 h-9 rounded-xl bg-zinc-950 border border-zinc-700 p-1.5 flex items-center justify-center shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:shadow-[0_0_18px_rgba(255,255,255,0.15)] group-hover:-translate-y-0.5 overflow-hidden shrink-0 ${className}`}
+        title="sv7 Deep Choke Taper"
+      >
+        <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none" className="w-full h-full transition-transform duration-300 group-hover:scale-105">
+          <g fill="#ffffff" transform="rotate(45 18 18)">
+            <path d="M9.5 7.5 L18 13.0 L26.5 7.5 L28 8.8 L18 17.35 L8 8.8 Z"/>
+            <path d="M8 27.2 L18 18.65 L28 27.2 L26.5 28.5 L18 23.0 L9.5 28.5 Z"/>
+          </g>
+        </svg>
+      </div>
+    );
+  }
+
+  // TC-3. Heavy Mass Wedge
+  if (style === 'tc3-heavy') {
+    return (
+      <div
+        className={`relative w-9 h-9 rounded-xl bg-zinc-950 border border-zinc-700 p-1.5 flex items-center justify-center shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:shadow-[0_0_18px_rgba(255,255,255,0.15)] group-hover:-translate-y-0.5 overflow-hidden shrink-0 ${className}`}
+        title="sv7 Heavy Mass Wedge"
+      >
+        <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none" className="w-full h-full transition-transform duration-300 group-hover:scale-105">
+          <g fill="#ffffff" transform="rotate(45 18 18)">
+            <path d="M9.0 7.0 L18 12.4 L27.0 7.0 L28.5 8.8 L18 17.2 L7.5 8.8 Z"/>
+            <path d="M7.5 27.2 L18 18.8 L28.5 27.2 L27.0 29.0 L18 23.6 L9.0 29.0 Z"/>
+          </g>
+        </svg>
+      </div>
+    );
+  }
+
+  // TC-4. Wide-Span Flare
+  if (style === 'tc4-wide') {
+    return (
+      <div
+        className={`relative w-9 h-9 rounded-xl bg-zinc-950 border border-zinc-700 p-1.5 flex items-center justify-center shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:shadow-[0_0_18px_rgba(255,255,255,0.15)] group-hover:-translate-y-0.5 overflow-hidden shrink-0 ${className}`}
+        title="sv7 Wide Span Flare"
+      >
+        <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none" className="w-full h-full transition-transform duration-300 group-hover:scale-105">
+          <g fill="#ffffff" transform="rotate(45 18 18)">
+            <path d="M10.0 6.5 L18 13.0 L26.0 6.5 L28.5 8.5 L18 17.2 L7.5 8.5 Z"/>
+            <path d="M7.5 27.5 L18 18.8 L28.5 27.5 L26.0 29.5 L18 23.0 L10.0 29.5 Z"/>
           </g>
         </svg>
       </div>
