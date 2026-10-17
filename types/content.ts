@@ -101,7 +101,15 @@ export interface HeaderSettings {
   badgeSubtitle?: string;
   logoStyle?:
     | 'nozzle'
+    | 'nozzle-linear'
+    | 'nozzle-bell'
+    | 'nozzle-core'
+    | 'nozzle-column'
     | 'polestar'
+    | 'vector-polestar'
+    | 'vector-kinetic'
+    | 'vector-shock'
+    | 'vector-monolith'
     | 'diamond'
     | 'chevron'
     | 'delta'

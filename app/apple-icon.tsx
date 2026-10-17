@@ -51,8 +51,36 @@ export default async function AppleIcon() {
     );
   }
 
-  // 2. Supersonic Nozzle: Two opposing aerodynamic chevrons
-  if (logoStyle === 'nozzle') {
+  // 1B. Parabolic Bell Nozzle
+  if (logoStyle === 'nozzle-bell') {
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#ffffff',
+            borderRadius: '44px',
+            padding: '24px',
+          }}
+        >
+          <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none">
+            <g fill="#09090b">
+              <path d="M8 9.5 Q13 11 18 13.5 Q23 11 28 9.5 L28 12.5 Q23 14 18 16.5 Q13 14 8 12.5 Z" />
+              <path d="M8 26.5 Q13 25 18 22.5 Q23 25 28 26.5 L28 23.5 Q23 22 18 19.5 Q13 22 8 23.5 Z" />
+            </g>
+          </svg>
+        </div>
+      ),
+      { ...size }
+    );
+  }
+
+  // 1C. Injector Datum Core
+  if (logoStyle === 'nozzle-core') {
     return new ImageResponse(
       (
         <div
@@ -71,6 +99,7 @@ export default async function AppleIcon() {
             <g fill="#09090b">
               <path d="M8 9 L18 13 L28 9 L28 12.5 L18 16.5 L8 12.5 Z" />
               <path d="M8 27 L18 23 L28 27 L28 23.5 L18 19.5 L8 23.5 Z" />
+              <rect x="16.5" y="16.5" width="3" height="3" rx="0.5" transform="rotate(45 18 18)" />
             </g>
           </svg>
         </div>
@@ -79,8 +108,36 @@ export default async function AppleIcon() {
     );
   }
 
-  // 3. Polestar Guidance Vector: Opposing 45° diagonal aerodynamic chevrons
-  if (logoStyle === 'polestar') {
+  // 1D. Vertical Thrust Column
+  if (logoStyle === 'nozzle-column') {
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#ffffff',
+            borderRadius: '44px',
+            padding: '24px',
+          }}
+        >
+          <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none">
+            <g fill="#09090b">
+              <path d="M9 27.5 L14 18 L9 8.5 L12.5 8.5 L17 18 L12.5 27.5 Z" />
+              <path d="M27 27.5 L22 18 L27 8.5 L23.5 8.5 L19 18 L23.5 27.5 Z" />
+            </g>
+          </svg>
+        </div>
+      ),
+      { ...size }
+    );
+  }
+
+  // 2A. Polestar Guidance Vector (Diagonal)
+  if (logoStyle === 'polestar' || logoStyle === 'vector-polestar') {
     return new ImageResponse(
       (
         <div
@@ -97,8 +154,8 @@ export default async function AppleIcon() {
         >
           <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none">
             <g fill="#09090b" transform="rotate(45 18 18)">
-              <path d="M8 9 L18 13 L28 9 L28 12.5 L18 16.5 L8 12.5 Z" />
-              <path d="M8 27 L18 23 L28 27 L28 23.5 L18 19.5 L8 23.5 Z" />
+              <path d="M8 9 L18 13.5 L28 9 L28 12.5 L18 17 L8 12.5 Z" />
+              <path d="M8 27 L18 22.5 L28 27 L28 23.5 L18 19 L8 23.5 Z" />
             </g>
           </svg>
         </div>
@@ -107,7 +164,94 @@ export default async function AppleIcon() {
     );
   }
 
-  // 4. Mach Diamond: Concentric precision diamond
+  // 2B. Kinetic Forward Vector
+  if (logoStyle === 'vector-kinetic') {
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#ffffff',
+            borderRadius: '44px',
+            padding: '24px',
+          }}
+        >
+          <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none">
+            <g fill="#09090b">
+              <path d="M7 7.5 L18 14 L29 7.5 L29 11 L18 17.5 L7 11 Z" />
+              <path d="M10 27.5 L18 23.5 L26 27.5 L26 24.5 L18 20.5 L10 24.5 Z" />
+            </g>
+          </svg>
+        </div>
+      ),
+      { ...size }
+    );
+  }
+
+  // 2C. Stratified Multi-Shock Wave
+  if (logoStyle === 'vector-shock') {
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#ffffff',
+            borderRadius: '44px',
+            padding: '24px',
+          }}
+        >
+          <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none">
+            <g fill="#09090b">
+              <path d="M7 8 L18 12.5 L29 8 L29 10.5 L18 15 L7 10.5 Z" />
+              <path d="M7 28 L18 23.5 L29 28 L29 25.5 L18 21 L7 25.5 Z" />
+              <path d="M11 14.5 L18 17 L25 14.5 L25 16 L18 18.5 L11 16 Z" />
+              <path d="M11 21.5 L18 19 L25 21.5 L25 20 L18 17.5 L11 20 Z" />
+            </g>
+          </svg>
+        </div>
+      ),
+      { ...size }
+    );
+  }
+
+  // 2D. Inverted Titanium Monolith
+  if (logoStyle === 'vector-monolith') {
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#09090b',
+            borderRadius: '44px',
+            border: '2px solid #3f3f46',
+            padding: '24px',
+          }}
+        >
+          <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none">
+            <g fill="#ffffff" transform="rotate(45 18 18)">
+              <path d="M8 9 L18 13.5 L28 9 L28 12.5 L18 17 L8 12.5 Z" />
+              <path d="M8 27 L18 22.5 L28 27 L28 23.5 L18 19 L8 23.5 Z" />
+            </g>
+          </svg>
+        </div>
+      ),
+      { ...size }
+    );
+  }
+
+  // 3. Mach Diamond
   if (logoStyle === 'diamond') {
     return new ImageResponse(
       (
@@ -135,7 +279,7 @@ export default async function AppleIcon() {
     );
   }
 
-  // 5. Square CAD Datum: Concentric upright geometry
+  // 4. Square CAD Datum
   if (logoStyle === 'square') {
     return new ImageResponse(
       (
@@ -163,7 +307,32 @@ export default async function AppleIcon() {
     );
   }
 
-  // 6. Mach Delta Chevron ('chevron' or 'delta'): Single razor-sharp supersonic delta wing
+  // 5. Delta Chevron ('chevron' or 'delta')
+  if (logoStyle === 'chevron' || logoStyle === 'delta') {
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#ffffff',
+            borderRadius: '44px',
+            padding: '24px',
+          }}
+        >
+          <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none">
+            <path d="M18 7.5 L28.5 26 H22.5 L18 18.5 L13.5 26 H7.5 Z" fill="#09090b" />
+          </svg>
+        </div>
+      ),
+      { ...size }
+    );
+  }
+
+  // Default: Linear Razor Nozzle ('nozzle' or 'nozzle-linear')
   return new ImageResponse(
     (
       <div
@@ -179,10 +348,10 @@ export default async function AppleIcon() {
         }}
       >
         <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none">
-          <path
-            d="M18 7.5 L28.5 26 H22.5 L18 18.5 L13.5 26 H7.5 Z"
-            fill="#09090b"
-          />
+          <g fill="#09090b">
+            <path d="M8 9 L18 13.5 L28 9 L28 12.5 L18 17 L8 12.5 Z" />
+            <path d="M8 27 L18 22.5 L28 27 L28 23.5 L18 19 L8 23.5 Z" />
+          </g>
         </svg>
       </div>
     ),
