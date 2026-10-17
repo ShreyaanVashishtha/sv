@@ -99,7 +99,17 @@ export interface HeaderSettings {
   logoBadge: string;
   brandTitle: string;
   badgeSubtitle?: string;
-  logoStyle?: 'monoline' | 'stencil' | 'exponent' | 'delta' | 'classic';
+  logoStyle?:
+    | 'nozzle'
+    | 'polestar'
+    | 'diamond'
+    | 'chevron'
+    | 'delta'
+    | 'square'
+    | 'classic'
+    | 'monoline'
+    | 'stencil'
+    | 'exponent';
   navLinks: NavLink[];
   ctaText: string;
   ctaHref: string;
