@@ -57,7 +57,7 @@ export const DEFAULT_SETTINGS: SiteSettings = {
     logoBadge: 'sv7',
     brandTitle: 'sv7.dev',
     badgeSubtitle: '',
-    logoStyle: 'classic',
+    logoStyle: 'tc1-balanced',
     navLinks: [
       { name: 'Work', href: '#projects', enabled: true },
       { name: 'Experience', href: '#experience', enabled: true },
