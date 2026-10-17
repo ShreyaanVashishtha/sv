@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { getContent } from '@/lib/content';
 import { LegalLayout } from '@/components/LegalLayout';
 import Link from 'next/link';
+import { ShieldCheck, FileText, ArrowRight } from 'lucide-react';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -13,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: `Terms and Conditions | ${siteName}`,
     description:
-      'Terms and conditions governing the access and usage of sv7.dev, engineering research archives, robotics prototypes, software repositories, and photography media.',
+      'Terms and conditions governing the access and usage of sv7.dev, 3D CAD mechanical assemblies, engineering research archives, robotics prototypes, and photography media.',
     alternates: {
       canonical: `${data.settings?.canonicalUrl || 'https://sv7.dev'}/terms`,
     },
@@ -78,6 +79,20 @@ export default async function TermsPage() {
                 <li><strong className="text-zinc-200">Machine Learning / AI Scraping:</strong> Automated scraping, harvesting, ingestion, or data-mining of high-resolution imagery or video streams for generative AI model training is expressly prohibited without explicit authorization.</li>
               </ul>
             </div>
+
+            <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-2">
+              <h3 className="text-xs font-mono uppercase tracking-wider text-white font-semibold">
+                C. 3D CAD Lab, STL Geometries &amp; Additive Manufacturing Assets
+              </h3>
+              <p className="text-zinc-400 text-xs leading-relaxed">
+                3D digital representations, STL mesh files, STEP solid models, GLB/glTF assets, and mechanical assembly specifications showcased in the CAD Lab (<Link href="/cad" className="text-white underline hover:text-zinc-200">/cad</Link>) are the proprietary mechanical designs of Shreyaan Vashishtha.
+              </p>
+              <ul className="list-disc pl-5 space-y-1 text-xs text-zinc-400">
+                <li><strong className="text-zinc-200">Personal &amp; Educational Prototyping:</strong> Where download links or Printables repository releases are provided, you are granted a non-exclusive, revocable license to download, slice, and 3D print models for personal, non-commercial, and educational evaluation.</li>
+                <li><strong className="text-zinc-200">Commercial Fabrication &amp; Resale Prohibited:</strong> Commercial production, injection molding, CNC batch machining, sale of physical printed units, or redistribution of modified mesh files without written consent is strictly prohibited.</li>
+                <li><strong className="text-zinc-200">Printables.com Model Releases:</strong> 3D models distributed via Printables.com (Prusa Research a.s.) remain additionally subject to the specific open-source or Creative Commons license designated on each respective model listing.</li>
+              </ul>
+            </div>
           </div>
         </section>
 
@@ -109,10 +124,15 @@ export default async function TermsPage() {
             <span>Technical Demonstrations &amp; Engineering Disclaimers</span>
           </h2>
           <p>
-            The technical projects, simulations, flight descent systems, firmware snippets, and rocketry telemetry showcased on this Website represent academic, experimental, and exploratory engineering work. They are presented for demonstration, educational, and portfolio purposes only.
+            The technical projects, simulations, flight descent systems, 3D CAD assemblies, firmware snippets, and rocketry telemetry showcased on this Website represent academic, experimental, and exploratory engineering work. They are presented for demonstration, educational, and portfolio purposes only.
           </p>
-          <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-300">
-            <strong>Important Engineering Notice:</strong> Calculations, prototypes, and flight control concepts published herein are not certified for commercial, flight-critical, industrial, or life-safety applications without independent engineering verification and compliance with applicable aviation authorities (e.g., FAA, CAD HK, EASA).
+          <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-300 space-y-2">
+            <div>
+              <strong>Important Engineering &amp; Additive Manufacturing Notice:</strong> Calculations, prototypes, flight control concepts, and 3D CAD geometries published herein are not certified for commercial, flight-critical, industrial, or life-safety applications without independent engineering verification and compliance with applicable aviation authorities (e.g., FAA, CAD HK, EASA).
+            </div>
+            <div className="text-amber-200/80 text-[11px] leading-relaxed">
+              When 3D printing or fabricating mechanical assemblies from provided STL/CAD files, you acknowledge that material shrinkage, ambient temperature, infill density, print orientation, nozzle wear, and filament properties (PLA, PETG, ABS, ASA, CF-composites) fundamentally affect physical tolerances and structural tensile strength. You assume full responsibility and liability for any hardware fabrication, assembly, or flight testing.
+            </div>
           </div>
         </section>
 
@@ -125,7 +145,7 @@ export default async function TermsPage() {
             <span>Third-Party Links &amp; External Feeds</span>
           </h2>
           <p>
-            The Website links to and dynamically integrates content from third-party services, including Behold.so, Instagram (Meta Platforms, Inc.), Pexels (Canva Germany GmbH), GitHub, and Vercel. We do not control and are not responsible for the availability, terms, privacy practices, or content of external websites. Accessing external links is done at your own risk.
+            The Website links to and dynamically integrates content from third-party services, including Printables.com (Prusa Research a.s.), Behold.so, Instagram (Meta Platforms, Inc.), Pexels (Canva Germany GmbH), GitHub, and Vercel. We do not control and are not responsible for the availability, terms, privacy practices, or content of external websites. Accessing external links is done at your own risk.
           </p>
         </section>
 
@@ -179,6 +199,54 @@ export default async function TermsPage() {
           <p>
             We reserve the right to revise or update these Terms at any time without prior notice. Any modifications will become effective immediately upon posting to this page with an updated &quot;Effective Date&quot;. Continued use of the Website constitutes acceptance of the modified Terms.
           </p>
+        </section>
+
+        {/* Quick Navigation Links */}
+        <section className="pt-4 border-t border-white/10 space-y-4">
+          <h3 className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+            Related Legal Documentation
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <Link
+              href="/privacy"
+              className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-white/20 transition-all flex items-center justify-between group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-xl bg-white/5 text-white flex items-center justify-center">
+                  <ShieldCheck className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="text-xs font-semibold text-white group-hover:text-zinc-200">
+                    Privacy Policy
+                  </div>
+                  <div className="text-[10px] text-zinc-500">
+                    Telemetry, telemetry data, and data rights
+                  </div>
+                </div>
+              </div>
+              <ArrowRight className="w-4 h-4 text-zinc-500 group-hover:text-white transition-transform group-hover:translate-x-1" />
+            </Link>
+
+            <Link
+              href="/legal"
+              className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-white/20 transition-all flex items-center justify-between group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-xl bg-white/5 text-white flex items-center justify-center">
+                  <FileText className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="text-xs font-semibold text-white group-hover:text-zinc-200">
+                    Legal Notice &amp; Compliance
+                  </div>
+                  <div className="text-[10px] text-zinc-500">
+                    Site operator, affiliations, and CAD notices
+                  </div>
+                </div>
+              </div>
+              <ArrowRight className="w-4 h-4 text-zinc-500 group-hover:text-white transition-transform group-hover:translate-x-1" />
+            </Link>
+          </div>
         </section>
       </div>
     </LegalLayout>

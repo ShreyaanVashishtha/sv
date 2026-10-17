@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { getContent } from '@/lib/content';
 import { LegalLayout } from '@/components/LegalLayout';
 import Link from 'next/link';
-import { Scale, ShieldCheck, ArrowRight, Building, Award, Camera } from 'lucide-react';
+import { Scale, ShieldCheck, ArrowRight, Building, Award, Camera, Box } from 'lucide-react';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -14,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: `Legal Notice & Compliance | ${siteName}`,
     description:
-      'Legal notice, site operator identification, intellectual property disclosures, and compliance information for sv7.dev.',
+      'Legal notice, site operator identification, intellectual property disclosures, 3D CAD engineering assets, and compliance information for sv7.dev.',
     alternates: {
       canonical: `${data.settings?.canonicalUrl || 'https://sv7.dev'}/legal`,
     },
@@ -27,7 +27,7 @@ export default async function LegalPage() {
   return (
     <LegalLayout
       title="Legal Notice &amp; Compliance"
-      subtitle="Regulatory disclosures, site operator identification, academic disclaimers, and intellectual property notices for sv7.dev."
+      subtitle="Regulatory disclosures, site operator identification, academic disclaimers, 3D CAD engineering assets, and intellectual property notices for sv7.dev."
       documentType="Regulatory Notice"
       lastUpdated="October 17, 2026"
       activeSlug="legal"
@@ -125,16 +125,35 @@ export default async function LegalPage() {
           </div>
         </section>
 
-        {/* Section 5: Trademark Notice */}
+        {/* Section 5: 3D CAD Lab & Additive Manufacturing Notice */}
         <section className="space-y-3">
           <h2 className="text-lg font-bold text-white flex items-center gap-2">
             <span className="w-6 h-6 rounded-lg bg-white/10 text-white font-mono text-xs flex items-center justify-center">
               05
             </span>
+            <span>3D CAD Lab, Fusion 360 &amp; Additive Manufacturing Notice</span>
+          </h2>
+          <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-2">
+            <div className="flex items-center gap-2 text-white font-semibold text-xs">
+              <Box className="w-4 h-4 text-amber-400" />
+              <span>Autodesk Fusion 360 &amp; Printables Engineering Showcase</span>
+            </div>
+            <p className="text-xs text-zinc-400 leading-relaxed">
+              3D CAD assemblies, stereolithography (.STL) geometries, and mechanical models presented in the CAD Lab (<Link href="/cad" className="text-white underline">/cad</Link>) are designed by Shreyaan Vashishtha using parametric software including Autodesk Fusion 360. Where available, physical fabrication files, 3MF slices, and maker specifications are syndicated through our verified <strong className="text-zinc-200">Printables</strong> maker profile. Physical reproduction of any design requires user validation of slicing parameters, material tensile properties, tolerances, and printer calibration.
+            </p>
+          </div>
+        </section>
+
+        {/* Section 6: Trademark Notice */}
+        <section className="space-y-3">
+          <h2 className="text-lg font-bold text-white flex items-center gap-2">
+            <span className="w-6 h-6 rounded-lg bg-white/10 text-white font-mono text-xs flex items-center justify-center">
+              06
+            </span>
             <span>Trademarks &amp; Third-Party Rights</span>
           </h2>
           <p className="text-xs text-zinc-400">
-            All brand names, logos, software titles, and trademarks referenced on this Website (including but not limited to SolidWorks, MATLAB, Python, GitHub, Instagram, Meta, Pexels, Canva, Vercel, and HKUST) are the property of their respective owners. Their mention is solely for nominative technical reference and portfolio demonstration, and implies no endorsement or commercial sponsorship.
+            All brand names, logos, software titles, and trademarks referenced on this Website (including but not limited to Autodesk Fusion 360, SolidWorks, Three.js, Printables by Prusa Research a.s., MATLAB, Python, GitHub, Instagram, Meta, Pexels, Canva, Vercel, and HKUST) are the property of their respective owners. Their mention is solely for nominative technical reference, software attribution, and portfolio demonstration, and implies no endorsement, affiliation, or commercial sponsorship.
           </p>
         </section>
 
@@ -157,7 +176,7 @@ export default async function LegalPage() {
                     Terms of Service
                   </div>
                   <div className="text-[10px] text-zinc-500">
-                    Licensing, permitted use, and liabilities
+                    Licensing, CAD terms, and fabrication disclaimers
                   </div>
                 </div>
               </div>

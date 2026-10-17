@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { getContent } from '@/lib/content';
 import { LegalLayout } from '@/components/LegalLayout';
 import Link from 'next/link';
+import { Scale, FileText, ArrowRight } from 'lucide-react';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -13,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: `Privacy Policy | ${siteName}`,
     description:
-      'Privacy policy for sv7.dev detailing privacy-first data practices, contact communications, cookieless analytics, and data rights under Hong Kong PDPO.',
+      'Privacy policy for sv7.dev detailing privacy-first data practices, client-side 3D CAD rendering, contact communications, cookieless analytics, and data rights under Hong Kong PDPO.',
     alternates: {
       canonical: `${data.settings?.canonicalUrl || 'https://sv7.dev'}/privacy`,
     },
@@ -87,6 +88,15 @@ export default async function PrivacyPage() {
                 The Website may use client-side <code className="text-zinc-200 font-mono">localStorage</code> or <code className="text-zinc-200 font-mono">sessionStorage</code> solely for functional UI states (such as remembering gallery view preferences, Cinema Lightbox state, or temporary security session tokens for authorized administrative maintenance).
               </p>
             </div>
+
+            <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-2">
+              <h3 className="text-xs font-mono uppercase tracking-wider text-white font-semibold">
+                D. WebGL Hardware Acceleration &amp; Local 3D Rendering (CAD Lab)
+              </h3>
+              <p className="text-zinc-400 text-xs leading-relaxed">
+                The interactive 3D CAD Lab (<Link href="/cad" className="text-white underline">/cad</Link>) uses Three.js and WebGL to render mechanical geometry files (.STL) directly inside your web browser via local GPU hardware acceleration. This rendering execution occurs entirely client-side on your local machine. We do not extract, fingerprint, or log your GPU hardware model, graphics driver profiles, or WebGL canvas hashes.
+              </p>
+            </div>
           </div>
         </section>
 
@@ -104,6 +114,9 @@ export default async function PrivacyPage() {
           <ul className="list-disc pl-5 space-y-2 text-xs text-zinc-400">
             <li>
               <strong className="text-zinc-200">Vercel Inc. (Hosting &amp; Edge Network):</strong> Hosts the website infrastructure, edge compute, and TLS certificates. Server log records (request path, status codes, user-agent) are processed for infrastructure defense and DDoS mitigation.
+            </li>
+            <li>
+              <strong className="text-zinc-200">Printables.com (Prusa Research a.s.):</strong> Hosts verified maker listings, downloadable 3D CAD assets (.STL, .3MF), and slice configurations. Outbound links to Printables redirect to their platform and are governed by Printables’ Privacy Policy.
             </li>
             <li>
               <strong className="text-zinc-200">Behold.so &amp; Meta / Instagram CDN:</strong> Delivers live MP4 video streams and poster assets for motion reels published on <strong className="text-zinc-200">@sv.snap</strong>. When playing a video, your browser establishes a secure connection to CDN nodes to stream video data.
@@ -191,6 +204,54 @@ export default async function PrivacyPage() {
           <p>
             We may update this Privacy Policy periodically to reflect technological changes, infrastructural updates, or legal compliance requirements. Any revisions will be published here with an updated effective date.
           </p>
+        </section>
+
+        {/* Quick Navigation Links */}
+        <section className="pt-4 border-t border-white/10 space-y-4">
+          <h3 className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+            Related Legal Documentation
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <Link
+              href="/terms"
+              className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-white/20 transition-all flex items-center justify-between group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-xl bg-white/5 text-white flex items-center justify-center">
+                  <Scale className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="text-xs font-semibold text-white group-hover:text-zinc-200">
+                    Terms of Service
+                  </div>
+                  <div className="text-[10px] text-zinc-500">
+                    Licensing, CAD terms, and fabrication disclaimers
+                  </div>
+                </div>
+              </div>
+              <ArrowRight className="w-4 h-4 text-zinc-500 group-hover:text-white transition-transform group-hover:translate-x-1" />
+            </Link>
+
+            <Link
+              href="/legal"
+              className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-white/20 transition-all flex items-center justify-between group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-xl bg-white/5 text-white flex items-center justify-center">
+                  <FileText className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="text-xs font-semibold text-white group-hover:text-zinc-200">
+                    Legal Notice &amp; Compliance
+                  </div>
+                  <div className="text-[10px] text-zinc-500">
+                    Site operator, affiliations, and CAD notices
+                  </div>
+                </div>
+              </div>
+              <ArrowRight className="w-4 h-4 text-zinc-500 group-hover:text-white transition-transform group-hover:translate-x-1" />
+            </Link>
+          </div>
         </section>
       </div>
     </LegalLayout>
