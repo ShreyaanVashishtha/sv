@@ -226,7 +226,7 @@ export function BrandLogo({ className = '' }: { className?: string }) {
 
         {/* The Big Stage */}
         <div
-          className={`relative rounded-3xl p-8 sm:p-14 border transition-all duration-300 flex flex-col items-center justify-center min-h-[420px] overflow-hidden ${
+          className={`relative rounded-3xl p-6 sm:p-12 border transition-all duration-300 flex flex-col items-center justify-center min-h-[480px] overflow-hidden ${
             surfaceTheme === 'dark'
               ? 'bg-zinc-950/90 border-zinc-800'
               : surfaceTheme === 'blueprint'
@@ -247,7 +247,7 @@ export function BrandLogo({ className = '' }: { className?: string }) {
 
           {/* HUD Dimensions Overlay */}
           {showHUD && (
-            <div className="absolute inset-0 pointer-events-none p-6 font-mono text-[10px] text-zinc-500 flex flex-col justify-between">
+            <div className="absolute inset-0 pointer-events-none p-5 sm:p-6 font-mono text-[10px] text-zinc-500 flex flex-col justify-between">
               <div className="flex justify-between items-start">
                 <span className="text-zinc-400">DATUM: X:18.00 Y:18.00</span>
                 <span className="text-emerald-400 font-semibold">ROTATION: +45.00° FLUSH</span>
@@ -259,58 +259,77 @@ export function BrandLogo({ className = '' }: { className?: string }) {
             </div>
           )}
 
-          {/* The Monolith Mark in Stage */}
-          <div className="relative group cursor-crosshair z-10 flex flex-col items-center">
-            {/* Center crosshairs if HUD enabled */}
-            {showHUD && (
-              <div className="absolute inset-0 -m-8 pointer-events-none flex items-center justify-center">
-                <div className="w-full h-px bg-emerald-500/25" />
-                <div className="h-full w-px bg-emerald-500/25 absolute" />
-                <div className="w-56 h-56 rounded-full border border-dashed border-emerald-500/20 absolute" />
-              </div>
-            )}
+          {/* Centered Mark Presentation */}
+          <div className="relative z-10 flex flex-col items-center justify-center my-auto">
+            {/* Anchor Container: Sized exactly to the Badge so HUD is 100% concentric */}
+            <div className="relative flex items-center justify-center">
+              {/* CAD Reticle HUD (concentric with Badge datum 18, 18) */}
+              {showHUD && (
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  {/* Horizontal crosshair passing directly through the throat gap */}
+                  <div className="w-64 sm:w-80 h-px bg-emerald-500/30 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                  {/* Vertical crosshair passing directly through the centerline */}
+                  <div className="h-64 sm:h-80 w-px bg-emerald-500/30 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                  {/* Primary dashed reticle circle */}
+                  <div className="w-56 h-56 sm:w-64 sm:h-64 rounded-full border border-dashed border-emerald-500/25 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                  {/* Outer subtle target ring */}
+                  <div className="w-72 h-72 sm:w-80 sm:h-80 rounded-full border border-emerald-500/10 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                  {/* 4 Quadrant Degrees Annotations */}
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 text-[9px] font-mono text-emerald-400/80 bg-zinc-950/80 px-1 rounded">0° N</div>
+                  <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 text-[9px] font-mono text-emerald-400/80 bg-zinc-950/80 px-1 rounded">180° S</div>
+                  <div className="absolute top-1/2 -left-6 -translate-y-1/2 text-[9px] font-mono text-emerald-400/80 bg-zinc-950/80 px-1 rounded">270° W</div>
+                  <div className="absolute top-1/2 -right-6 -translate-y-1/2 text-[9px] font-mono text-emerald-400/80 bg-zinc-950/80 px-1 rounded">90° E</div>
+                </div>
+              )}
 
-            {/* The Badge Container */}
-            <div
-              className={`w-36 h-36 sm:w-44 sm:h-44 rounded-3xl p-6 sm:p-7 flex items-center justify-center shadow-2xl transition-all duration-300 group-hover:scale-105 ${
-                surfaceTheme === 'light'
-                  ? 'bg-zinc-950 border-2 border-zinc-700 shadow-zinc-400/50'
-                  : 'bg-zinc-950 border-2 border-zinc-700 shadow-black/80 group-hover:shadow-[0_0_40px_rgba(255,255,255,0.18)]'
-              }`}
-            >
-              <svg
-                viewBox="0 0 36 36"
-                width="100%"
-                height="100%"
-                fill="none"
-                className="w-full h-full drop-shadow-sm transition-transform duration-300 group-hover:scale-105"
+              {/* The Badge Container */}
+              <div
+                className={`relative z-10 w-36 h-36 sm:w-44 sm:h-44 rounded-3xl p-6 sm:p-7 flex items-center justify-center shadow-2xl transition-all duration-300 group hover:scale-105 cursor-crosshair ${
+                  surfaceTheme === 'light'
+                    ? 'bg-zinc-950 border-2 border-zinc-700 shadow-zinc-400/50'
+                    : 'bg-zinc-950 border-2 border-zinc-700 shadow-black/80 hover:shadow-[0_0_40px_rgba(255,255,255,0.18)]'
+                }`}
               >
-                <g fill="#ffffff" transform="rotate(45 18 18)">
-                  {/* Top chevron airfoil */}
-                  <path d="M9.5 7.5 L18 13.0 L26.5 7.5 L28 9.0 L18 17.2 L8 9.0 Z" />
-                  {/* Bottom chevron airfoil */}
-                  <path d="M8 27.0 L18 18.8 L28 27.0 L26.5 28.5 L18 23.0 L9.5 28.5 Z" />
-                </g>
-              </svg>
+                <svg
+                  viewBox="0 0 36 36"
+                  width="100%"
+                  height="100%"
+                  fill="none"
+                  className="w-full h-full drop-shadow-sm transition-transform duration-300 group-hover:scale-105"
+                >
+                  <g fill="#ffffff" transform="rotate(45 18 18)">
+                    {/* Top chevron airfoil */}
+                    <path d="M9.5 7.5 L18 13.0 L26.5 7.5 L28 9.0 L18 17.2 L8 9.0 Z" />
+                    {/* Bottom chevron airfoil */}
+                    <path d="M8 27.0 L18 18.8 L28 27.0 L26.5 28.5 L18 23.0 L9.5 28.5 Z" />
+                  </g>
+                </svg>
+              </div>
             </div>
 
             {/* Wordmark Lockup Preview below badge */}
-            <div className="mt-6 flex items-center gap-3">
+            <div
+              className={`mt-10 sm:mt-12 flex items-center gap-3 px-4 py-1.5 rounded-full border z-10 backdrop-blur-md shadow-md transition-all ${
+                surfaceTheme === 'light'
+                  ? 'bg-white/95 border-zinc-300 shadow-zinc-200'
+                  : 'bg-zinc-900/90 border-zinc-800'
+              }`}
+            >
               <span
-                className={`font-bold text-xl sm:text-2xl tracking-tight transition-colors ${
+                className={`font-bold text-lg sm:text-xl tracking-tight transition-colors ${
                   surfaceTheme === 'light' ? 'text-zinc-900' : 'text-white'
                 }`}
               >
                 {brandTitle}
               </span>
-              <span className="text-[11px] font-mono uppercase tracking-widest px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 border border-zinc-700">
+              <span className="text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 border border-zinc-700">
                 AERO • CAD
               </span>
             </div>
           </div>
 
           {/* Quick Action Overlay inside Stage */}
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-2 z-10">
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-2 z-10">
             <button
               onClick={() => copyToClipboard(rawVectorSvg, 'rawSvg')}
               className="px-4 py-2 rounded-xl text-xs font-mono font-medium bg-zinc-900/90 text-white border border-zinc-700 hover:bg-zinc-800 hover:border-zinc-500 transition-all flex items-center gap-1.5 shadow-sm"
