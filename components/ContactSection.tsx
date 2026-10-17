@@ -12,7 +12,6 @@ import {
   ShieldCheck,
   CheckCircle2,
   AlertCircle,
-  Clock,
   MapPin,
   ExternalLink,
   Instagram,
@@ -48,27 +47,6 @@ export function ContactSection({
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [hkTime, setHkTime] = useState<string>('');
-
-  useEffect(() => {
-    const updateTime = () => {
-      try {
-        const timeStr = new Intl.DateTimeFormat('en-US', {
-          timeZone: 'Asia/Hong_Kong',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          hour12: false,
-        }).format(new Date());
-        setHkTime(timeStr);
-      } catch {
-        setHkTime('12:00:00');
-      }
-    };
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
-  }, []);
 
   const formTitle = contactSettings?.formTitle || 'Send a Direct Dispatch';
   const subjectLabel = contactSettings?.subjectLabel || 'Subject / Topic';
@@ -298,15 +276,18 @@ export function ContactSection({
                   <Mail className="w-3.5 h-3.5 text-white" />
                   <span>Direct Communication</span>
                 </span>
-                <span className="text-[10px] font-mono text-zinc-500">Official Inbox</span>
+                <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>Direct Channel</span>
+                </span>
               </div>
 
-              <div className="text-xl sm:text-2xl font-mono font-bold text-white tracking-tight break-all">
-                {displayEmail}
+              <div className="text-lg sm:text-xl font-bold text-white tracking-tight">
+                {contactSettings?.directTitle || 'Direct Inquiries & RFPs'}
               </div>
 
               <p className="text-xs text-zinc-400 mt-2 leading-relaxed">
-                {responseDisclaimer} Direct inquiries are reviewed personally.
+                {responseDisclaimer} Prefer writing directly via your email client? Inquiries routed directly or via the dispatch console are received into private inbox.
               </p>
 
               <div className="mt-4 pt-4 border-t border-white/10 flex items-center gap-2">
@@ -318,12 +299,12 @@ export function ContactSection({
                   {copied ? (
                     <>
                       <Check className="w-3.5 h-3.5 text-emerald-400" />
-                      <span className="text-emerald-400 font-semibold">Copied!</span>
+                      <span className="text-emerald-400 font-semibold">Address Copied!</span>
                     </>
                   ) : (
                     <>
                       <Copy className="w-3.5 h-3.5 text-zinc-400" />
-                      <span>Copy Address</span>
+                      <span>{contactSettings?.copyAddressText || 'Copy Address'}</span>
                     </>
                   )}
                 </button>
@@ -338,31 +319,20 @@ export function ContactSection({
               </div>
             </div>
 
-            {/* Timezone & Location Card */}
+            {/* Base Location Card */}
             <div className="p-5 rounded-3xl bg-zinc-900/40 border border-white/10 backdrop-blur-xl shadow-lg">
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-zinc-400">
                   <MapPin className="w-3.5 h-3.5 text-amber-400" />
                   <span>Base Location</span>
                 </div>
-                <div className="flex items-center gap-1.5 text-[11px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                  <span>Live Matrix</span>
-                </div>
+                <span className="text-[10px] font-mono text-zinc-500">Academic &amp; Research</span>
               </div>
 
-              <div className="flex items-baseline justify-between gap-2">
-                <div>
-                  <div className="text-base font-bold text-white">Hong Kong SAR</div>
-                  <div className="text-xs text-zinc-400 font-mono mt-0.5">HKUST Aerospace &amp; Mech Eng</div>
-                </div>
-
-                <div className="text-right">
-                  <div className="text-base font-mono font-bold text-white flex items-center gap-1.5 justify-end">
-                    <Clock className="w-3.5 h-3.5 text-zinc-400" />
-                    <span>{hkTime || 'HKT'}</span>
-                  </div>
-                  <div className="text-[10px] font-mono text-zinc-500">UTC+8 (HKT)</div>
+              <div>
+                <div className="text-base font-bold text-white">Hong Kong SAR</div>
+                <div className="text-xs text-zinc-400 font-mono mt-0.5">
+                  HKUST • Department of Mechanical &amp; Aerospace Engineering
                 </div>
               </div>
             </div>

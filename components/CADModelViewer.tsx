@@ -19,7 +19,6 @@ import {
   Sun,
   Eye,
   Compass,
-  Upload,
   RefreshCw,
   X,
 } from 'lucide-react';
@@ -53,13 +52,9 @@ export function CADModelViewer({
   const [isZUp, setIsZUp] = useState<boolean>(
     model.upAxis === 'z' || (model.cadSoftware || '').toLowerCase().includes('fusion')
   );
-  const [localFileUrl, setLocalFileUrl] = useState<string | null>(null);
-  const [localFileName, setLocalFileName] = useState<string | null>(null);
 
   useEffect(() => {
     setIsZUp(model.upAxis === 'z' || (model.cadSoftware || '').toLowerCase().includes('fusion'));
-    setLocalFileUrl(null);
-    setLocalFileName(null);
   }, [model]);
 
   // Procedural fallback generators for rocketry & mechanical models
@@ -370,9 +365,8 @@ export function CADModelViewer({
         scene.remove(currentModelGroup.current);
       }
 
-      const targetUrl = localFileUrl || model.modelUrl;
+      const targetUrl = model.modelUrl || '';
       const isStl =
-        (localFileName && localFileName.toLowerCase().endsWith('.stl')) ||
         model.format === 'stl' ||
         targetUrl.toLowerCase().endsWith('.stl');
 
@@ -532,7 +526,7 @@ export function CADModelViewer({
         rendererRef.current.dispose();
       }
     };
-  }, [model, buildProceduralModel, isRotating, isWireframe, isZUp, localFileUrl]);
+  }, [model, buildProceduralModel, isRotating, isWireframe, isZUp]);
 
   // Toggle wireframe on active model materials
   useEffect(() => {
@@ -594,38 +588,14 @@ export function CADModelViewer({
       {/* Top HUD Telemetry Bar */}
       <div className="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none z-10">
         <div className="flex items-center gap-2 pointer-events-auto">
-          {localFileName ? (
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-cyan-500/15 border border-cyan-500/40 backdrop-blur-md text-xs font-mono text-cyan-300">
-              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-              <span className="font-semibold text-white truncate max-w-[150px] sm:max-w-[220px]">
-                {localFileName}
-              </span>
-              <span className="text-zinc-600">•</span>
-              <span className="text-[10px] text-cyan-400 uppercase tracking-wider font-bold">
-                Local Preview
-              </span>
-              <button
-                type="button"
-                onClick={() => {
-                  setLocalFileUrl(null);
-                  setLocalFileName(null);
-                }}
-                className="text-cyan-400 hover:text-white p-0.5 rounded transition-colors"
-                title="Exit local preview"
-              >
-                <X className="w-3 h-3" />
-              </button>
-            </div>
-          ) : (
-            <div className="px-3 py-1.5 rounded-xl bg-zinc-950/80 border border-white/10 backdrop-blur-md flex items-center gap-2 text-xs font-mono text-zinc-300">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="font-semibold text-white">WebGL // 60 FPS</span>
-              <span className="text-zinc-600">•</span>
-              <span className="text-[11px] text-zinc-400 uppercase tracking-wider">
-                {model.cadSoftware || 'SolidWorks'}
-              </span>
-            </div>
-          )}
+          <div className="px-3 py-1.5 rounded-xl bg-zinc-950/80 border border-white/10 backdrop-blur-md flex items-center gap-2 text-xs font-mono text-zinc-300">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="font-semibold text-white">WebGL // 60 FPS</span>
+            <span className="text-zinc-600">•</span>
+            <span className="text-[11px] text-zinc-400 uppercase tracking-wider">
+              {model.cadSoftware || 'SolidWorks'}
+            </span>
+          </div>
 
           {activeFaceCount > 0 && (
             <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinc-950/80 border border-white/10 backdrop-blur-md text-[11px] font-mono text-zinc-400">
@@ -637,28 +607,6 @@ export function CADModelViewer({
 
         {/* Viewport Control Actions */}
         <div className="flex items-center gap-1.5 pointer-events-auto">
-          {/* Preview Local STL / CAD file from Fusion 360 */}
-          <label
-            className="p-2 rounded-xl bg-zinc-950/80 border border-white/10 text-zinc-400 hover:text-white backdrop-blur-md transition-all cursor-pointer flex items-center justify-center hover:border-cyan-500/40"
-            title="Upload & Preview Local STL from Fusion 360"
-          >
-            <Upload className="w-3.5 h-3.5 text-cyan-400" />
-            <input
-              type="file"
-              accept=".stl,.glb,.gltf"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (!file) return;
-                const url = URL.createObjectURL(file);
-                setLocalFileUrl(url);
-                setLocalFileName(file.name);
-                if (file.name.toLowerCase().endsWith('.stl')) {
-                  setIsZUp(true);
-                }
-              }}
-              className="hidden"
-            />
-          </label>
 
           {/* Flip Z-Up / Y-Up Orientation (Autodesk Fusion 360) */}
           <button
