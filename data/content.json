@@ -469,7 +469,7 @@
     "adminPassword": "sv7-passkey-2026",
     "biometricCredentialIds": [],
     "accentColor": "#ffffff",
-    "cvUrl": "/CV-Shreyaan-Vashishtha.pdf",
+    "cvUrl": "",
     "contactMessage": "Interested in aerospace engineering, Astrix rocketry, IB tutoring, or technical collaboration? Reach out directly.",
     "footerNote": "Crafted with precision for sv7.dev. Mechanical & Aerospace Engineering @ HKUST.",
     "sectionVisibility": {
@@ -525,8 +525,8 @@
       ],
       "ctaText": "Get in Touch",
       "ctaHref": "#contact",
-      "resumeButtonText": "Resume / CV",
-      "showResumeButton": true
+      "resumeButtonText": "LinkedIn",
+      "showResumeButton": false
     },
     "hero": {
       "showStatusBadge": false,

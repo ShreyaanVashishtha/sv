@@ -12,6 +12,25 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/CV-Shreyaan-Vashishtha.pdf',
+        destination: 'https://www.linkedin.com/in/shreyaanv/',
+        permanent: false,
+      },
+      {
+        source: '/cv',
+        destination: 'https://www.linkedin.com/in/shreyaanv/',
+        permanent: false,
+      },
+      {
+        source: '/resume',
+        destination: 'https://www.linkedin.com/in/shreyaanv/',
+        permanent: false,
+      },
+    ];
+  },
 };
 
 export default withBotId(nextConfig);

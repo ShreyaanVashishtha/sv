@@ -39,7 +39,7 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   adminPassword: DEFAULT_PASSKEY,
   biometricCredentialIds: [],
   accentColor: '#ffffff',
-  cvUrl: '/CV-Shreyaan-Vashishtha.pdf',
+  cvUrl: '',
   contactMessage: 'Interested in aerospace engineering, Astrix rocketry, IB tutoring, or technical collaboration? Reach out directly.',
   footerNote: 'Crafted with precision for sv7.dev. Mechanical & Aerospace Engineering @ HKUST.',
   sectionVisibility: {
@@ -66,8 +66,8 @@ export const DEFAULT_SETTINGS: SiteSettings = {
     ],
     ctaText: 'Get in Touch',
     ctaHref: '#contact',
-    resumeButtonText: 'Resume / CV',
-    showResumeButton: true,
+    resumeButtonText: 'LinkedIn',
+    showResumeButton: false,
   },
   hero: {
     showStatusBadge: false,

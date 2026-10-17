@@ -10,7 +10,7 @@ import {
   Twitter,
   Linkedin,
   Mail,
-  FileDown,
+  FileText,
   ArrowUpRight,
 } from 'lucide-react';
 
@@ -64,6 +64,9 @@ export function Hero({
   // Avoid duplicating contact link in socials if Direct Dispatch button is already visible
   const cleanSocials = (socials || []).filter((s) => {
     if (hideRawEmail && (s.url === '#contact' || s.name.toLowerCase().includes('dispatch'))) {
+      return false;
+    }
+    if (!cvUrl && s.url.includes('linkedin.com')) {
       return false;
     }
     return true;
@@ -138,16 +141,28 @@ export function Hero({
             <ArrowDown className="w-4 h-4 transition-transform duration-300 group-hover:translate-y-0.5" />
           </a>
 
-          {cvUrl && (
+          {cvUrl ? (
             <a
               href={cvUrl}
               target="_blank"
               rel="noreferrer"
-              download
               className="group flex items-center gap-2 bg-zinc-900/90 text-zinc-300 hover:text-white px-4 py-2.5 rounded-xl text-sm font-medium border border-white/10 hover:border-white/20 transition-all hover:bg-zinc-800/80 active:scale-[0.98]"
             >
-              <FileDown className="w-4 h-4 text-zinc-400 transition-transform duration-300 group-hover:translate-y-0.5" />
-              <span>Download CV</span>
+              <FileText className="w-4 h-4 text-zinc-400" />
+              <span>Resume / CV</span>
+              <ArrowUpRight className="w-3.5 h-3.5 text-zinc-500 group-hover:text-white transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </a>
+          ) : (
+            <a
+              href="https://www.linkedin.com/in/shreyaanv/"
+              target="_blank"
+              rel="noreferrer"
+              className="group flex items-center gap-2 bg-zinc-900/90 text-zinc-300 hover:text-white px-4 py-2.5 rounded-xl text-sm font-medium border border-white/10 hover:border-white/20 transition-all hover:bg-zinc-800/80 active:scale-[0.98]"
+              title="Shreyaan Vashishtha on LinkedIn"
+            >
+              <Linkedin className="w-4 h-4 text-[#0077b5]" />
+              <span>LinkedIn</span>
+              <ArrowUpRight className="w-3.5 h-3.5 text-zinc-500 group-hover:text-white transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </a>
           )}
 

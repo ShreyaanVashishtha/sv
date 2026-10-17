@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Status, HeaderSettings } from '@/types/content';
-import { Menu, X, ArrowUpRight, FileDown, Camera } from 'lucide-react';
+import { Menu, X, ArrowUpRight, Linkedin, Camera } from 'lucide-react';
 
 interface NavbarProps {
   status: Status;
@@ -32,8 +32,8 @@ export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps)
   const ctaText = headerSettings?.ctaText || 'Get in Touch';
   const rawCtaHref = headerSettings?.ctaHref || '#contact';
   const ctaHref = rawCtaHref.startsWith('#') && pathname !== '/' ? `/${rawCtaHref}` : rawCtaHref;
-  const resumeButtonText = headerSettings?.resumeButtonText || 'Resume / CV';
-  const showResume = headerSettings?.showResumeButton !== false && Boolean(cvUrl);
+  const resumeButtonText = headerSettings?.resumeButtonText || 'LinkedIn';
+  const showResume = Boolean(headerSettings?.showResumeButton);
 
   const defaultNavLinks = [
     { name: 'Projects', href: '#projects', enabled: true },
@@ -133,17 +133,17 @@ export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps)
 
         {/* Right CTA Links */}
         <div className="hidden md:flex items-center gap-3">
-          {showResume && cvUrl && (
+          {showResume && (
             <a
-              href={cvUrl}
+              href={cvUrl || 'https://www.linkedin.com/in/shreyaanv/'}
               target="_blank"
               rel="noreferrer"
-              download
               className="flex items-center gap-1.5 text-xs text-zinc-300 hover:text-white px-3 py-1.5 rounded-lg border border-white/10 hover:border-white/20 transition-all duration-200 bg-zinc-900/50 hover:bg-zinc-800/80 active:scale-95"
               title={resumeButtonText}
             >
-              <FileDown className="w-3.5 h-3.5 text-zinc-400" />
+              <Linkedin className="w-3.5 h-3.5 text-[#0077b5]" />
               <span>{resumeButtonText}</span>
+              <ArrowUpRight className="w-3 h-3 text-zinc-500" />
             </a>
           )}
 
@@ -186,16 +186,16 @@ export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps)
             );
           })}
           <div className="pt-3 border-t border-white/10 flex items-center justify-between">
-            {showResume && cvUrl && (
+            {showResume && (
               <a
-                href={cvUrl}
+                href={cvUrl || 'https://www.linkedin.com/in/shreyaanv/'}
                 target="_blank"
                 rel="noreferrer"
-                download
                 className="flex items-center gap-1.5 text-xs text-zinc-300 hover:text-white py-2"
               >
-                <FileDown className="w-3.5 h-3.5" />
+                <Linkedin className="w-3.5 h-3.5 text-[#0077b5]" />
                 <span>{resumeButtonText}</span>
+                <ArrowUpRight className="w-3 h-3 text-zinc-500" />
               </a>
             )}
             <a
