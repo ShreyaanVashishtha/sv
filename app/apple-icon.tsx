@@ -371,6 +371,35 @@ export default async function AppleIcon() {
     );
   }
 
+  // Precision Monolith (High-DPI Retina Tune)
+  if (logoStyle === 'precision-monolith') {
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#09090b',
+            borderRadius: '44px',
+            border: '2px solid #3f3f46',
+            padding: '24px',
+          }}
+        >
+          <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none">
+            <g fill="#ffffff" transform="rotate(45 18 18)">
+              <path d="M8 8.5 L18 13.5 L28 8.5 L28 12 L18 16.8 L8 12 Z" />
+              <path d="M8 27.5 L18 22.5 L28 27.5 L28 24 L18 19.2 L8 24 Z" />
+            </g>
+          </svg>
+        </div>
+      ),
+      { ...size }
+    );
+  }
+
   // 3. Mach Diamond
   if (logoStyle === 'diamond') {
     return new ImageResponse(

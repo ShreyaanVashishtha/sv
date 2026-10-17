@@ -105,6 +105,7 @@ export interface HeaderSettings {
     | 'monolith-blueprint'
     | 'monolith-crest'
     | 'vector-monolith'
+    | 'precision-monolith'
     | 'nozzle'
     | 'nozzle-linear'
     | 'nozzle-bell'

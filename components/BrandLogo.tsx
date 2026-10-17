@@ -8,6 +8,7 @@ export type LogoStyle =
   | 'monolith-blueprint'
   | 'monolith-crest'
   | 'vector-monolith'
+  | 'precision-monolith'
   | 'nozzle'
   | 'nozzle-linear'
   | 'nozzle-bell'
@@ -127,6 +128,23 @@ export function BrandLogo({
           <g fill="#ffffff" transform="rotate(45 18 18)">
             <path d="M8 9 L18 13.5 L28 9 L28 12.5 L18 17 L8 12.5 Z"/>
             <path d="M8 27 L18 22.5 L28 27 L28 23.5 L18 19 L8 23.5 Z"/>
+          </g>
+        </svg>
+      </div>
+    );
+  }
+
+  // Precision Monolith (High-DPI Retina Tune)
+  if (style === 'precision-monolith') {
+    return (
+      <div
+        className={`relative w-9 h-9 rounded-xl bg-zinc-950 border border-zinc-700 p-1.5 flex items-center justify-center shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:shadow-[0_0_18px_rgba(255,255,255,0.15)] group-hover:-translate-y-0.5 overflow-hidden shrink-0 ${className}`}
+        title="sv7 Precision Monolith"
+      >
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full transition-transform duration-300 group-hover:scale-105">
+          <g fill="#ffffff" transform="rotate(45 18 18)">
+            <path d="M8 8.5 L18 13.5 L28 8.5 L28 12 L18 16.8 L8 12 Z"/>
+            <path d="M8 27.5 L18 22.5 L28 27.5 L28 24 L18 19.2 L8 24 Z"/>
           </g>
         </svg>
       </div>
