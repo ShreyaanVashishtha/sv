@@ -10,7 +10,7 @@ export const contentType = 'image/png';
 
 export default async function AppleIcon() {
   let badgeText = 'SV7';
-  let logoStyle: string = 'monoline';
+  let logoStyle: string = 'classic';
 
   try {
     const data = await getContent();
