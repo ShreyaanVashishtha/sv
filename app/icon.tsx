@@ -546,6 +546,180 @@ export default async function Icon() {
     );
   }
 
+  // H1. Hypersonic Heavy
+  if (logoStyle === 'h1-hybrid') {
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#09090b',
+            borderRadius: '8px',
+            border: '1px solid #3f3f46',
+            padding: '3px',
+          }}
+        >
+          <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none">
+            <g fill="#ffffff" transform="rotate(45 18 18)">
+              <path d="M8 7 L18 13.5 L28 7 L28 11.5 L18 17.2 L8 11.5 Z" />
+              <path d="M8 29 L18 22.5 L28 29 L28 24.5 L18 18.8 L8 24.5 Z" />
+            </g>
+          </svg>
+        </div>
+      ),
+      { ...size }
+    );
+  }
+
+  // H2. Tapered Mach Airfoil
+  if (logoStyle === 'h2-tapered') {
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#09090b',
+            borderRadius: '8px',
+            border: '1px solid #3f3f46',
+            padding: '3px',
+          }}
+        >
+          <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none">
+            <g fill="#ffffff" transform="rotate(45 18 18)">
+              <path d="M8.5 8.5 L18 12.8 L27.5 8.5 L27.5 10.8 L18 17.2 L8.5 10.8 Z" />
+              <path d="M8.5 27.5 L18 23.2 L27.5 27.5 L27.5 25.2 L18 18.8 L8.5 25.2 Z" />
+            </g>
+          </svg>
+        </div>
+      ),
+      { ...size }
+    );
+  }
+
+  // H3. Chamfered Hypersonic Wedge
+  if (logoStyle === 'h3-chamfered') {
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#09090b',
+            borderRadius: '8px',
+            border: '1px solid #3f3f46',
+            padding: '3px',
+          }}
+        >
+          <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none">
+            <g fill="#ffffff" transform="rotate(45 18 18)">
+              <path d="M9.5 7 L18 13 L26.5 7 L28 8.5 L18 17.2 L8 8.5 Z" />
+              <path d="M8 27.5 L18 18.8 L28 27.5 L26.5 29 L18 23 L9.5 29 Z" />
+            </g>
+          </svg>
+        </div>
+      ),
+      { ...size }
+    );
+  }
+
+  // H4. Razor Slit Compression
+  if (logoStyle === 'h4-knife') {
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#09090b',
+            borderRadius: '8px',
+            border: '1px solid #3f3f46',
+            padding: '3px',
+          }}
+        >
+          <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none">
+            <g fill="#ffffff" transform="rotate(45 18 18)">
+              <path d="M8 7.5 L18 13.5 L28 7.5 L28 12 L18 17.4 L8 12 Z" />
+              <path d="M8 28.5 L18 22.5 L28 28.5 L28 24 L18 18.6 L8 24 Z" />
+            </g>
+          </svg>
+        </div>
+      ),
+      { ...size }
+    );
+  }
+
+  // H5. Faceted Stealth Wedge
+  if (logoStyle === 'h5-stealth') {
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#09090b',
+            borderRadius: '8px',
+            border: '1px solid #3f3f46',
+            padding: '3px',
+          }}
+        >
+          <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none">
+            <g fill="#ffffff" transform="rotate(45 18 18)">
+              <path d="M8 8 L13 11 L18 14 L23 11 L28 8 L28 12 L23 14.5 L18 17.2 L13 14.5 L8 12 Z" />
+              <path d="M8 28 L13 25 L18 22 L23 25 L28 28 L28 24 L23 21.5 L18 18.8 L13 21.5 L8 24 Z" />
+            </g>
+          </svg>
+        </div>
+      ),
+      { ...size }
+    );
+  }
+
+  // H6. Relief-Notched Choke
+  if (logoStyle === 'h6-notch') {
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#09090b',
+            borderRadius: '8px',
+            border: '1px solid #3f3f46',
+            padding: '3px',
+          }}
+        >
+          <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none">
+            <g fill="#ffffff" transform="rotate(45 18 18)">
+              <path d="M8 7 L18 13.5 L28 7 L28 11.5 L19 16.8 L17 16.8 L8 11.5 Z" />
+              <path d="M8 29 L18 22.5 L28 29 L28 24.5 L19 19.2 L17 19.2 L8 24.5 Z" />
+            </g>
+          </svg>
+        </div>
+      ),
+      { ...size }
+    );
+  }
+
   // 3. Mach Diamond
   if (logoStyle === 'diamond') {
     return new ImageResponse(

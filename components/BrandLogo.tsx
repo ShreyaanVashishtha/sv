@@ -15,6 +15,12 @@ export type LogoStyle =
   | 'p4-datum'
   | 'p5-bold'
   | 'p6-acute'
+  | 'h1-hybrid'
+  | 'h2-tapered'
+  | 'h3-chamfered'
+  | 'h4-knife'
+  | 'h5-stealth'
+  | 'h6-notch'
   | 'nozzle'
   | 'nozzle-linear'
   | 'nozzle-bell'
@@ -237,6 +243,108 @@ export function BrandLogo({
           <g fill="#ffffff" transform="rotate(45 18 18)">
             <path d="M9 7 L18 14.5 L27 7 L27 10 L18 17.2 L9 10 Z"/>
             <path d="M9 29 L18 21.5 L27 29 L27 26 L18 18.8 L9 26 Z"/>
+          </g>
+        </svg>
+      </div>
+    );
+  }
+
+  // H1. Hypersonic Heavy (The Direct Hybrid)
+  if (style === 'h1-hybrid') {
+    return (
+      <div
+        className={`relative w-9 h-9 rounded-xl bg-zinc-950 border border-zinc-700 p-1.5 flex items-center justify-center shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:shadow-[0_0_18px_rgba(255,255,255,0.15)] group-hover:-translate-y-0.5 overflow-hidden shrink-0 ${className}`}
+        title="sv7 Hypersonic Heavy"
+      >
+        <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none" className="w-full h-full transition-transform duration-300 group-hover:scale-105">
+          <g fill="#ffffff" transform="rotate(45 18 18)">
+            <path d="M8 7 L18 13.5 L28 7 L28 11.5 L18 17.2 L8 11.5 Z"/>
+            <path d="M8 29 L18 22.5 L28 29 L28 24.5 L18 18.8 L8 24.5 Z"/>
+          </g>
+        </svg>
+      </div>
+    );
+  }
+
+  // H2. Tapered Mach Airfoil
+  if (style === 'h2-tapered') {
+    return (
+      <div
+        className={`relative w-9 h-9 rounded-xl bg-zinc-950 border border-zinc-700 p-1.5 flex items-center justify-center shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:shadow-[0_0_18px_rgba(255,255,255,0.15)] group-hover:-translate-y-0.5 overflow-hidden shrink-0 ${className}`}
+        title="sv7 Tapered Mach Airfoil"
+      >
+        <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none" className="w-full h-full transition-transform duration-300 group-hover:scale-105">
+          <g fill="#ffffff" transform="rotate(45 18 18)">
+            <path d="M8.5 8.5 L18 12.8 L27.5 8.5 L27.5 10.8 L18 17.2 L8.5 10.8 Z"/>
+            <path d="M8.5 27.5 L18 23.2 L27.5 27.5 L27.5 25.2 L18 18.8 L8.5 25.2 Z"/>
+          </g>
+        </svg>
+      </div>
+    );
+  }
+
+  // H3. Chamfered Hypersonic Wedge
+  if (style === 'h3-chamfered') {
+    return (
+      <div
+        className={`relative w-9 h-9 rounded-xl bg-zinc-950 border border-zinc-700 p-1.5 flex items-center justify-center shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:shadow-[0_0_18px_rgba(255,255,255,0.15)] group-hover:-translate-y-0.5 overflow-hidden shrink-0 ${className}`}
+        title="sv7 Chamfered Hypersonic Wedge"
+      >
+        <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none" className="w-full h-full transition-transform duration-300 group-hover:scale-105">
+          <g fill="#ffffff" transform="rotate(45 18 18)">
+            <path d="M9.5 7 L18 13 L26.5 7 L28 8.5 L18 17.2 L8 8.5 Z"/>
+            <path d="M8 27.5 L18 18.8 L28 27.5 L26.5 29 L18 23 L9.5 29 Z"/>
+          </g>
+        </svg>
+      </div>
+    );
+  }
+
+  // H4. Razor Slit Compression
+  if (style === 'h4-knife') {
+    return (
+      <div
+        className={`relative w-9 h-9 rounded-xl bg-zinc-950 border border-zinc-700 p-1.5 flex items-center justify-center shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:shadow-[0_0_18px_rgba(255,255,255,0.15)] group-hover:-translate-y-0.5 overflow-hidden shrink-0 ${className}`}
+        title="sv7 Razor Slit Compression"
+      >
+        <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none" className="w-full h-full transition-transform duration-300 group-hover:scale-105">
+          <g fill="#ffffff" transform="rotate(45 18 18)">
+            <path d="M8 7.5 L18 13.5 L28 7.5 L28 12 L18 17.4 L8 12 Z"/>
+            <path d="M8 28.5 L18 22.5 L28 28.5 L28 24 L18 18.6 L8 24 Z"/>
+          </g>
+        </svg>
+      </div>
+    );
+  }
+
+  // H5. Faceted Stealth Wedge
+  if (style === 'h5-stealth') {
+    return (
+      <div
+        className={`relative w-9 h-9 rounded-xl bg-zinc-950 border border-zinc-700 p-1.5 flex items-center justify-center shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:shadow-[0_0_18px_rgba(255,255,255,0.15)] group-hover:-translate-y-0.5 overflow-hidden shrink-0 ${className}`}
+        title="sv7 Faceted Stealth Wedge"
+      >
+        <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none" className="w-full h-full transition-transform duration-300 group-hover:scale-105">
+          <g fill="#ffffff" transform="rotate(45 18 18)">
+            <path d="M8 8 L13 11 L18 14 L23 11 L28 8 L28 12 L23 14.5 L18 17.2 L13 14.5 L8 12 Z"/>
+            <path d="M8 28 L13 25 L18 22 L23 25 L28 28 L28 24 L23 21.5 L18 18.8 L13 21.5 L8 24 Z"/>
+          </g>
+        </svg>
+      </div>
+    );
+  }
+
+  // H6. Relief-Notched Choke
+  if (style === 'h6-notch') {
+    return (
+      <div
+        className={`relative w-9 h-9 rounded-xl bg-zinc-950 border border-zinc-700 p-1.5 flex items-center justify-center shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:shadow-[0_0_18px_rgba(255,255,255,0.15)] group-hover:-translate-y-0.5 overflow-hidden shrink-0 ${className}`}
+        title="sv7 Relief-Notched Choke"
+      >
+        <svg viewBox="0 0 36 36" width="100%" height="100%" fill="none" className="w-full h-full transition-transform duration-300 group-hover:scale-105">
+          <g fill="#ffffff" transform="rotate(45 18 18)">
+            <path d="M8 7 L18 13.5 L28 7 L28 11.5 L19 16.8 L17 16.8 L8 11.5 Z"/>
+            <path d="M8 29 L18 22.5 L28 29 L28 24.5 L19 19.2 L17 19.2 L8 24.5 Z"/>
           </g>
         </svg>
       </div>
