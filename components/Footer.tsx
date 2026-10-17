@@ -23,7 +23,9 @@ export function Footer({
     footerSettings?.footerNote ||
     footerNote ||
     'Crafted with precision for sv7.dev. Mechanical & Aerospace Engineering @ HKUST.';
-  const customLinks = footerSettings?.customLinks || [];
+  const customLinks = (footerSettings?.customLinks || []).filter(
+    (link) => link.url !== '/brand' && link.url !== '/brand/'
+  );
 
   // Default to true unless explicitly disabled
   const shouldShowLegal =
@@ -32,6 +34,7 @@ export function Footer({
       : footerSettings?.showLegalLinks !== false;
 
   const legalLinks = [
+    { name: 'Brand Guidelines', href: '/brand' },
     { name: 'Terms of Service', href: '/terms' },
     { name: 'Privacy Policy', href: '/privacy' },
     { name: 'Legal Notice', href: '/legal' },
