@@ -5353,6 +5353,9 @@ export default function AdminPage() {
                                       />
                                     </label>
                                   </div>
+                                  <p className="text-[10px] text-zinc-500 font-mono mt-1">
+                                    Tip: Upload STL directly, use an external URL (GitHub raw, Printables, etc.), or place files in <code className="text-zinc-400">public/models/</code>.
+                                  </p>
                                 </div>
 
                                 <div className="sm:col-span-3">
