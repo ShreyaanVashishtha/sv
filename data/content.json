@@ -581,7 +581,8 @@
     "footer": {
       "copyrightName": "Shreyaan Vashishtha",
       "footerNote": "Crafted with precision for sv7.dev. Mechanical & Aerospace Engineering @ HKUST.",
-      "customLinks": []
+      "customLinks": [],
+      "showLegalLinks": true
     },
     "theme": {
       "accentColor": "white",

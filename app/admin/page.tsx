@@ -4969,6 +4969,30 @@ export default function AdminPage() {
                 </div>
               </div>
 
+              {/* Display Legal Links Toggle */}
+              <div className="pt-2">
+                <label className="flex items-center gap-2.5 text-xs text-zinc-300 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={footer.showLegalLinks !== false}
+                    onChange={(e) =>
+                      setData({
+                        ...data,
+                        settings: {
+                          ...data.settings,
+                          footer: { ...footer, showLegalLinks: e.target.checked },
+                        },
+                      })
+                    }
+                    className="w-4 h-4 rounded accent-emerald-500"
+                  />
+                  <span>Display Legal Pages (Terms of Service, Privacy Policy, Legal Notice)</span>
+                </label>
+                <p className="text-[11px] text-zinc-500 mt-1 pl-6">
+                  Automatically links /terms, /privacy, and /legal in the site footer.
+                </p>
+              </div>
+
               {/* Custom Footer Links */}
               <div className="pt-4 border-t border-white/5 space-y-3">
                 <div className="flex items-center justify-between">

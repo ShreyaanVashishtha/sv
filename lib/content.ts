@@ -131,6 +131,7 @@ export const DEFAULT_SETTINGS: SiteSettings = {
     copyrightName: 'Shreyaan Vashishtha',
     footerNote: 'Crafted with precision for sv7.dev. Mechanical & Aerospace Engineering @ HKUST.',
     customLinks: [],
+    showLegalLinks: true,
   },
   theme: {
     accentColor: 'white',

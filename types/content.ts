@@ -166,6 +166,7 @@ export interface FooterSettings {
   copyrightName: string;
   footerNote: string;
   customLinks?: { name: string; url: string }[];
+  showLegalLinks?: boolean;
 }
 
 export interface ThemeSettings {
