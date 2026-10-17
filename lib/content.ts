@@ -188,6 +188,8 @@ export const DEFAULT_PHOTOGRAPHY_SETTINGS: PhotographySettings = {
   instagramProfileUrl: 'https://www.instagram.com/sv.snap/',
   instagramBio: 'Aviation reels, vertical cinema, and high-speed motion studies.',
   enableVideos: true,
+  beholdFeedUrl: 'https://feeds.behold.so/1lkLZszNd2q0wm55agTN',
+  beholdFeedId: '1lkLZszNd2q0wm55agTN',
   categories: ['All', 'Aerospace & Aviation', 'Architecture', 'Urban & Nocturne', 'Nature & Textures'],
   enableExif: true,
   photosPerPage: 24,

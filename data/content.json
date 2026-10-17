@@ -2,8 +2,8 @@
   "profile": {
     "name": "Shreyaan Vashishtha",
     "handle": "",
-    "title": "Mechanical & Aerospace Engineering @ HKUST",
-    "tagline": "Junior Engineer in the Astrix Rocketry Team specializing in Aerodynamics & Descent Control, mechanism design, and computational engineering.",
+    "title": "Mechanical & Aerospace Engineering @ HKUST | Astrix Rocketry Team",
+    "tagline": "Mechanical and Aerospace Engineering undergraduate at HKUST. Junior Engineer in the Astrix Rocketry Team specializing in Aerodynamics & Descent Control, mechanism design, and computational engineering.",
     "avatar": "https://images.unsplash.com/photo-1517976487502-5f657a8bf606?w=600&auto=format&fit=crop&q=80",
     "status": {
       "available": true,
@@ -34,8 +34,13 @@
       "icon": "linkedin"
     },
     {
+      "name": "Direct Dispatch",
+      "url": "#contact",
+      "icon": "mail"
+    },
+    {
       "name": "GitHub",
-      "url": "https://github.com/ShreyaanVashishtha",
+      "url": "https://github.com",
       "icon": "github"
     }
   ],
@@ -55,7 +60,7 @@
         "HKUST"
       ],
       "demoUrl": "https://www.linkedin.com/in/shreyaanv/",
-      "githubUrl": "https://github.com/ShreyaanVashishtha",
+      "githubUrl": "https://github.com",
       "imageUrl": "https://images.unsplash.com/photo-1517976487502-5f657a8bf606?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -72,7 +77,7 @@
         "Mechanical Design"
       ],
       "demoUrl": "https://www.linkedin.com/in/shreyaanv/",
-      "githubUrl": "https://github.com/ShreyaanVashishtha",
+      "githubUrl": "https://github.com",
       "imageUrl": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop&q=80"
     }
   ],
@@ -175,7 +180,7 @@
       "id": "exp-1",
       "role": "Junior Engineer (Aerodynamic & Descent Control)",
       "company": "Astrix | The Hong Kong University of Science and Technology",
-      "period": "Sep 2025 \u2014 Present",
+      "period": "Sep 2025 — Present",
       "description": "Contributing to the Aerodynamic & Descent Control subsystem for experimental rocketry. Previously a member of the Payload and Descent Control teams, involved in mechanism design, testing, and control considerations for flight and recovery systems.",
       "highlights": [
         "Involved in mechanism design and flight recovery system testing for high-altitude rocketry.",
@@ -187,7 +192,7 @@
       "id": "exp-2",
       "role": "IB Tutor (Physics, Economics, Maths AA HL/SL)",
       "company": "Edunade",
-      "period": "Jan 2026 \u2014 Present",
+      "period": "Jan 2026 — Present",
       "description": "Providing personalized 1-on-1 tutoring in IB Physics, Economics, and Mathematics Analysis & Approaches (HL/SL), adapting pedagogical explanations to individual learning styles.",
       "highlights": [
         "Designed exam-focused lesson frameworks aligned with IB mark schemes, command terms, and assessment criteria.",
@@ -198,7 +203,7 @@
       "id": "exp-3",
       "role": "Mathematics Mentor (Math Buddies)",
       "company": "Creative Secondary School",
-      "period": "2023 \u2014 2024",
+      "period": "2023 — 2024",
       "description": "Mentored junior students in mathematics through the Math Buddies program, offering weekly structured support to improve understanding of key mathematical concepts.",
       "highlights": [
         "Mentored junior cohorts to reinforce algebra, geometry, and foundational numeracy.",
@@ -209,9 +214,9 @@
   "education": [
     {
       "id": "edu-1",
-      "degree": "Bachelor of Engineering (B.Eng.) \u2014 Mechanical & Aerospace Engineering",
+      "degree": "Bachelor of Engineering (B.Eng.) — Mechanical & Aerospace Engineering",
       "institution": "The Hong Kong University of Science and Technology (HKUST)",
-      "period": "2025 \u2014 2029 (Expected June 2029)",
+      "period": "2025 — 2029 (Expected June 2029)",
       "location": "Hong Kong",
       "score": "Undergraduate",
       "highlights": [
@@ -262,13 +267,186 @@
       "details": "Integrated Sciences: 7, ICT: 7, Physical Education: 7, Mathematics: 6"
     }
   ],
+  "photos": [],
+  "videos": [
+    {
+      "id": "ig-18061578206531128",
+      "title": "we back to sdr now 😐",
+      "description": "we back to sdr now 😐",
+      "category": "Urban & Nocturne",
+      "videoUrl": "https://scontent-ord5-1.cdninstagram.com/o1/v/t2/f2/m86/AQNJyztYKAucqHo6pC12qhQ9qYgOLGuayoauopqeF1IO2ioDYqIvU_ApTzT48VTDlFqH2yG8UatfhokV_6dlcXL4aswC7c2yOMOzlW4.mp4?_nc_cat=108&_nc_sid=5e9851&_nc_ht=scontent-ord5-1.cdninstagram.com&_nc_ohc=w9w36-Ra6Z8Q7kNvwFzqDXV&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTY2Nzg1ODI5Nzc4NTY4OCwiYXNzZXRfYWdlX2RheXMiOjEzMCwidmlfdXNlY2FzZV9pZCI6MTA4MjcsImR1cmF0aW9uX3MiOjE4LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=9781678550f45e63&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC9GRjQ0NDVENEJGMkVDMUJBNjExM0FERkY0MkJFQUJCQl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzkzNDZCRTcyMzkxMDc5N0E3MjdEOEQ3N0JFQUYxMDg1X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACawtYDWkLr2BRUCKAJDMywXQDKAAAAAAAAYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZZapAQA&_nc_gid=4neOadBnN4tnzbza9p_gag&edm=ANo9K5cEAAAA&_nc_zt=28&_nc_tpa=Q5bMBQJXI6qGsqI1g31BnA6bW2fc4bsfr6A4NkIM2WUfY_-lJxWoNsF68s8EsiqNFm9i87Cvh-Pl8ubh_A&oh=00_AQN6yVr7YH5nY3c2f4FAWhEzwBwIWF9BYFpRWjnijVXdgA&oe=6AD4ABC5",
+      "posterUrl": "https://behold.pictures/eyJ1Ijoibmh1MlhER3NhSFdLcGVneHdKU1k0V1dSc29oMSIsImYiOiIxbGtMWnN6TmQycTB3bTU1YWdUTiIsInAiOiIxODA2MTU3ODIwNjUzMTEyOCIsImgiOiI4ZmE4MGYifQ.jpg?class=originalLarge",
+      "instagramUrl": "https://www.instagram.com/reel/DZUSUUQTtxz/",
+      "duration": "Reel",
+      "aspectRatio": "9:16",
+      "resolution": "1080p 60fps",
+      "camera": "Sony Alpha",
+      "lens": "Prime / Zoom",
+      "fps": "60fps",
+      "location": "Hong Kong SAR",
+      "date": "Jun 2026",
+      "featured": false,
+      "hidden": false
+    },
+    {
+      "id": "ig-17859271614644875",
+      "title": "hopefully hdr works 🙏",
+      "description": "hopefully hdr works 🙏",
+      "category": "Urban & Nocturne",
+      "videoUrl": "https://scontent-ord5-2.cdninstagram.com/o1/v/t2/f2/m86/AQO_QsgB0k_Nw4Yv7diXW3C0ZvaOd6-Z3OcU6s7WfSwYK9gjaR-mUNwbxCjRP7wtkf5LzDo20l-ClFqZAOsH7M4YqIPU0MPZiWuSp5c.mp4?_nc_cat=102&_nc_sid=5e9851&_nc_ht=scontent-ord5-2.cdninstagram.com&_nc_ohc=qmH62H9S8kQQ7kNvwE7x_gs&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNDcyLmRhc2hfYmFzZWxpbmVfM192MSIsInhwdl9hc3NldF9pZCI6MjA2Njk3NjYwMDU2NjM2NSwiYXNzZXRfYWdlX2RheXMiOjEzMywidmlfdXNlY2FzZV9pZCI6MTAwOTksImR1cmF0aW9uX3MiOjksInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=f43e2ef494dc4ff4&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC9GMDQ3NzJDOUQ5QkE4NEYzQTJFNDI2OThCQzM4NEI4QV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzg1NEUyMTYwREY5ODA5NkMwNTEwNDg2M0E2NjQ0REJFX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACa6qcng7_mrBxUCKAJDMywXQCKZmZmZmZoYEmRhc2hfYmFzZWxpbmVfM192MREAdf4HZeadAQA&_nc_gid=4neOadBnN4tnzbza9p_gag&edm=ANo9K5cEAAAA&_nc_zt=28&_nc_tpa=Q5bMBQKJ9icICAyVjgoGpLdr342uk9UQw8xt74sWtvCtAfDQyJ2HsTcsf9JAaSlyX6aRfugRcAOGB380yA&oh=00_AQMLdgbCokiTwLNjXu_dFNU2CEXJ_CaInn3aLE3D-QAL2g&oe=6AD49797",
+      "posterUrl": "https://behold.pictures/eyJ1Ijoibmh1MlhER3NhSFdLcGVneHdKU1k0V1dSc29oMSIsImYiOiIxbGtMWnN6TmQycTB3bTU1YWdUTiIsInAiOiIxNzg1OTI3MTYxNDY0NDg3NSIsImgiOiJwMGxqcTQifQ.jpg?class=originalLarge",
+      "instagramUrl": "https://www.instagram.com/reel/DZMngXAzC06/",
+      "duration": "Reel",
+      "aspectRatio": "9:16",
+      "resolution": "1080p 60fps",
+      "camera": "Sony Alpha",
+      "lens": "Prime / Zoom",
+      "fps": "60fps",
+      "location": "Hong Kong SAR",
+      "date": "Jun 2026",
+      "featured": false,
+      "hidden": false
+    },
+    {
+      "id": "ig-18113145730636428",
+      "title": "been a while...",
+      "description": "been a while... \n\n#nature #hongkong #discoverhongkong #wanderlust #beach",
+      "category": "Nature & Textures",
+      "videoUrl": "https://scontent-ord5-2.cdninstagram.com/o1/v/t2/f2/m367/AQNsL380ZceunQJ2RlWMeWawcRUXq598GMxCz4O2XOLm-swqAI4sVeWMF5Bq3IMez4GuNoM4Kce9DvutO50cLHZ1aEopsn54RUvt0As.mp4?_nc_cat=110&_nc_sid=5e9851&_nc_ht=scontent-ord5-2.cdninstagram.com&_nc_ohc=MxIUb5usW8sQ7kNvwG1GhHr&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5Nzc4ODU5MzE5ODY4OTAsImFzc2V0X2FnZV9kYXlzIjoyMzIsInZpX3VzZWNhc2VfaWQiOjEwMDk5LCJkdXJhdGlvbl9zIjo0NCwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=83cfce03a68e1d99&_nc_vs=HBksFQIYQGlnX2VwaGVtZXJhbC9BNzQ3NDVFMzc1MkFDOEUzOUY3NDhCNUEwQkI2QjNBQl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0YwNEQ3ODlGNTBGNEQwQzZGMTlGNDA1NUFDOTBFOEE0X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaU_86M2LLvPxUCKAJDMywXQEYfO2RaHKwYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=med6b6oPfpOMNN1Yk9qLpQ&edm=ANo9K5cEAAAA&_nc_zt=28&_nc_tpa=Q5bMBQIoy6FGR-PGeSdtb9m5fkmapXqqjgiQ8xH44lXZGbTnU0lVNkXILIWY-z0mQg59rVCX9n5J7a-3xQ&oh=00_AQOB50bG3YVT1tNBLE9shQwl2defZdFI3bt5mJ-KCW-8GQ&oe=6AD88C97",
+      "posterUrl": "https://behold.pictures/eyJ1Ijoibmh1MlhER3NhSFdLcGVneHdKU1k0V1dSc29oMSIsImYiOiIxbGtMWnN6TmQycTB3bTU1YWdUTiIsInAiOiIxODExMzE0NTczMDYzNjQyOCIsImgiOiIxZnNmNXpqIn0.jpg?class=originalLarge",
+      "instagramUrl": "https://www.instagram.com/reel/DVNl6TGky2D/",
+      "duration": "Reel",
+      "aspectRatio": "9:16",
+      "resolution": "1080p 60fps",
+      "camera": "Sony Alpha",
+      "lens": "Prime / Zoom",
+      "fps": "60fps",
+      "location": "Hong Kong SAR",
+      "date": "Feb 2026",
+      "featured": false,
+      "hidden": false
+    },
+    {
+      "id": "ig-18089352695054100",
+      "title": "Tai Lam Reservoir | HK 🇭🇰",
+      "description": "Tai Lam Reservoir | HK 🇭🇰\n\n#cinematicreels #hk #wanderlust #visuals #drone",
+      "category": "Nature & Textures",
+      "videoUrl": "https://scontent-ord5-2.cdninstagram.com/o1/v/t2/f2/m86/AQMl0ntiGLmQj65Xpq3RCH1rO46rJCx6W0qS98CVPjZ4deYSOoHNS5CUL-bzRDA3IesKmTowqfU3XN1PNO-QvBzecSav4XyHaYCb0ew.mp4?_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent-ord5-2.cdninstagram.com&_nc_ohc=k6iCmoKoG4YQ7kNvwEVrbN2&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNjQwLmRhc2hfYmFzZWxpbmVfM192MSIsInhwdl9hc3NldF9pZCI6ODc2NTU3MDg4MjU2NzcwLCJhc3NldF9hZ2VfZGF5cyI6Mjk2LCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6MjAsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=9862f2c965e519c&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC8zNTQ2MjhFMTBCNzRGRjM2RUZFMTY1RDUwMUQwN0FCMF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYR2lnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC8xOTA5NjIwMDg2NjE3MTIyXzUyNzMzNDMxMDA1Njg1MzU2MDIubXA0FQICyAESACgAGAAbAogHdXNlX29pbAExEnByb2dyZXNzaXZlX3JlY2lwZQExFQAAJoTM952rzo4DFQIoAkMzLBdANAAAAAAAABgSZGFzaF9iYXNlbGluZV8zX3YxEQB1_gdl5p0BAA&_nc_gid=med6b6oPfpOMNN1Yk9qLpQ&edm=ANo9K5cEAAAA&_nc_zt=28&_nc_tpa=Q5bMBQICp21YR0SaqYqGMZW06bGjJmmUxQcan435bn-4bQ_lA2ea_zhEONWQqyyUJ_EyG1C9-VrCMv6QGA&oh=00_AQOUOV28nZNC4zJw5pMIlWO7rj42OIf2EUSVot-yitgOAQ&oe=6AD4980C",
+      "posterUrl": "https://behold.pictures/eyJ1Ijoibmh1MlhER3NhSFdLcGVneHdKU1k0V1dSc29oMSIsImYiOiIxbGtMWnN6TmQycTB3bTU1YWdUTiIsInAiOiIxODA4OTM1MjY5NTA1NDEwMCIsImgiOiIxY2Rvd2JjIn0.jpg?class=originalLarge",
+      "instagramUrl": "https://www.instagram.com/reel/DSpu-nKkwBK/",
+      "duration": "Reel",
+      "aspectRatio": "9:16",
+      "resolution": "1080p 60fps",
+      "camera": "Sony Alpha",
+      "lens": "Prime / Zoom",
+      "fps": "60fps",
+      "location": "Hong Kong SAR",
+      "date": "Dec 2025",
+      "featured": false,
+      "hidden": false
+    },
+    {
+      "id": "ig-17844420339636672",
+      "title": "香港 🇭🇰",
+      "description": "香港 🇭🇰\n\n#hongkong #hk #travel #cinematicreels #cityvibes",
+      "category": "Urban & Nocturne",
+      "videoUrl": "https://scontent-ord5-2.cdninstagram.com/o1/v/t2/f2/m86/AQMOTBG_MsH4Kz2Kn9Ix0psIZd3GcsEhz5ziqkmBfL27mEkLs8SBxKn10S5v4IlkONo1NuzzESG-irb5f-8evQnHa3HNUqvYENk7XAE.mp4?_nc_cat=102&_nc_sid=5e9851&_nc_ht=scontent-ord5-2.cdninstagram.com&_nc_ohc=w-5lKSKA0KsQ7kNvwEKZf6M&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuMTI4MC5kYXNoX2Jhc2VsaW5lXzFfdjEiLCJ4cHZfYXNzZXRfaWQiOjEzOTA0NzU0NzIwMzM1NDYsImFzc2V0X2FnZV9kYXlzIjoyOTksInZpX3VzZWNhc2VfaWQiOjEwMDk5LCJkdXJhdGlvbl9zIjoxMSwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=fed89a9a5f68a9ae&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC84QTQxOTQ2RkQwNUVCOTdGMDZDNzJDRDQyMDY0RkVBOF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYR2lnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC8xOTM4NzI5MzEwMDQ0NTU5XzgwOTk3NDk5NTQ3OTkzNjQ1NTIubXA0FQICyAESACgAGAAbAogHdXNlX29pbAExEnByb2dyZXNzaXZlX3JlY2lwZQExFQAAJpTcosmpqPgEFQIoAkMzLBdAJ0QYk3S8ahgSZGFzaF9iYXNlbGluZV8xX3YxEQB1_gdl5p0BAA&_nc_gid=med6b6oPfpOMNN1Yk9qLpQ&edm=ANo9K5cEAAAA&_nc_zt=28&_nc_tpa=Q5bMBQJPmGfxrj7x--c6BIfVUNmXmo41m7vO7YAvFPo913-WLHPIYJqLxnkGMBW3IeXRAFj1UPd6CROkuw&oh=00_AQNbC9n9M_ALhJZltikJB6WdayW9DHd_BGTbOB4f4o9RTw&oe=6AD4A5E3",
+      "posterUrl": "https://behold.pictures/eyJ1Ijoibmh1MlhER3NhSFdLcGVneHdKU1k0V1dSc29oMSIsImYiOiIxbGtMWnN6TmQycTB3bTU1YWdUTiIsInAiOiIxNzg0NDQyMDMzOTYzNjY3MiIsImgiOiJpM3M2bmQifQ.jpg?class=originalLarge",
+      "instagramUrl": "https://www.instagram.com/reel/DSg8H_0E54i/",
+      "duration": "Reel",
+      "aspectRatio": "9:16",
+      "resolution": "1080p 60fps",
+      "camera": "Sony Alpha",
+      "lens": "Prime / Zoom",
+      "fps": "60fps",
+      "location": "Hong Kong SAR",
+      "date": "Dec 2025",
+      "featured": false,
+      "hidden": false
+    },
+    {
+      "id": "ig-18085025063107870",
+      "title": "17:45 in hk.",
+      "description": "17:45 in hk.\n\n#hongkong #hkig #hongkongphotography #hkcity #hksunset #discoverhongkong #hkviews #cityscapephotography #citylights #urbanphotography #sunsetlovers #goldenhour #skyline #cinematicshots #urbanaesthetic #visuals #cityvibes #travelasia #wanderlust #aestheticfeed #reels #cinematicreels #victoriaharbour #tst #tsimshatsui #k11 #k11musea",
+      "category": "Nature & Textures",
+      "videoUrl": "https://scontent-ord5-1.cdninstagram.com/o1/v/t2/f2/m367/AQNeJh-3Qta4eqnrHTTSv5McABb8PzJDiwxAf-H0TKZnndbohlusGEkfzSr2L73ZcnyXD0bCb1FcI2iWrUmvoXOgiOmrxIBToLrJ5yY.mp4?_nc_cat=108&_nc_sid=5e9851&_nc_ht=scontent-ord5-1.cdninstagram.com&_nc_ohc=_q32Am53mkUQ7kNvwHZl8ec&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuMTI4MC5kYXNoX2Jhc2VsaW5lXzFfdjEiLCJ4cHZfYXNzZXRfaWQiOjQyNTcyNjQyMjEyMTU0MjMsImFzc2V0X2FnZV9kYXlzIjozMDIsInZpX3VzZWNhc2VfaWQiOjEwMDk5LCJkdXJhdGlvbl9zIjoxNiwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=fec2fb1883446c4a&_nc_vs=HBksFQIYQGlnX2VwaGVtZXJhbC9BRTQ3NkQ1RDNEQkVCM0E0OTE5MkEzNzA5MDYxQjU5OV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYR2lnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC8yNTc5NzI1NDg0OTg3OTI1N185MjUxODAxOTk5NDA4MTQ3NzIubXA0FQICyAESACgAGAAbAogHdXNlX29pbAExEnByb2dyZXNzaXZlX3JlY2lwZQExFQAAJv7q9pmy_Y8PFQIoAkMzLBdAMKp--dsi0RgSZGFzaF9iYXNlbGluZV8xX3YxEQB1_gdl5p0BAA&_nc_gid=vPPuzywR69zh3FuuCDBldg&edm=ANo9K5cEAAAA&_nc_zt=28&_nc_tpa=Q5bMBQIp1UqIKPcfelgiVxwfoXn3HAfJtXpu86B7Vr9F0X4BvTaWVdG0JMzYC3oljqzXbu6sRvjqmHMw1A&oh=00_AQMHZLm-CR9PxCvV2-IC3mObuf9qPGeS_0R4Gmkt7xfGzg&oe=6AD88939",
+      "posterUrl": "https://behold.pictures/eyJ1Ijoibmh1MlhER3NhSFdLcGVneHdKU1k0V1dSc29oMSIsImYiOiIxbGtMWnN6TmQycTB3bTU1YWdUTiIsInAiOiIxODA4NTAyNTA2MzEwNzg3MCIsImgiOiIxYXQ1ZzM5In0.jpg?class=originalLarge",
+      "instagramUrl": "https://www.instagram.com/reel/DSZpoEgk14C/",
+      "duration": "Reel",
+      "aspectRatio": "9:16",
+      "resolution": "1080p 60fps",
+      "camera": "Sony Alpha",
+      "lens": "Prime / Zoom",
+      "fps": "60fps",
+      "location": "Hong Kong SAR",
+      "date": "Dec 2025",
+      "featured": false,
+      "hidden": false
+    },
+    {
+      "id": "vid-1",
+      "title": "A350-1000 Low-Pass Flare & Touchdown",
+      "description": "Cathay Pacific Airbus A350-1000 on ILS 25R final approach at HKG during golden hour crosswind conditions. 10-bit S-Log3 grading.",
+      "category": "Aerospace & Aviation",
+      "videoUrl": "https://images.pexels.com/videos/3045163/free-video-3045163.mp4",
+      "posterUrl": "https://images.unsplash.com/photo-1542296332-2e4473faf563?w=1200&auto=format&fit=crop&q=80",
+      "instagramUrl": "https://www.instagram.com/sv.snap/",
+      "duration": "0:35",
+      "aspectRatio": "9:16",
+      "resolution": "4K 60fps",
+      "camera": "Sony Alpha 7 IV",
+      "lens": "FE 200-600mm F5.6-6.3 G OSS",
+      "fps": "60fps",
+      "location": "Hong Kong International Airport (HKG)",
+      "date": "Oct 2024",
+      "featured": true
+    },
+    {
+      "id": "vid-2",
+      "title": "Nocturne Runway Operations & Thrust Reversal",
+      "description": "Long-exposure motion study of night departures and apron ground handling dynamics with moisture condensation trails.",
+      "category": "Urban & Nocturne",
+      "videoUrl": "https://images.pexels.com/videos/4774391/pexels-photo-4774391.mp4",
+      "posterUrl": "https://images.unsplash.com/photo-1506015391300-4802dc74de2e?w=1200&auto=format&fit=crop&q=80",
+      "instagramUrl": "https://www.instagram.com/sv.snap/",
+      "duration": "0:48",
+      "aspectRatio": "16:9",
+      "resolution": "4K 24fps Cinema",
+      "camera": "Sony Alpha 7 IV",
+      "lens": "FE 24-70mm f/2.8 GM",
+      "fps": "24fps",
+      "location": "HKG South Runway Observation Point",
+      "date": "Sep 2024",
+      "featured": false
+    }
+  ],
+  "photographySettings": {
+    "title": "Visual Archive & Cinematography",
+    "subtitle": "Aerospace perspectives, mechanical forms, and terrestrial observations through stills & motion.",
+    "bio": "A curated visual and motion log captured on 35mm & 4K digital sensors — featuring aviation reels on @sv.snap, structural geometry, and nocturne atmospheres.",
+    "pexelsProfileUrl": "https://www.pexels.com/collections/portfolio-je8myyb/",
+    "pexelsUsername": "shreyaan",
+    "pexelsCollectionId": "portfolio-je8myyb",
+    "instagramHandle": "sv.snap",
+    "instagramProfileUrl": "https://www.instagram.com/sv.snap/",
+    "instagramBio": "Aviation reels, vertical cinema, and high-speed motion studies.",
+    "enableVideos": true,
+    "beholdFeedUrl": "https://feeds.behold.so/1lkLZszNd2q0wm55agTN",
+    "beholdFeedId": "1lkLZszNd2q0wm55agTN",
+    "categories": [
+      "All",
+      "Aerospace & Aviation",
+      "Architecture",
+      "Urban & Nocturne",
+      "Nature & Textures"
+    ],
+    "enableExif": true,
+    "photosPerPage": 24
+  },
   "settings": {
     "siteName": "sv7.dev",
-    "metaTitle": "Shreyaan Vashishtha \u2014 Mechanical & Aerospace Engineering | sv7.dev",
+    "metaTitle": "Shreyaan Vashishtha — Mechanical & Aerospace Engineering | sv7.dev",
     "metaDescription": "Official portfolio of Shreyaan Vashishtha. Mechanical & Aerospace Engineering at HKUST, Astrix Rocketry, mechanism design, and scientific computing.",
-    "canonicalUrl": "https://sv7.dev",
-    "twitterHandle": "@shreyaanv",
-    "ogImageUrl": "",
     "keywords": [
       "Shreyaan Vashishtha",
       "Mechanical Engineering",
@@ -278,11 +456,18 @@
       "Aerodynamics and Descent Control",
       "SolidWorks CAD",
       "Autodesk Fusion 360",
-      "Computational Python",
-      "Hong Kong Engineer",
-      "sv7.dev"
+      "IB Physics Tutor",
+      "IB Mathematics AA HL",
+      "Numerical Python",
+      "Hong Kong Engineer"
     ],
+    "ogImageUrl": "",
+    "faviconUrl": "",
+    "twitterHandle": "@shreyaanv",
+    "canonicalUrl": "https://sv7.dev",
+    "adminPasskey": "sv7-passkey-2026",
     "adminPassword": "sv7-passkey-2026",
+    "biometricCredentialIds": [],
     "accentColor": "#ffffff",
     "cvUrl": "/CV-Shreyaan-Vashishtha.pdf",
     "contactMessage": "Interested in aerospace engineering, Astrix rocketry, IB tutoring, or technical collaboration? Reach out directly.",
@@ -310,7 +495,7 @@
     "header": {
       "logoBadge": "sv7",
       "brandTitle": "sv7.dev",
-      "badgeSubtitle": "",
+      "badgeSubtitle": "HKUST Astrix",
       "navLinks": [
         {
           "name": "Projects",
@@ -372,7 +557,7 @@
       "contactSubtitle": "Open for select consulting, high-impact systems architecture, and engineering advisory."
     },
     "terminal": {
-      "windowTitle": "bash \u2014 sv7.dev",
+      "windowTitle": "bash — sv7.dev",
       "commandPrompt": "curl -s https://sv7.dev/api/content | jq .profile",
       "customOutput": "{\n  \"handle\": \"shreyaanv\",\n  \"status\": \"active\",\n  \"university\": \"HKUST\",\n  \"focus\": [\n    \"Aerospace Systems\",\n    \"Descent Recovery\",\n    \"Numerical Python\",\n    \"Parametric CAD\"\n  ],\n  \"availability\": \"Open for high-impact projects & engineering research\"\n}",
       "copyButtonText": "Copy",
@@ -388,7 +573,7 @@
       "messagePlaceholder": "Tell me about your project, inquiry, or question...",
       "submitButtonText": "Send Dispatch",
       "directTitle": "Direct Channels",
-      "responseDisclaimer": "Typically replies within 24\u201348 hours.",
+      "responseDisclaimer": "Typically replies within 24–48 hours.",
       "copyAddressText": "Copy Address",
       "hideEmailAddress": true,
       "publicDisplayEmail": "contact@sv7.dev"
@@ -401,68 +586,6 @@
     "theme": {
       "accentColor": "white",
       "glowIntensity": "subtle"
-    },
-    "adminPasskey": "sv7-passkey-2026",
-    "faviconUrl": ""
-  },
-  "photographySettings": {
-    "title": "Visual Archive & Cinematography",
-    "subtitle": "Aerospace perspectives, mechanical forms, and terrestrial observations through stills & motion.",
-    "bio": "A curated visual and motion log captured on 35mm & 4K digital sensors — featuring aviation reels on @sv.snap, structural geometry, and nocturne atmospheres.",
-    "pexelsProfileUrl": "https://www.pexels.com/collections/portfolio-je8myyb/",
-    "pexelsUsername": "shreyaan",
-    "pexelsCollectionId": "portfolio-je8myyb",
-    "instagramHandle": "sv.snap",
-    "instagramProfileUrl": "https://www.instagram.com/sv.snap/",
-    "instagramBio": "Aviation reels, vertical cinema, and high-speed motion studies.",
-    "enableVideos": true,
-    "categories": [
-      "All",
-      "Aerospace & Aviation",
-      "Architecture & Geometry",
-      "Urban & Nocturne",
-      "Nature & Textures"
-    ],
-    "enableExif": true,
-    "photosPerPage": 24
-  },
-  "photos": [],
-  "videos": [
-    {
-      "id": "vid-1",
-      "title": "A350-1000 Low-Pass Flare & Touchdown",
-      "description": "Cathay Pacific Airbus A350-1000 on ILS 25R final approach at HKG during golden hour crosswind conditions. 10-bit S-Log3 grading.",
-      "category": "Aerospace & Aviation",
-      "videoUrl": "https://images.pexels.com/videos/3045163/free-video-3045163.mp4",
-      "posterUrl": "https://images.unsplash.com/photo-1542296332-2e4473faf563?w=1200&auto=format&fit=crop&q=80",
-      "instagramUrl": "https://www.instagram.com/sv.snap/",
-      "duration": "0:35",
-      "aspectRatio": "9:16",
-      "resolution": "4K 60fps",
-      "camera": "Sony Alpha 7 IV",
-      "lens": "FE 200-600mm F5.6-6.3 G OSS",
-      "fps": "60fps",
-      "location": "Hong Kong International Airport (HKG)",
-      "date": "Oct 2024",
-      "featured": true
-    },
-    {
-      "id": "vid-2",
-      "title": "Nocturne Runway Operations & Thrust Reversal",
-      "description": "Long-exposure motion study of night departures and apron ground handling dynamics with moisture condensation trails.",
-      "category": "Urban & Nocturne",
-      "videoUrl": "https://images.pexels.com/videos/4774391/pexels-photo-4774391.mp4",
-      "posterUrl": "https://images.unsplash.com/photo-1506015391300-4802dc74de2e?w=1200&auto=format&fit=crop&q=80",
-      "instagramUrl": "https://www.instagram.com/sv.snap/",
-      "duration": "0:48",
-      "aspectRatio": "16:9",
-      "resolution": "4K 24fps Cinema",
-      "camera": "Sony Alpha 7 IV",
-      "lens": "FE 24-70mm f/2.8 GM",
-      "fps": "24fps",
-      "location": "HKG South Runway Observation Point",
-      "date": "Sep 2024",
-      "featured": false
     }
-  ]
+  }
 }

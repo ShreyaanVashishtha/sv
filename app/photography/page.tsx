@@ -1,12 +1,70 @@
 import type { Metadata } from 'next';
 import { getContent, saveContent } from '@/lib/content';
-import { PhotoItem } from '@/types/content';
+import { PhotoItem, VideoItem } from '@/types/content';
 import { fetchPexelsCollectionPhotos, extractCollectionId } from '@/lib/pexels';
+import { fetchBeholdReels } from '@/lib/instagram';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { PhotographyGallery } from '@/components/PhotographyGallery';
 
 export const runtime = 'nodejs';
+
+async function getVideosWithLiveFallback(data: any): Promise<VideoItem[]> {
+  const existingVideos: VideoItem[] = data.videos || [];
+  const existingMap = new Map(existingVideos.map((v) => [v.id, v]));
+
+  const feedUrl =
+    data.photographySettings?.beholdFeedUrl ||
+    'https://feeds.behold.so/1lkLZszNd2q0wm55agTN';
+
+  if (feedUrl && data.photographySettings?.enableVideos !== false) {
+    try {
+      const liveVideos = await fetchBeholdReels(feedUrl);
+      if (liveVideos && liveVideos.length > 0) {
+        // Auto-curate and merge: preserve user overrides from admin
+        const merged: VideoItem[] = liveVideos.map((fresh) => {
+          const prev = existingMap.get(fresh.id);
+          if (prev) {
+            return {
+              ...fresh,
+              title: prev.title || fresh.title,
+              description: prev.description !== undefined ? prev.description : fresh.description,
+              category: prev.category || fresh.category,
+              camera: prev.camera || fresh.camera,
+              lens: prev.lens || fresh.lens,
+              fps: prev.fps || fresh.fps,
+              resolution: prev.resolution || fresh.resolution,
+              location: prev.location || fresh.location,
+              date: prev.date || fresh.date,
+              featured: prev.featured ?? fresh.featured,
+              hidden: prev.hidden ?? fresh.hidden,
+            };
+          }
+          return fresh;
+        });
+
+        // Also preserve any manually added custom videos
+        const liveIds = new Set(liveVideos.map((v) => v.id));
+        for (const prev of existingVideos) {
+          if (!liveIds.has(prev.id)) {
+            merged.push(prev);
+          }
+        }
+
+        // Background persist if new videos were discovered
+        if (merged.length !== existingVideos.length) {
+          saveContent({ ...data, videos: merged }).catch(() => {});
+        }
+
+        return merged;
+      }
+    } catch (err) {
+      console.warn('Auto-sync Behold reels failed:', err);
+    }
+  }
+
+  return existingVideos;
+}
 
 async function getPhotosWithLiveFallback(data: any): Promise<PhotoItem[]> {
   const existingPhotos: PhotoItem[] = data.photos || [];
@@ -123,7 +181,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function PhotographyPage() {
   const data = await getContent();
-  const photos = await getPhotosWithLiveFallback(data);
+  const [photos, videos] = await Promise.all([
+    getPhotosWithLiveFallback(data),
+    getVideosWithLiveFallback(data),
+  ]);
 
   return (
     <div className="min-h-screen bg-zinc-950 text-foreground selection:bg-white selection:text-black">
@@ -137,7 +198,7 @@ export default async function PhotographyPage() {
       <main>
         <PhotographyGallery
           photos={photos}
-          videos={data.videos || []}
+          videos={videos}
           settings={data.photographySettings}
           profile={data.profile}
           socials={data.socials}

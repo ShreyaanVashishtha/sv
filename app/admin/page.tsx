@@ -113,6 +113,8 @@ export default function AdminPage() {
   >('profile');
   const [syncingPexels, setSyncingPexels] = useState(false);
   const [pexelsSyncStatus, setPexelsSyncStatus] = useState('');
+  const [syncingBehold, setSyncingBehold] = useState(false);
+  const [beholdSyncStatus, setBeholdSyncStatus] = useState('');
   const [newPhotoUrl, setNewPhotoUrl] = useState('');
   const [showMasterPin, setShowMasterPin] = useState(false);
   const [showPexelsApiKey, setShowPexelsApiKey] = useState(false);
@@ -552,6 +554,45 @@ export default function AdminPage() {
       setPexelsSyncStatus(`Network error: ${err?.message || 'Sync failed'}`);
     } finally {
       setSyncingPexels(false);
+    }
+  };
+
+  const handleSyncBehold = async () => {
+    if (!data) return;
+    setSyncingBehold(true);
+    setBeholdSyncStatus('Connecting to Behold.so and pulling @sv.snap Reels...');
+    try {
+      const res = await fetch('/api/photography/reels-sync', {
+        method: 'POST',
+        headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify({
+          beholdFeedUrl:
+            data.photographySettings?.beholdFeedUrl ||
+            'https://feeds.behold.so/1lkLZszNd2q0wm55agTN',
+        }),
+      });
+      const result = await res.json();
+      if (res.ok && result.success) {
+        setData((prev) =>
+          prev
+            ? {
+                ...prev,
+                videos: result.videos,
+                photographySettings: {
+                  ...prev.photographySettings,
+                  ...(result.photographySettings || {}),
+                },
+              }
+            : prev
+        );
+        setBeholdSyncStatus(result.message || `Successfully synced ${result.count} reels!`);
+      } else {
+        setBeholdSyncStatus(`Sync error: ${result.error || 'Failed to sync Reels'}`);
+      }
+    } catch (err: any) {
+      setBeholdSyncStatus(`Network error: ${err?.message || 'Sync failed'}`);
+    } finally {
+      setSyncingBehold(false);
     }
   };
 
@@ -3606,6 +3647,62 @@ export default function AdminPage() {
                     className="w-full px-3.5 py-2 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white"
                   />
                 </div>
+
+                <div className="pt-2 border-t border-white/5 space-y-3">
+                  <div>
+                    <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase flex items-center justify-between">
+                      <span>Behold.so Live Reels Feed (JSON Endpoint or Feed ID)</span>
+                      <a
+                        href="https://behold.so"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[10px] text-pink-400 hover:underline flex items-center gap-1 font-sans"
+                      >
+                        <span>Manage on Behold.so</span>
+                        <ExternalLink className="w-2.5 h-2.5" />
+                      </a>
+                    </label>
+                    <input
+                      type="text"
+                      value={data.photographySettings?.beholdFeedUrl || ''}
+                      onChange={(e) =>
+                        setData({
+                          ...data,
+                          photographySettings: {
+                            ...data.photographySettings,
+                            title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                            subtitle: data.photographySettings?.subtitle || '',
+                            beholdFeedUrl: e.target.value,
+                          },
+                        })
+                      }
+                      placeholder="https://feeds.behold.so/1lkLZszNd2q0wm55agTN"
+                      className="w-full px-3.5 py-2 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono"
+                    />
+                    <span className="text-[10px] text-zinc-500 mt-1 block">
+                      Connects directly to your Behold Instagram feed to pull full HD MP4 video streams and high-res posters from @sv.snap.
+                    </span>
+                  </div>
+
+                  {/* Sync Action Button */}
+                  <div className="pt-1 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <button
+                      type="button"
+                      onClick={handleSyncBehold}
+                      disabled={syncingBehold}
+                      className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 hover:opacity-95 text-white font-semibold text-xs transition-all disabled:opacity-50 shadow-sm"
+                    >
+                      <RefreshCw className={`w-3.5 h-3.5 ${syncingBehold ? 'animate-spin' : ''}`} />
+                      <span>{syncingBehold ? 'Pulling from Behold.so...' : 'Pull & Sync Reels from Behold (@sv.snap)'}</span>
+                    </button>
+
+                    {beholdSyncStatus && (
+                      <div className="text-xs font-mono text-pink-400 bg-pink-500/10 border border-pink-500/20 px-3 py-1.5 rounded-xl">
+                        {beholdSyncStatus}
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
 
               {/* PHOTOS CURATION & REORDER LIST */}
@@ -4118,23 +4215,36 @@ export default function AdminPage() {
                     </p>
                   </div>
 
-                  {/* Quick Add Video input */}
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="text"
-                      value={newVideoUrl}
-                      onChange={(e) => setNewVideoUrl(e.target.value)}
-                      placeholder="Paste Instagram Reel or MP4 URL..."
-                      className="px-3 py-1.5 rounded-xl bg-zinc-950 border border-white/10 text-xs text-white min-w-[220px]"
-                    />
+                  {/* Quick Actions: Sync Behold & Quick Add Video */}
+                  <div className="flex flex-wrap items-center gap-2">
                     <button
                       type="button"
-                      onClick={handleAddVideo}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 hover:opacity-90 text-white text-xs font-semibold transition-all shrink-0 shadow-md"
+                      onClick={handleSyncBehold}
+                      disabled={syncingBehold}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinc-950 border border-pink-500/30 hover:border-pink-500 text-pink-400 hover:text-pink-300 text-xs font-semibold transition-all disabled:opacity-50 shrink-0 shadow-sm"
+                      title="Sync Reels directly from Behold.so (@sv.snap)"
                     >
-                      <Plus className="w-3.5 h-3.5" />
-                      <span>Add Video Frame</span>
+                      <RefreshCw className={`w-3.5 h-3.5 ${syncingBehold ? 'animate-spin' : ''}`} />
+                      <span>{syncingBehold ? 'Syncing...' : 'Sync from Behold'}</span>
                     </button>
+
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        value={newVideoUrl}
+                        onChange={(e) => setNewVideoUrl(e.target.value)}
+                        placeholder="Paste Instagram Reel or MP4 URL..."
+                        className="px-3 py-1.5 rounded-xl bg-zinc-950 border border-white/10 text-xs text-white min-w-[200px]"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleAddVideo}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 hover:opacity-90 text-white text-xs font-semibold transition-all shrink-0 shadow-md"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                        <span>Add Video Frame</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
 

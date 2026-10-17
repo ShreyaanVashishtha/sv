@@ -266,6 +266,8 @@ export interface PhotographySettings {
   instagramProfileUrl?: string;
   instagramBio?: string;
   enableVideos?: boolean;
+  beholdFeedUrl?: string;
+  beholdFeedId?: string;
   categories?: string[];
   enableExif?: boolean;
   photosPerPage?: number;
