@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import {
   WebsiteData,
@@ -135,10 +135,38 @@ export default function AdminPage() {
     message: '',
   });
 
+  // Autosave engine states and refs
+  const [autoSaveEnabled, setAutoSaveEnabled] = useState(true);
+  const [autoSaveStatus, setAutoSaveStatus] = useState<'saved' | 'saving' | 'unsaved' | 'error'>('saved');
+  const [lastSavedTime, setLastSavedTime] = useState<Date | null>(null);
+  const lastSavedDataStringRef = useRef<string>('');
+  const isInitialLoadRef = useRef(true);
+  const autoSaveTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const isSavingRef = useRef(false);
+  const pendingSavePayloadRef = useRef<WebsiteData | null>(null);
+
   useEffect(() => {
     checkAuthAndLoad();
     checkBiometricsStatus();
+    if (typeof window !== 'undefined') {
+      const savedPref = localStorage.getItem('sv7_admin_autosave');
+      if (savedPref === 'false') {
+        setAutoSaveEnabled(false);
+      }
+    }
   }, []);
+
+  // Prevent accidental navigation if unsaved changes are pending
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (autoSaveStatus === 'unsaved' || autoSaveStatus === 'saving') {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [autoSaveStatus]);
 
   const getAuthHeaders = (extra: Record<string, string> = {}) => {
     const headers: Record<string, string> = { ...extra };
@@ -362,6 +390,9 @@ export default function AdminPage() {
         setIsDatabaseConnected(!!json.isDatabaseConnected);
         setData(json);
         setRawJsonText(JSON.stringify(json, null, 2));
+        lastSavedDataStringRef.current = JSON.stringify(json);
+        isInitialLoadRef.current = false;
+        setAutoSaveStatus('saved');
       } else if (res.status === 401) {
         setIsAuthenticated(false);
       }
@@ -468,16 +499,30 @@ export default function AdminPage() {
       await fetch('/api/auth', { method: 'DELETE', credentials: 'include' });
       setIsAuthenticated(false);
       setData(null);
+      isInitialLoadRef.current = true;
+      lastSavedDataStringRef.current = '';
     } catch (e) {
       console.error('Failed to logout', e);
     }
   };
 
-  const handleSave = async (overrideData?: WebsiteData) => {
+  const handleSave = async (overrideData?: WebsiteData, isAutoSave = false) => {
     const payload = overrideData || data;
     if (!payload) return;
-    setLoading(true);
-    setSaveStatus({ type: '', message: '' });
+
+    if (isSavingRef.current) {
+      pendingSavePayloadRef.current = payload;
+      return;
+    }
+
+    isSavingRef.current = true;
+    if (isAutoSave) {
+      setAutoSaveStatus('saving');
+    } else {
+      setLoading(true);
+      setAutoSaveStatus('saving');
+      setSaveStatus({ type: '', message: '' });
+    }
 
     try {
       const res = await fetch('/api/content', {
@@ -490,6 +535,9 @@ export default function AdminPage() {
       const json = await res.json();
       if (res.ok && json.success) {
         setIsDatabaseConnected(!!json.isDatabaseConnected);
+        lastSavedDataStringRef.current = JSON.stringify(payload);
+        setAutoSaveStatus('saved');
+        setLastSavedTime(new Date());
         setSaveStatus({
           type: 'success',
           message: json.isDatabaseConnected
@@ -503,14 +551,64 @@ export default function AdminPage() {
           setIsAuthenticated(false);
           setLoginError('Session expired or unauthorized. Please re-enter your master passkey.');
         }
+        setAutoSaveStatus('error');
         setSaveStatus({ type: 'error', message: json.error || 'Failed to save changes.' });
       }
     } catch (e) {
+      setAutoSaveStatus('error');
       setSaveStatus({ type: 'error', message: 'Network error saving content.' });
     } finally {
+      isSavingRef.current = false;
       setLoading(false);
+
+      if (pendingSavePayloadRef.current) {
+        const nextPayload = pendingSavePayloadRef.current;
+        pendingSavePayloadRef.current = null;
+        if (JSON.stringify(nextPayload) !== lastSavedDataStringRef.current) {
+          handleSave(nextPayload, true);
+        }
+      }
     }
   };
+
+  // Debounced Autosave on every modification
+  useEffect(() => {
+    if (!data || !isAuthenticated || !autoSaveEnabled) return;
+
+    const currentString = JSON.stringify(data);
+
+    // Initial load guard - do not autosave fresh initial state
+    if (isInitialLoadRef.current) {
+      isInitialLoadRef.current = false;
+      lastSavedDataStringRef.current = currentString;
+      setAutoSaveStatus('saved');
+      return;
+    }
+
+    // Unchanged from last saved state
+    if (currentString === lastSavedDataStringRef.current) {
+      setAutoSaveStatus('saved');
+      return;
+    }
+
+    // Mark as unsaved
+    setAutoSaveStatus('unsaved');
+
+    if (autoSaveTimerRef.current) {
+      clearTimeout(autoSaveTimerRef.current);
+    }
+
+    // Debounce saving by 1200ms
+    autoSaveTimerRef.current = setTimeout(() => {
+      handleSave(data, true);
+    }, 1200);
+
+    return () => {
+      if (autoSaveTimerRef.current) {
+        clearTimeout(autoSaveTimerRef.current);
+      }
+    };
+  }, [data, isAuthenticated, autoSaveEnabled]);
 
   const handleApplyRawJson = () => {
     try {
@@ -1193,22 +1291,90 @@ export default function AdminPage() {
           </div>
         </div>
 
-        {saveStatus.message && (
-          <div
-            className={`hidden md:flex items-center gap-2 text-xs px-3.5 py-1.5 rounded-full font-mono transition-all animate-fadeIn ${
-              saveStatus.type === 'success'
-                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+        {/* Autosave Status Indicator */}
+        <div className="flex items-center gap-2.5">
+          <button
+            type="button"
+            onClick={() => {
+              const next = !autoSaveEnabled;
+              setAutoSaveEnabled(next);
+              if (typeof window !== 'undefined') {
+                localStorage.setItem('sv7_admin_autosave', String(next));
+              }
+            }}
+            className={`hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-mono transition-all border ${
+              autoSaveEnabled
+                ? autoSaveStatus === 'saving'
+                  ? 'bg-amber-500/10 text-amber-400 border-amber-500/30 shadow-sm'
+                  : autoSaveStatus === 'unsaved'
+                  ? 'bg-amber-500/10 text-amber-300 border-amber-500/20'
+                  : autoSaveStatus === 'error'
+                  ? 'bg-rose-500/10 text-rose-400 border-rose-500/30'
+                  : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                : 'bg-zinc-900 text-zinc-500 border-white/5 opacity-80 hover:opacity-100'
             }`}
+            title={
+              autoSaveEnabled
+                ? 'Autosave is ON: edits save automatically. Click to pause.'
+                : 'Autosave is OFF: click to re-enable automatic saving.'
+            }
           >
-            {saveStatus.type === 'success' ? (
-              <CheckCircle2 className="w-3.5 h-3.5" />
+            {autoSaveEnabled ? (
+              <>
+                {autoSaveStatus === 'saving' && (
+                  <>
+                    <RefreshCw className="w-3 h-3 animate-spin text-amber-400" />
+                    <span>Autosaving...</span>
+                  </>
+                )}
+                {autoSaveStatus === 'unsaved' && (
+                  <>
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                    <span>Unsaved edits</span>
+                  </>
+                )}
+                {autoSaveStatus === 'saved' && (
+                  <>
+                    <Check className="w-3 h-3 text-emerald-400" />
+                    <span>
+                      {lastSavedTime
+                        ? `Autosaved ${lastSavedTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`
+                        : 'Autosave Active'}
+                    </span>
+                  </>
+                )}
+                {autoSaveStatus === 'error' && (
+                  <>
+                    <AlertCircle className="w-3 h-3 text-rose-400" />
+                    <span>Save error</span>
+                  </>
+                )}
+              </>
             ) : (
-              <AlertCircle className="w-3.5 h-3.5" />
+              <>
+                <span className="w-1.5 h-1.5 rounded-full bg-zinc-600" />
+                <span>Autosave Paused</span>
+              </>
             )}
-            <span>{saveStatus.message}</span>
-          </div>
-        )}
+          </button>
+
+          {saveStatus.message && (
+            <div
+              className={`hidden md:flex items-center gap-2 text-xs px-3.5 py-1.5 rounded-full font-mono transition-all animate-fadeIn ${
+                saveStatus.type === 'success'
+                  ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                  : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+              }`}
+            >
+              {saveStatus.type === 'success' ? (
+                <CheckCircle2 className="w-3.5 h-3.5" />
+              ) : (
+                <AlertCircle className="w-3.5 h-3.5" />
+              )}
+              <span>{saveStatus.message}</span>
+            </div>
+          )}
+        </div>
 
         <div className="flex items-center gap-2.5">
           <Link
@@ -1221,12 +1387,28 @@ export default function AdminPage() {
           </Link>
 
           <button
-            onClick={() => handleSave()}
+            onClick={() => {
+              if (autoSaveTimerRef.current) {
+                clearTimeout(autoSaveTimerRef.current);
+              }
+              handleSave(data || undefined, false);
+            }}
             disabled={loading}
             className="flex items-center gap-1.5 text-xs font-semibold bg-white text-black px-4 py-1.5 rounded-lg hover:bg-zinc-200 transition-all shadow-sm disabled:opacity-50"
+            title="Force immediate save"
           >
-            <Save className="w-3.5 h-3.5" />
-            <span>{loading ? 'Saving...' : 'Save All Changes'}</span>
+            {autoSaveStatus === 'saving' || loading ? (
+              <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+            ) : (
+              <Save className="w-3.5 h-3.5" />
+            )}
+            <span>
+              {loading || autoSaveStatus === 'saving'
+                ? 'Saving...'
+                : autoSaveStatus === 'unsaved'
+                ? 'Save Now'
+                : 'Save All Changes'}
+            </span>
           </button>
 
           <button
