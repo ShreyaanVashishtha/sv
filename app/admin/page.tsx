@@ -1174,7 +1174,7 @@ export default function AdminPage() {
           </div>
           <div>
             <h1 className="text-sm font-bold tracking-tight text-white flex items-center gap-2">
-              Granular Control Studio
+              SV7 Admin Dashboard
               <span className="text-[10px] font-mono text-zinc-400 bg-zinc-800 px-2 py-0.5 rounded-full">
                 Full CMS
               </span>
