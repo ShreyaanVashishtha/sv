@@ -877,6 +877,30 @@ export default function AdminPage() {
     setData({ ...data, projects: newProjects });
   };
 
+  // Experience reordering
+  const handleMoveExperience = (index: number, direction: 'up' | 'down') => {
+    if (!data || !data.experience) return;
+    const newExperience = [...data.experience];
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= newExperience.length) return;
+    const temp = newExperience[index];
+    newExperience[index] = newExperience[targetIndex];
+    newExperience[targetIndex] = temp;
+    setData({ ...data, experience: newExperience });
+  };
+
+  // Education reordering
+  const handleMoveEducation = (index: number, direction: 'up' | 'down') => {
+    if (!data || !data.education) return;
+    const newEducation = [...data.education];
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= newEducation.length) return;
+    const temp = newEducation[index];
+    newEducation[index] = newEducation[targetIndex];
+    newEducation[targetIndex] = temp;
+    setData({ ...data, education: newEducation });
+  };
+
   const handleExportBackup = () => {
     if (!data) return;
     const jsonString = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(data, null, 2))}`;
@@ -2519,8 +2543,11 @@ export default function AdminPage() {
                     key={item.id}
                     className="p-6 rounded-3xl bg-zinc-900/40 border border-white/10 space-y-4"
                   >
-                    <div className="flex items-center justify-between pb-3 border-b border-white/5">
-                      <div className="flex items-center gap-2">
+                    <div className="flex items-center justify-between pb-3 border-b border-white/5 gap-3">
+                      <div className="flex items-center gap-2 flex-1 min-w-0 flex-wrap">
+                        <span className="font-mono text-xs text-zinc-500 px-1.5 py-0.5 rounded bg-white/5 border border-white/5">
+                          #{index + 1}
+                        </span>
                         <input
                           type="text"
                           value={item.role}
@@ -2543,20 +2570,39 @@ export default function AdminPage() {
                           className="text-sm font-semibold text-zinc-300 bg-transparent border-b border-transparent hover:border-white/20 focus:outline-none"
                         />
                       </div>
-                      <button
-                        onClick={() => {
-                          if (confirm('Delete this role?')) {
-                            setData({
-                              ...data,
-                              experience: data.experience.filter((e) => e.id !== item.id),
-                            });
-                          }
-                        }}
-                        className="p-1.5 text-zinc-400 hover:text-rose-400 rounded hover:bg-white/5"
-                        title="Delete Role"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
+
+                      <div className="flex items-center gap-1 shrink-0">
+                        <button
+                          onClick={() => handleMoveExperience(index, 'up')}
+                          disabled={index === 0}
+                          className="p-1.5 text-zinc-400 hover:text-white disabled:opacity-30 rounded hover:bg-white/5"
+                          title="Move Up"
+                        >
+                          <MoveUp className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => handleMoveExperience(index, 'down')}
+                          disabled={index === data.experience.length - 1}
+                          className="p-1.5 text-zinc-400 hover:text-white disabled:opacity-30 rounded hover:bg-white/5"
+                          title="Move Down"
+                        >
+                          <MoveDown className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => {
+                            if (confirm('Delete this role?')) {
+                              setData({
+                                ...data,
+                                experience: data.experience.filter((e) => e.id !== item.id),
+                              });
+                            }
+                          }}
+                          className="p-1.5 text-zinc-400 hover:text-rose-400 rounded hover:bg-white/5 ml-2"
+                          title="Delete Role"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                     </div>
 
                     <div>
@@ -2651,32 +2697,55 @@ export default function AdminPage() {
                     key={item.id}
                     className="p-6 rounded-3xl bg-zinc-900/40 border border-white/10 space-y-4"
                   >
-                    <div className="flex items-center justify-between pb-3 border-b border-white/5">
-                      <input
-                        type="text"
-                        value={item.degree}
-                        onChange={(e) => {
-                          const updated = [...data.education];
-                          updated[index].degree = e.target.value;
-                          setData({ ...data, education: updated });
-                        }}
-                        placeholder="Degree Title"
-                        className="font-bold text-base text-white bg-transparent border-b border-transparent hover:border-white/20 focus:outline-none flex-1"
-                      />
-                      <button
-                        onClick={() => {
-                          if (confirm('Delete this education entry?')) {
-                            setData({
-                              ...data,
-                              education: data.education.filter((e) => e.id !== item.id),
-                            });
-                          }
-                        }}
-                        className="p-1.5 text-zinc-400 hover:text-rose-400 rounded hover:bg-white/5 ml-2"
-                        title="Delete Degree"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
+                    <div className="flex items-center justify-between pb-3 border-b border-white/5 gap-3">
+                      <div className="flex items-center gap-2 flex-1 min-w-0">
+                        <span className="font-mono text-xs text-zinc-500 px-1.5 py-0.5 rounded bg-white/5 border border-white/5">
+                          #{index + 1}
+                        </span>
+                        <input
+                          type="text"
+                          value={item.degree}
+                          onChange={(e) => {
+                            const updated = [...data.education];
+                            updated[index].degree = e.target.value;
+                            setData({ ...data, education: updated });
+                          }}
+                          placeholder="Degree Title"
+                          className="font-bold text-base text-white bg-transparent border-b border-transparent hover:border-white/20 focus:outline-none flex-1"
+                        />
+                      </div>
+                      <div className="flex items-center gap-1 shrink-0">
+                        <button
+                          onClick={() => handleMoveEducation(index, 'up')}
+                          disabled={index === 0}
+                          className="p-1.5 text-zinc-400 hover:text-white disabled:opacity-30 rounded hover:bg-white/5"
+                          title="Move Up"
+                        >
+                          <MoveUp className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => handleMoveEducation(index, 'down')}
+                          disabled={index === (data.education?.length || 0) - 1}
+                          className="p-1.5 text-zinc-400 hover:text-white disabled:opacity-30 rounded hover:bg-white/5"
+                          title="Move Down"
+                        >
+                          <MoveDown className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => {
+                            if (confirm('Delete this education entry?')) {
+                              setData({
+                                ...data,
+                                education: data.education.filter((e) => e.id !== item.id),
+                              });
+                            }
+                          }}
+                          className="p-1.5 text-zinc-400 hover:text-rose-400 rounded hover:bg-white/5 ml-2"
+                          title="Delete Degree"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
