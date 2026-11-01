@@ -33,6 +33,9 @@ import {
   Instagram,
   Video,
   Star,
+  Trophy,
+  Zap,
+  Activity,
 } from 'lucide-react';
 
 interface PhotographyGalleryProps {
@@ -208,6 +211,26 @@ export function PhotographyGallery({
     setTimeout(() => setCopiedLink(false), 2000);
   };
 
+  const hkSixesPhotoIndex = useMemo(() => {
+    const idx = visiblePhotos.findIndex(
+      (p) =>
+        p.id === 'photo-hksixes-1' ||
+        (p.title && p.title.toLowerCase().includes('sixes')) ||
+        (p.description && p.description.toLowerCase().includes('sixes'))
+    );
+    return idx !== -1 ? idx : null;
+  }, [visiblePhotos]);
+
+  const handleFilterHKSixes = () => {
+    setMediaType('all');
+    setSelectedCategory('Sports & Live Action');
+    setSearchQuery('');
+    const el = document.getElementById('gallery-media-stream');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   const pexelsUrl =
     settings?.pexelsProfileUrl ||
     (settings?.pexelsUsername
@@ -301,11 +324,202 @@ export function PhotographyGallery({
               <span className="text-zinc-400">Hub:</span>
               <span className="text-white">Hong Kong SAR &bull; Spaceports</span>
             </div>
+
+            <div className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-amber-500/10 border border-amber-500/30 text-xs flex items-center gap-2 shadow-sm">
+              <Trophy className="w-3.5 h-3.5 text-amber-400" />
+              <span className="text-zinc-400">Assignment:</span>
+              <span className="font-semibold text-amber-300">Hong Kong Sixes Coverage</span>
+            </div>
           </div>
         </div>
 
+        {/* FEATURED EDITORIAL & SPORTS ASSIGNMENT: HONG KONG SIXES */}
+        <section
+          aria-label="Featured Assignment: Hong Kong Cricket Sixes"
+          className="relative rounded-3xl p-6 sm:p-8 md:p-10 bg-gradient-to-br from-zinc-900/95 via-zinc-900/80 to-zinc-950 border border-amber-500/25 overflow-hidden shadow-2xl group"
+        >
+          {/* Subtle Ambient Radial Glow */}
+          <div className="absolute -top-32 -right-32 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
+
+          {/* Top Badge Strip */}
+          <div className="flex flex-wrap items-center justify-between gap-3 pb-6 border-b border-white/10">
+            <div className="flex items-center gap-2.5">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500" />
+              </span>
+              <span className="text-[11px] font-mono tracking-wider uppercase font-semibold text-amber-400">
+                Editorial Assignment &bull; Tournament Coverage
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-[11px] font-mono font-medium text-amber-300 flex items-center gap-1.5 shadow-sm">
+                <Trophy className="w-3.5 h-3.5 text-amber-400" />
+                <span>Hong Kong Cricket Sixes</span>
+              </span>
+              <span className="hidden sm:inline-flex px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono text-zinc-400">
+                Tin Kwong Road Ground
+              </span>
+            </div>
+          </div>
+
+          {/* Main 2-Column Content Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-6 items-center">
+            {/* Left: Narrative, Highlights, and Actions (7 cols) */}
+            <div className="lg:col-span-7 space-y-5">
+              <div className="space-y-2">
+                <div className="text-xs font-mono uppercase tracking-widest text-zinc-400 flex items-center gap-2">
+                  <Zap className="w-3.5 h-3.5 text-amber-400" />
+                  <span>High-Speed Sports Action &bull; Vertical Cinema</span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white tracking-tight leading-tight">
+                  Pitch-Side Action &amp; Tournament Cinematography: Hong Kong Sixes
+                </h2>
+              </div>
+
+              <p className="text-sm sm:text-base text-zinc-300 leading-relaxed font-sans">
+                Comprehensive pitch-side coverage of the international Hong Kong Cricket Sixes at Tin Kwong Road Ground. Freezing bat-on-ball power hits and seam rotation at 1/2500s, tracking high-intensity boundary rope athletics, and delivering same-day 4K 60fps vertical reels formatted for real-time tournament engagement on <span className="text-white font-medium">@{instagramHandle}</span>.
+              </p>
+
+              {/* 4 Feature Badges Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                <div className="p-3.5 rounded-2xl bg-zinc-950/70 border border-white/10 space-y-1">
+                  <div className="flex items-center gap-2 text-xs font-semibold text-white">
+                    <Zap className="w-3.5 h-3.5 text-amber-400" />
+                    <span>1/2500s Action Burst</span>
+                  </div>
+                  <p className="text-[11px] text-zinc-400 leading-normal">
+                    Freezing high-velocity bat impact, seam spin, and boundary clearances in direct sunlight.
+                  </p>
+                </div>
+
+                <div className="p-3.5 rounded-2xl bg-zinc-950/70 border border-white/10 space-y-1">
+                  <div className="flex items-center gap-2 text-xs font-semibold text-white">
+                    <Film className="w-3.5 h-3.5 text-pink-400" />
+                    <span>4K 60fps Vertical Cinema</span>
+                  </div>
+                  <p className="text-[11px] text-zinc-400 leading-normal">
+                    Rapid turnaround matchday reels capturing crowd voltage and international team dynamics.
+                  </p>
+                </div>
+
+                <div className="p-3.5 rounded-2xl bg-zinc-950/70 border border-white/10 space-y-1">
+                  <div className="flex items-center gap-2 text-xs font-semibold text-white">
+                    <Camera className="w-3.5 h-3.5 text-sky-400" />
+                    <span>Super-Telephoto Tracking</span>
+                  </div>
+                  <p className="text-[11px] text-zinc-400 leading-normal">
+                    Sony Full-Frame system with FE 200–600mm G OSS &amp; 70–200mm f/2.8 GM glass.
+                  </p>
+                </div>
+
+                <div className="p-3.5 rounded-2xl bg-zinc-950/70 border border-white/10 space-y-1">
+                  <div className="flex items-center gap-2 text-xs font-semibold text-white">
+                    <Activity className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Pitch-Side Field Access</span>
+                  </div>
+                  <p className="text-[11px] text-zinc-400 leading-normal">
+                    Accredited field position delivering high-speed tournament coverage.
+                  </p>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-wrap items-center gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={handleFilterHKSixes}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-black font-semibold text-xs transition-all shadow-lg shadow-amber-500/20 active:scale-95"
+                >
+                  <Trophy className="w-4 h-4 text-black" />
+                  <span>Filter HK Sixes &amp; Sports Media</span>
+                </button>
+
+                <a
+                  href={instagramUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-200 hover:text-white border border-white/10 hover:border-pink-500/40 text-xs font-medium transition-all group/ig"
+                >
+                  <Instagram className="w-4 h-4 text-pink-400 group-hover/ig:scale-110 transition-transform" />
+                  <span>Watch Reels on @{instagramHandle}</span>
+                  <ExternalLink className="w-3 h-3 text-zinc-500 group-hover/ig:text-white transition-colors" />
+                </a>
+              </div>
+            </div>
+
+            {/* Right: Technical Field Log & Specs Card (5 cols) */}
+            <div className="lg:col-span-5 space-y-4">
+              <div className="rounded-2xl p-5 sm:p-6 bg-zinc-950/90 border border-white/10 space-y-4 backdrop-blur-md">
+                <div className="flex items-center justify-between pb-3 border-b border-white/10">
+                  <div className="flex items-center gap-2">
+                    <Camera className="w-4 h-4 text-amber-400" />
+                    <span className="text-xs font-mono uppercase tracking-wider font-semibold text-white">
+                      Field Assignment Log
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
+                    Completed &bull; Archived
+                  </span>
+                </div>
+
+                <div className="space-y-2.5 text-xs font-mono">
+                  <div className="flex items-center justify-between py-1 border-b border-white/5">
+                    <span className="text-zinc-500">Tournament</span>
+                    <span className="text-zinc-200 font-sans font-medium text-right">Hong Kong Cricket Sixes</span>
+                  </div>
+
+                  <div className="flex items-center justify-between py-1 border-b border-white/5">
+                    <span className="text-zinc-500">Venue / Ground</span>
+                    <span className="text-zinc-200 font-sans font-medium text-right">Tin Kwong Road Ground, HK</span>
+                  </div>
+
+                  <div className="flex items-center justify-between py-1 border-b border-white/5">
+                    <span className="text-zinc-500">Camera Body</span>
+                    <span className="text-zinc-200 font-sans font-medium text-right">Sony Alpha 7 IV (Full-Frame)</span>
+                  </div>
+
+                  <div className="flex items-center justify-between py-1 border-b border-white/5">
+                    <span className="text-zinc-500">Action Optics</span>
+                    <span className="text-zinc-200 font-sans font-medium text-right">FE 200–600mm &amp; 70–200mm GM</span>
+                  </div>
+
+                  <div className="flex items-center justify-between py-1 border-b border-white/5">
+                    <span className="text-zinc-500">Peak Shutter</span>
+                    <span className="text-amber-400 font-semibold">1/2500s Hi+ Continuous</span>
+                  </div>
+
+                  <div className="flex items-center justify-between py-1 border-b border-white/5">
+                    <span className="text-zinc-500">Cinematography</span>
+                    <span className="text-pink-400 font-semibold">4K 60fps S-Cinetone / S-Log3</span>
+                  </div>
+
+                  <div className="flex items-center justify-between py-1">
+                    <span className="text-zinc-500">Media Scope</span>
+                    <span className="text-zinc-200 font-sans text-right">Pitch-side Stills &amp; Vertical Reels</span>
+                  </div>
+                </div>
+
+                {/* Inspect Shot Button */}
+                {hkSixesPhotoIndex !== null && (
+                  <button
+                    type="button"
+                    onClick={() => setActivePhotoIndex(hkSixesPhotoIndex)}
+                    className="w-full mt-2 py-2 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 hover:text-white text-xs font-mono flex items-center justify-center gap-2 transition-all"
+                  >
+                    <Maximize2 className="w-3.5 h-3.5 text-amber-400" />
+                    <span>Open Featured Match Frame in Lightbox</span>
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* MEDIA TYPE SELECTOR TABS & SEARCH */}
-        <div className="space-y-4">
+        <div id="gallery-media-stream" className="space-y-4 pt-2">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             {/* View Mode Tabs: All / Photos / Videos */}
             <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-zinc-900/90 border border-white/10 w-fit backdrop-blur-md">

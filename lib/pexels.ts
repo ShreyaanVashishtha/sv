@@ -12,6 +12,17 @@ export function extractCollectionId(urlOrId: string): string {
 export function categorizePexelsPhoto(altText: string): string {
   const text = (altText || '').toLowerCase();
   if (
+    text.includes('cricket') ||
+    text.includes('sixes') ||
+    text.includes('sports') ||
+    text.includes('stadium') ||
+    text.includes('match') ||
+    text.includes('tournament') ||
+    text.includes('athlete')
+  ) {
+    return 'Sports & Live Action';
+  }
+  if (
     text.includes('rocket') ||
     text.includes('airplane') ||
     text.includes('plane') ||

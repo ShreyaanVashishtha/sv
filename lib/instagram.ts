@@ -11,6 +11,17 @@ export function extractBeholdFeedId(urlOrId: string): string {
 export function categorizeInstagramReel(caption: string = '', hashtags: string[] = []): string {
   const combined = (caption + ' ' + hashtags.join(' ')).toLowerCase();
   if (
+    combined.includes('cricket') ||
+    combined.includes('sixes') ||
+    combined.includes('hksixes') ||
+    combined.includes('sports') ||
+    combined.includes('match') ||
+    combined.includes('tournament') ||
+    combined.includes('stadium')
+  ) {
+    return 'Sports & Live Action';
+  }
+  if (
     combined.includes('plane') ||
     combined.includes('airplane') ||
     combined.includes('aviation') ||
