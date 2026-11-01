@@ -144,11 +144,43 @@ export default function AdminPage() {
   const [autoSaveEnabled, setAutoSaveEnabled] = useState(true);
   const [autoSaveStatus, setAutoSaveStatus] = useState<'saved' | 'saving' | 'unsaved' | 'error'>('saved');
   const [lastSavedTime, setLastSavedTime] = useState<Date | null>(null);
+  const [nowTick, setNowTick] = useState(Date.now());
   const lastSavedDataStringRef = useRef<string>('');
   const isInitialLoadRef = useRef(true);
   const autoSaveTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isSavingRef = useRef(false);
   const pendingSavePayloadRef = useRef<WebsiteData | null>(null);
+
+  // Drag & drop state for 3D CAD files
+  const [isDraggingCad, setIsDraggingCad] = useState(false);
+  const [cadUploadProgress, setCadUploadProgress] = useState<{
+    uploading: boolean;
+    fileName: string;
+    progressPercent: number;
+    error?: string;
+  }>({
+    uploading: false,
+    fileName: '',
+    progressPercent: 0,
+  });
+
+  // Live timer tick to keep relative save time accurate
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNowTick(Date.now());
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const getRelativeSavedTime = (date: Date | null) => {
+    if (!date) return 'Autosave Active';
+    const diffSec = Math.max(0, Math.floor((nowTick - date.getTime()) / 1000));
+    if (diffSec < 4) return 'Saved just now';
+    if (diffSec < 60) return `Saved ${diffSec}s ago`;
+    const diffMin = Math.floor(diffSec / 60);
+    if (diffMin < 60) return `Saved ${diffMin}m ago`;
+    return `Saved at ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+  };
 
   useEffect(() => {
     checkAuthAndLoad();
@@ -958,6 +990,102 @@ export default function AdminPage() {
     }
   };
 
+  const handleDropCadFiles = async (files: FileList | File[], targetIndex?: number) => {
+    if (!files || files.length === 0) return;
+    const fileList = Array.from(files);
+
+    for (let i = 0; i < fileList.length; i++) {
+      const file = fileList[i];
+      const extMatch = file.name.match(/\.([a-zA-Z0-9]+)$/);
+      const ext = extMatch ? extMatch[1].toLowerCase() : '';
+
+      if (!['stl', 'glb', 'gltf', 'step', 'stp'].includes(ext)) {
+        alert(`"${file.name}" is not a recognized CAD format. Please upload .stl, .glb, or .gltf files.`);
+        continue;
+      }
+
+      setCadUploadProgress({
+        uploading: true,
+        fileName: file.name,
+        progressPercent: 30,
+      });
+
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+        const token = typeof window !== 'undefined' ? localStorage.getItem('sv7_admin_token') : '';
+        const headers: Record<string, string> = {};
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+
+        setCadUploadProgress((prev) => ({ ...prev, progressPercent: 65 }));
+
+        const res = await fetch('/api/cad/upload', {
+          method: 'POST',
+          headers,
+          body: formData,
+        });
+        const json = await res.json();
+
+        if (res.ok && json.success) {
+          setCadUploadProgress((prev) => ({ ...prev, progressPercent: 100 }));
+          const isStl = json.format === 'stl';
+          const formattedTitle = file.name
+            .replace(/\.[^/.]+$/, '')
+            .replace(/[-_]+/g, ' ')
+            .replace(/\b\w/g, (c) => c.toUpperCase());
+
+          if (targetIndex !== undefined && data?.models && data.models[targetIndex]) {
+            // Update an existing model
+            handleUpdateModel(targetIndex, {
+              modelUrl: json.url,
+              format: isStl ? 'stl' : 'glb',
+              cadSoftware: isStl ? 'Autodesk Fusion 360' : 'SolidWorks 2024',
+              upAxis: isStl ? 'z' : 'y',
+            });
+          } else {
+            // Insert a new 3D CAD model item
+            const newModel: CADModelItem = {
+              id: `cad-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+              title: formattedTitle || 'New CAD Assembly',
+              description: `Precision 3D mechanical assembly uploaded directly (${(file.size / 1024).toFixed(0)} KB ${json.format.toUpperCase()}).`,
+              category: 'Mechanical & CAD',
+              modelUrl: json.url,
+              format: isStl ? 'stl' : 'glb',
+              cadSoftware: isStl ? 'Autodesk Fusion 360' : 'SolidWorks 2024',
+              material: '6061-T6 Aluminum / PETG',
+              manufacturing: 'CNC Milling / Precision FDM',
+              tolerances: '±0.05 mm',
+              mass: '—',
+              dimensions: '—',
+              downloadUrl: json.url,
+              printablesUrl: '',
+              upAxis: isStl ? 'z' : 'y',
+              featured: (data?.models || []).length === 0,
+              hidden: false,
+              order: (data?.models || []).length + 1,
+            };
+
+            setData((prev) => {
+              if (!prev) return prev;
+              return {
+                ...prev,
+                models: [newModel, ...(prev.models || [])],
+              };
+            });
+          }
+        } else {
+          alert(`Upload error for "${file.name}": ${json.error || 'Failed to upload CAD model'}`);
+        }
+      } catch (err: any) {
+        alert(`Upload error for "${file.name}": ${err?.message || 'Network error'}`);
+      } finally {
+        setTimeout(() => {
+          setCadUploadProgress({ uploading: false, fileName: '', progressPercent: 0 });
+        }, 1200);
+      }
+    }
+  };
+
   const handleUpdateModel = (index: number, patch: Partial<CADModelItem>) => {
     if (!data || !data.models) return;
     const updated = [...data.models];
@@ -1347,7 +1475,7 @@ export default function AdminPage() {
                 localStorage.setItem('sv7_admin_autosave', String(next));
               }
             }}
-            className={`hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-mono transition-all border ${
+            className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-full text-xs font-mono transition-all border ${
               autoSaveEnabled
                 ? autoSaveStatus === 'saving'
                   ? 'bg-amber-500/10 text-amber-400 border-amber-500/30 shadow-sm'
@@ -1368,37 +1496,38 @@ export default function AdminPage() {
               <>
                 {autoSaveStatus === 'saving' && (
                   <>
-                    <RefreshCw className="w-3 h-3 animate-spin text-amber-400" />
-                    <span>Autosaving...</span>
+                    <RefreshCw className="w-3 h-3 animate-spin text-amber-400 shrink-0" />
+                    <span className="hidden sm:inline">Autosaving...</span>
+                    <span className="sm:hidden text-[10px]">Saving</span>
                   </>
                 )}
                 {autoSaveStatus === 'unsaved' && (
                   <>
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                    <span>Unsaved edits</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse shrink-0" />
+                    <span className="hidden sm:inline">Unsaved edits</span>
+                    <span className="sm:hidden text-[10px]">Unsaved</span>
                   </>
                 )}
                 {autoSaveStatus === 'saved' && (
                   <>
-                    <Check className="w-3 h-3 text-emerald-400" />
-                    <span>
-                      {lastSavedTime
-                        ? `Autosaved ${lastSavedTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`
-                        : 'Autosave Active'}
-                    </span>
+                    <Check className="w-3 h-3 text-emerald-400 shrink-0" />
+                    <span className="hidden sm:inline">{getRelativeSavedTime(lastSavedTime)}</span>
+                    <span className="sm:hidden text-[10px]">Saved</span>
                   </>
                 )}
                 {autoSaveStatus === 'error' && (
                   <>
-                    <AlertCircle className="w-3 h-3 text-rose-400" />
-                    <span>Save error</span>
+                    <AlertCircle className="w-3 h-3 text-rose-400 shrink-0" />
+                    <span className="hidden sm:inline">Save error</span>
+                    <span className="sm:hidden text-[10px]">Error</span>
                   </>
                 )}
               </>
             ) : (
               <>
-                <span className="w-1.5 h-1.5 rounded-full bg-zinc-600" />
-                <span>Autosave Paused</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-zinc-600 shrink-0" />
+                <span className="hidden sm:inline">Autosave Paused</span>
+                <span className="sm:hidden text-[10px]">Paused</span>
               </>
             )}
           </button>
@@ -6243,6 +6372,90 @@ export default function AdminPage() {
                 </div>
               </div>
 
+              {/* Direct STL / GLTF Drag & Drop Dropzone */}
+              <div
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setIsDraggingCad(true);
+                }}
+                onDragLeave={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setIsDraggingCad(false);
+                }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setIsDraggingCad(false);
+                  if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                    handleDropCadFiles(e.dataTransfer.files);
+                  }
+                }}
+                className={`relative rounded-3xl p-6 sm:p-8 transition-all border-2 border-dashed text-center flex flex-col items-center justify-center gap-3 cursor-pointer group ${
+                  isDraggingCad
+                    ? 'border-cyan-400 bg-cyan-500/15 scale-[1.01] shadow-[0_0_30px_rgba(6,182,212,0.25)]'
+                    : 'border-white/10 hover:border-cyan-500/40 bg-zinc-950/60 hover:bg-zinc-900/50'
+                }`}
+              >
+                <input
+                  type="file"
+                  accept=".stl,.glb,.gltf,.step,.stp"
+                  multiple
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files.length > 0) {
+                      handleDropCadFiles(e.target.files);
+                    }
+                  }}
+                  className="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10"
+                />
+
+                <div
+                  className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all ${
+                    isDraggingCad
+                      ? 'bg-cyan-400 text-black scale-110 shadow-lg shadow-cyan-500/50'
+                      : 'bg-zinc-900 text-cyan-400 border border-white/10 group-hover:scale-105 group-hover:border-cyan-500/40'
+                  }`}
+                >
+                  {cadUploadProgress.uploading ? (
+                    <RefreshCw className="w-5 h-5 animate-spin text-cyan-400" />
+                  ) : (
+                    <Upload className="w-5 h-5" />
+                  )}
+                </div>
+
+                <div className="space-y-1 max-w-md">
+                  <p className="text-sm font-semibold text-white">
+                    {cadUploadProgress.uploading
+                      ? `Uploading ${cadUploadProgress.fileName}...`
+                      : isDraggingCad
+                      ? 'Release to upload & initialize 3D CAD model'
+                      : 'Drag & Drop 3D CAD files (.STL, .GLB, .GLTF) here'}
+                  </p>
+                  <p className="text-xs text-zinc-400 font-mono">
+                    {cadUploadProgress.uploading
+                      ? 'Processing geometry and saving model to CMS...'
+                      : 'or click to browse directly from Autodesk Fusion 360 / SolidWorks (multi-file supported)'}
+                  </p>
+                </div>
+
+                {cadUploadProgress.uploading && (
+                  <div className="w-full max-w-xs h-1.5 rounded-full bg-zinc-800 overflow-hidden mt-1">
+                    <div
+                      className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 transition-all duration-300 rounded-full"
+                      style={{ width: `${cadUploadProgress.progressPercent}%` }}
+                    />
+                  </div>
+                )}
+
+                <div className="flex flex-wrap items-center justify-center gap-2 pt-1 text-[10px] font-mono text-zinc-500">
+                  <span className="px-2 py-0.5 rounded bg-zinc-900 border border-white/5 text-cyan-300">.STL (Binary/ASCII)</span>
+                  <span className="px-2 py-0.5 rounded bg-zinc-900 border border-white/5 text-purple-300">.GLB (Binary glTF)</span>
+                  <span className="px-2 py-0.5 rounded bg-zinc-900 border border-white/5 text-emerald-300">.GLTF</span>
+                  <span className="px-2 py-0.5 rounded bg-zinc-900 border border-white/5 text-amber-300">Instant Live Preview</span>
+                </div>
+              </div>
+
               {/* Filter and Search Bar for Models */}
               <div className="p-6 rounded-3xl bg-zinc-900/40 border border-white/10 space-y-6">
                 <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
@@ -6294,12 +6507,36 @@ export default function AdminPage() {
 
                 {/* Models List */}
                 {(!data.models || data.models.length === 0) ? (
-                  <div className="text-center py-12 px-4 rounded-2xl bg-zinc-950/40 border border-white/5 space-y-4">
-                    <Box className="w-10 h-10 text-zinc-600 mx-auto" />
+                  <div
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setIsDraggingCad(true);
+                    }}
+                    onDragLeave={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setIsDraggingCad(false);
+                    }}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setIsDraggingCad(false);
+                      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                        handleDropCadFiles(e.dataTransfer.files);
+                      }
+                    }}
+                    className={`text-center py-12 px-4 rounded-2xl transition-all border space-y-4 ${
+                      isDraggingCad
+                        ? 'border-cyan-400 bg-cyan-500/10 shadow-[0_0_20px_rgba(6,182,212,0.2)]'
+                        : 'bg-zinc-950/40 border-white/5'
+                    }`}
+                  >
+                    <Box className="w-10 h-10 text-cyan-400 mx-auto" />
                     <div className="space-y-1">
                       <p className="text-sm font-semibold text-white">No 3D models added yet.</p>
                       <p className="text-xs text-zinc-400 font-mono">
-                        Configure your first CAD assembly, upload an STL from Fusion 360, or load sample assemblies.
+                        Drag &amp; drop an .stl or .glb file anywhere into this box, or load sample assemblies.
                       </p>
                     </div>
                     <div className="flex flex-wrap items-center justify-center gap-2.5 pt-1">
@@ -6378,6 +6615,27 @@ export default function AdminPage() {
                               featured: false,
                               hidden: false,
                               order: 3,
+                            },
+                            {
+                              id: 'cad-4-frame',
+                              title: 'Structural Airframe & Electronics Chassis',
+                              description: 'High-precision aerospace airframe frame engineered in Autodesk Fusion 360 with internal mounting bulkheads.',
+                              category: 'Aerospace & Rocketry',
+                              modelUrl: '/models/Frame.stl',
+                              format: 'stl',
+                              thumbnailUrl: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop&q=80',
+                              cadSoftware: 'Autodesk Fusion 360',
+                              material: 'PETG-CF / Carbon Reinforced',
+                              manufacturing: 'High-Precision 3D Slicing & Direct Additive',
+                              tolerances: '±0.1 mm',
+                              mass: '185 g',
+                              dimensions: '140 × 140 × 65 mm',
+                              downloadUrl: '/models/Frame.stl',
+                              printablesUrl: '',
+                              upAxis: 'z',
+                              featured: false,
+                              hidden: false,
+                              order: 4,
                             },
                           ];
                           setData({
@@ -6552,7 +6810,20 @@ export default function AdminPage() {
                                   <label className="block text-[10px] font-mono text-zinc-400 uppercase mb-1 flex items-center justify-between">
                                     <span>3D Model URL (.glb, .stl, or procedural:identifier)</span>
                                   </label>
-                                  <div className="flex items-center gap-2">
+                                  <div
+                                    onDragOver={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                    }}
+                                    onDrop={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                                        handleDropCadFiles([e.dataTransfer.files[0]], originalIndex);
+                                      }
+                                    }}
+                                    className="flex items-center gap-2"
+                                  >
                                     <input
                                       type="text"
                                       value={model.modelUrl || ''}
@@ -6564,7 +6835,7 @@ export default function AdminPage() {
                                     />
                                     <label
                                       className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-xs font-mono text-cyan-300 cursor-pointer transition-all shrink-0"
-                                      title="Upload an .stl or .glb file from Fusion 360 directly"
+                                      title="Upload or drag & drop an .stl or .glb file from Fusion 360 directly"
                                     >
                                       <Upload className="w-3.5 h-3.5" />
                                       <span>
@@ -6582,7 +6853,7 @@ export default function AdminPage() {
                                     </label>
                                   </div>
                                   <p className="text-[10px] text-zinc-500 font-mono mt-1">
-                                    Tip: Upload STL directly, use an external URL (GitHub raw, Printables, etc.), or place files in <code className="text-zinc-400">public/models/</code>.
+                                    Tip: Drag &amp; drop an STL directly here, select a file, or place files in <code className="text-zinc-400">public/models/</code>.
                                   </p>
                                 </div>
 
@@ -7808,6 +8079,72 @@ export default function AdminPage() {
           )}
         </main>
       </div>
+
+      {/* Floating Ambient Autosave Status Indicator */}
+      {isAuthenticated && (
+        <aside
+          aria-label="Autosave status"
+          className="fixed bottom-5 right-5 z-40 hidden sm:flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-zinc-950/90 border border-white/10 backdrop-blur-md shadow-2xl text-xs font-mono transition-all animate-fadeIn"
+        >
+          {autoSaveEnabled ? (
+            <>
+              {autoSaveStatus === 'saving' && (
+                <div className="flex items-center gap-2 text-amber-400">
+                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                  <span className="font-medium">Saving edits to Cloud...</span>
+                </div>
+              )}
+              {autoSaveStatus === 'unsaved' && (
+                <div className="flex items-center gap-2 text-amber-300">
+                  <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
+                  <span>Unsaved edits</span>
+                  <button
+                    type="button"
+                    onClick={() => handleSave(data || undefined, false)}
+                    className="ml-1 px-2 py-0.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-500/30 text-[10px] font-bold transition-all"
+                  >
+                    Save Now
+                  </button>
+                </div>
+              )}
+              {autoSaveStatus === 'saved' && (
+                <div className="flex items-center gap-2 text-zinc-400">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                  <span className="text-zinc-300">{getRelativeSavedTime(lastSavedTime)}</span>
+                  <span className="text-[10px] text-zinc-500 hidden md:inline">
+                    &bull; {isDatabaseConnected ? 'Cloud DB Live' : 'Disk Storage'}
+                  </span>
+                </div>
+              )}
+              {autoSaveStatus === 'error' && (
+                <div className="flex items-center gap-2 text-rose-400">
+                  <AlertCircle className="w-3.5 h-3.5" />
+                  <span>Save error</span>
+                  <button
+                    type="button"
+                    onClick={() => handleSave(data || undefined, false)}
+                    className="ml-1 px-2 py-0.5 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-200 border border-rose-500/30 text-[10px] font-bold"
+                  >
+                    Retry
+                  </button>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="flex items-center gap-2 text-zinc-500">
+              <span className="w-2 h-2 rounded-full bg-zinc-600" />
+              <span>Autosave Paused</span>
+              <button
+                type="button"
+                onClick={() => setAutoSaveEnabled(true)}
+                className="ml-1 text-[10px] text-cyan-400 hover:underline font-bold"
+              >
+                Enable
+              </button>
+            </div>
+          )}
+        </aside>
+      )}
     </div>
   );
 }
