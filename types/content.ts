@@ -273,6 +273,7 @@ export interface PhotoItem {
   featured?: boolean;
   hidden?: boolean;
   date?: string;
+  alamyUrl?: string;
 }
 
 export interface VideoItem {
@@ -303,6 +304,8 @@ export interface PhotographySettings {
   pexelsUsername?: string;
   pexelsCollectionId?: string;
   pexelsApiKey?: string;
+  alamyProfileUrl?: string;
+  alamyCollectionUrl?: string;
   instagramHandle?: string;
   instagramProfileUrl?: string;
   instagramBio?: string;

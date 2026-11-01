@@ -119,6 +119,8 @@ export default function AdminPage() {
   const [pexelsSyncStatus, setPexelsSyncStatus] = useState('');
   const [syncingBehold, setSyncingBehold] = useState(false);
   const [beholdSyncStatus, setBeholdSyncStatus] = useState('');
+  const [syncingAlamy, setSyncingAlamy] = useState(false);
+  const [alamySyncStatus, setAlamySyncStatus] = useState('');
   const [newPhotoUrl, setNewPhotoUrl] = useState('');
   const [showMasterPin, setShowMasterPin] = useState(false);
   const [showPexelsApiKey, setShowPexelsApiKey] = useState(false);
@@ -698,6 +700,46 @@ export default function AdminPage() {
       setBeholdSyncStatus(`Network error: ${err?.message || 'Sync failed'}`);
     } finally {
       setSyncingBehold(false);
+    }
+  };
+
+  const handleSyncAlamy = async () => {
+    if (!data) return;
+    setSyncingAlamy(true);
+    setAlamySyncStatus('Connecting to Alamy and fetching editorial frames...');
+    try {
+      const res = await fetch('/api/photography/alamy-sync', {
+        method: 'POST',
+        headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify({
+          alamyProfileUrl: data.photographySettings?.alamyProfileUrl,
+          alamyCollectionUrl: data.photographySettings?.alamyCollectionUrl,
+        }),
+      });
+      const result = await res.json();
+      if (res.ok && result.success) {
+        setData((prev) =>
+          prev
+            ? {
+                ...prev,
+                photos: result.photos || prev.photos,
+                photographySettings: {
+                  ...prev.photographySettings,
+                  title: prev.photographySettings?.title || 'Visual Archive & Cinematography',
+                  subtitle: prev.photographySettings?.subtitle || '',
+                },
+              }
+            : prev
+        );
+        setAlamySyncStatus(result.message || 'Alamy frames synchronized!');
+        setTimeout(() => setAlamySyncStatus(''), 6000);
+      } else {
+        setAlamySyncStatus(result.error || 'Failed to sync with Alamy.');
+      }
+    } catch (e) {
+      setAlamySyncStatus('Error connecting to Alamy.');
+    } finally {
+      setSyncingAlamy(false);
     }
   };
 
@@ -4154,6 +4196,108 @@ export default function AdminPage() {
                 </div>
               </div>
 
+              {/* ALAMY EDITORIAL PRESS & STOCK SETTINGS */}
+              <div className="p-6 rounded-3xl bg-zinc-900/40 border border-white/10 space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-white/10">
+                  <div>
+                    <h3 className="text-base font-bold text-white flex items-center gap-2">
+                      <span className="w-5 h-5 rounded-md bg-amber-400 text-black font-mono font-bold text-xs flex items-center justify-center">
+                        a
+                      </span>
+                      <span>Alamy Editorial Stock &amp; HK Sixes Archive</span>
+                    </h3>
+                    <p className="text-xs text-zinc-400 mt-0.5">
+                      Connect your published Alamy collection or contributor portfolio to license tournament frames and pull matchday captures.
+                    </p>
+                  </div>
+
+                  {data.photographySettings?.alamyProfileUrl && (
+                    <a
+                      href={data.photographySettings.alamyProfileUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1.5 text-xs text-amber-400 hover:text-amber-300 font-mono bg-amber-500/10 border border-amber-500/20 px-3 py-1.5 rounded-xl self-start sm:self-auto"
+                    >
+                      <span>Open Alamy Portfolio</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">
+                      Alamy Contributor Portfolio URL
+                    </label>
+                    <input
+                      type="text"
+                      value={data.photographySettings?.alamyProfileUrl || ''}
+                      onChange={(e) =>
+                        setData({
+                          ...data,
+                          photographySettings: {
+                            ...data.photographySettings,
+                            title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                            subtitle: data.photographySettings?.subtitle || '',
+                            alamyProfileUrl: e.target.value,
+                          },
+                        })
+                      }
+                      placeholder="https://www.alamy.com/portfolio/your-portfolio"
+                      className="w-full px-3.5 py-2 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono focus:border-amber-500/50"
+                    />
+                    <span className="text-[10px] text-zinc-500 mt-1 block">
+                      Direct link to your Alamy agency/contributor profile page.
+                    </span>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">
+                      Alamy HK Sixes Collection / Set URL
+                    </label>
+                    <input
+                      type="text"
+                      value={data.photographySettings?.alamyCollectionUrl || ''}
+                      onChange={(e) =>
+                        setData({
+                          ...data,
+                          photographySettings: {
+                            ...data.photographySettings,
+                            title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                            subtitle: data.photographySettings?.subtitle || '',
+                            alamyCollectionUrl: e.target.value,
+                          },
+                        })
+                      }
+                      placeholder="https://www.alamy.com/search.html?..."
+                      className="w-full px-3.5 py-2 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white font-mono focus:border-amber-500/50"
+                    />
+                    <span className="text-[10px] text-zinc-500 mt-1 block">
+                      Direct link to your Hong Kong Sixes photoset or search link on Alamy.
+                    </span>
+                  </div>
+                </div>
+
+                {/* Alamy Sync Action Button */}
+                <div className="pt-1 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <button
+                    type="button"
+                    onClick={handleSyncAlamy}
+                    disabled={syncingAlamy}
+                    className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-black font-semibold text-xs transition-all disabled:opacity-50 shadow-sm"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 ${syncingAlamy ? 'animate-spin' : ''}`} />
+                    <span>{syncingAlamy ? 'Connecting to Alamy...' : 'Pull & Ingest Frames from Alamy Set'}</span>
+                  </button>
+
+                  {alamySyncStatus && (
+                    <div className="text-xs font-mono text-amber-300 bg-amber-500/10 border border-amber-500/20 px-3 py-1.5 rounded-xl">
+                      {alamySyncStatus}
+                    </div>
+                  )}
+                </div>
+              </div>
+
               {/* PHOTOS CURATION & REORDER LIST */}
               <div className="p-6 rounded-3xl bg-zinc-900/40 border border-white/10 space-y-6">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-white/10">
@@ -4471,6 +4615,7 @@ export default function AdminPage() {
                                     {/* Quick category suggestion pills */}
                                     <div className="flex flex-wrap gap-1">
                                       {[
+                                        'Sports & Live Action',
                                         'Aerospace & Aviation',
                                         'Architecture & Geometry',
                                         'Urban & Nocturne',
