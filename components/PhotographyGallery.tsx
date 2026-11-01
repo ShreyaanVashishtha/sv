@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import Link from 'next/link';
 import {
   PhotoItem,
@@ -149,6 +149,46 @@ export function PhotographyGallery({
     return items;
   }, [visiblePhotos, visibleVideos, mediaType, selectedCategory, searchQuery]);
 
+  const [videoPlaybackError, setVideoPlaybackError] = useState(false);
+
+  useEffect(() => {
+    setVideoPlaybackError(false);
+  }, [activeVideoIndex]);
+
+  const handleNextPhoto = useCallback(() => {
+    if (activePhotoIndex === null || visiblePhotos.length === 0) return;
+    setActivePhotoIndex((prev) => (prev !== null ? (prev + 1) % visiblePhotos.length : 0));
+  }, [activePhotoIndex, visiblePhotos.length]);
+
+  const handlePrevPhoto = useCallback(() => {
+    if (activePhotoIndex === null || visiblePhotos.length === 0) return;
+    setActivePhotoIndex((prev) =>
+      prev !== null ? (prev - 1 + visiblePhotos.length) % visiblePhotos.length : 0
+    );
+  }, [activePhotoIndex, visiblePhotos.length]);
+
+  const handleNextVideo = useCallback(() => {
+    if (activeVideoIndex === null || visibleVideos.length === 0) return;
+    setActiveVideoIndex((prev) => (prev !== null ? (prev + 1) % visibleVideos.length : 0));
+  }, [activeVideoIndex, visibleVideos.length]);
+
+  const handlePrevVideo = useCallback(() => {
+    if (activeVideoIndex === null || visibleVideos.length === 0) return;
+    setActiveVideoIndex((prev) =>
+      prev !== null ? (prev - 1 + visibleVideos.length) % visibleVideos.length : 0
+    );
+  }, [activeVideoIndex, visibleVideos.length]);
+
+  // Lock background scroll when lightbox is open
+  useEffect(() => {
+    if (activePhotoIndex === null && activeVideoIndex === null) return;
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [activePhotoIndex, activeVideoIndex]);
+
   // Keyboard navigation for Lightbox
   useEffect(() => {
     if (activePhotoIndex === null && activeVideoIndex === null) return;
@@ -168,7 +208,7 @@ export function PhotographyGallery({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activePhotoIndex, activeVideoIndex, visiblePhotos.length, visibleVideos.length]);
+  }, [activePhotoIndex, activeVideoIndex, handleNextPhoto, handleNextVideo, handlePrevPhoto, handlePrevVideo]);
 
   const activePhoto =
     activePhotoIndex !== null && visiblePhotos[activePhotoIndex]
@@ -179,30 +219,6 @@ export function PhotographyGallery({
     activeVideoIndex !== null && visibleVideos[activeVideoIndex]
       ? visibleVideos[activeVideoIndex]
       : null;
-
-  const handleNextPhoto = () => {
-    if (activePhotoIndex === null || visiblePhotos.length === 0) return;
-    setActivePhotoIndex((prev) => (prev !== null ? (prev + 1) % visiblePhotos.length : 0));
-  };
-
-  const handlePrevPhoto = () => {
-    if (activePhotoIndex === null || visiblePhotos.length === 0) return;
-    setActivePhotoIndex((prev) =>
-      prev !== null ? (prev - 1 + visiblePhotos.length) % visiblePhotos.length : 0
-    );
-  };
-
-  const handleNextVideo = () => {
-    if (activeVideoIndex === null || visibleVideos.length === 0) return;
-    setActiveVideoIndex((prev) => (prev !== null ? (prev + 1) % visibleVideos.length : 0));
-  };
-
-  const handlePrevVideo = () => {
-    if (activeVideoIndex === null || visibleVideos.length === 0) return;
-    setActiveVideoIndex((prev) =>
-      prev !== null ? (prev - 1 + visibleVideos.length) % visibleVideos.length : 0
-    );
-  };
 
   const handleCopyLink = (url?: string) => {
     const finalUrl = url || window.location.href;
@@ -744,8 +760,16 @@ export function PhotographyGallery({
                 return (
                   <div
                     key={`photo-${photo.id || entry.originalIndex}`}
+                    role="button"
+                    tabIndex={0}
                     onClick={() => setActivePhotoIndex(entry.originalIndex)}
-                    className="break-inside-avoid group relative rounded-2xl overflow-hidden border border-white/10 bg-zinc-900 cursor-pointer transition-all duration-300 hover:border-white/30 hover:shadow-xl hover:shadow-black/50"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setActivePhotoIndex(entry.originalIndex);
+                      }
+                    }}
+                    className="break-inside-avoid group relative rounded-2xl overflow-hidden border border-white/10 bg-zinc-900 cursor-pointer transition-all duration-300 hover:border-white/30 hover:shadow-xl hover:shadow-black/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
                   >
                     {/* Photo Image */}
                     <div className="relative overflow-hidden w-full bg-zinc-950">
@@ -811,8 +835,16 @@ export function PhotographyGallery({
               return (
                 <div
                   key={`video-${video.id || entry.originalIndex}`}
+                  role="button"
+                  tabIndex={0}
                   onClick={() => setActiveVideoIndex(entry.originalIndex)}
-                  className="break-inside-avoid group relative rounded-2xl overflow-hidden border border-white/10 bg-zinc-900 cursor-pointer transition-all duration-300 hover:border-pink-500/50 hover:shadow-2xl hover:shadow-pink-500/10"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setActiveVideoIndex(entry.originalIndex);
+                    }
+                  }}
+                  className="break-inside-avoid group relative rounded-2xl overflow-hidden border border-white/10 bg-zinc-900 cursor-pointer transition-all duration-300 hover:border-pink-500/50 hover:shadow-2xl hover:shadow-pink-500/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-500/50"
                 >
                   <div className="relative overflow-hidden w-full bg-zinc-950 aspect-[9/13] sm:aspect-[9/14]">
                     {/* Poster Image */}
@@ -849,7 +881,7 @@ export function PhotographyGallery({
 
                     {/* Centered Glowing Play Button */}
                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                      <div className="w-14 h-14 rounded-full bg-white/90 backdrop-blur-md text-black flex items-center justify-center shadow-2xl transition-all duration-300 group-hover:scale-115 group-hover:bg-white group-hover:shadow-pink-500/30">
+                      <div className="w-14 h-14 rounded-full bg-white/90 backdrop-blur-md text-black flex items-center justify-center shadow-2xl transition-all duration-300 group-hover:scale-110 group-hover:bg-white group-hover:shadow-pink-500/30">
                         <Play className="w-6 h-6 fill-black ml-1 text-black" />
                       </div>
                     </div>
@@ -1242,18 +1274,43 @@ export function PhotographyGallery({
                 activeVideo.aspectRatio === '9:16' ? 'w-[360px] max-w-[85vw]' : 'w-full max-w-4xl'
               }`}
             >
-              <video
-                key={activeVideo.id || activeVideo.videoUrl}
-                src={activeVideo.videoUrl}
-                poster={activeVideo.posterUrl}
-                controls
-                autoPlay
-                playsInline
-                loop
-                className={`max-h-[70vh] rounded-2xl shadow-2xl shadow-black bg-black border border-white/15 object-contain ${
-                  activeVideo.aspectRatio === '9:16' ? 'aspect-[9/16]' : 'w-full aspect-video'
-                }`}
-              />
+              {videoPlaybackError ? (
+                <div className="w-full aspect-[9/16] max-h-[70vh] rounded-2xl bg-zinc-950 border border-white/10 p-6 flex flex-col items-center justify-center text-center space-y-4">
+                  <Film className="w-10 h-10 text-pink-400" />
+                  <div className="space-y-1">
+                    <h4 className="text-sm font-bold text-white">Direct Stream Unavailable</h4>
+                    <p className="text-xs text-zinc-400 max-w-xs">
+                      This Instagram reel can be viewed in original high definition directly on @{instagramHandle}.
+                    </p>
+                  </div>
+                  {activeVideo.instagramUrl && (
+                    <a
+                      href={activeVideo.instagramUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 text-white text-xs font-semibold hover:opacity-90 transition-opacity"
+                    >
+                      <Instagram className="w-3.5 h-3.5" />
+                      <span>Watch on Instagram</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  )}
+                </div>
+              ) : (
+                <video
+                  key={activeVideo.id || activeVideo.videoUrl}
+                  src={activeVideo.videoUrl}
+                  poster={activeVideo.posterUrl}
+                  controls
+                  autoPlay
+                  playsInline
+                  loop
+                  onError={() => setVideoPlaybackError(true)}
+                  className={`max-h-[70vh] rounded-2xl shadow-2xl shadow-black bg-black border border-white/15 object-contain ${
+                    activeVideo.aspectRatio === '9:16' ? 'aspect-[9/16]' : 'w-full aspect-video'
+                  }`}
+                />
+              )}
             </div>
           </div>
 

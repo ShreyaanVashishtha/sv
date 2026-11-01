@@ -231,7 +231,7 @@ export function CADShowcaseClient({ initialModels, cadSettings }: CADShowcaseCli
                   href={activeModel.printablesUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center gap-2.5 px-5 py-3.5 rounded-xl bg-gradient-to-r from-[#fa6400] to-[#e05800] hover:from-[#e05800] hover:to-[#c44c00] text-white font-semibold text-xs transition-all shadow-lg shadow-orange-500/20 active:scale-98 group"
+                  className="w-full flex items-center justify-center gap-2.5 px-5 py-3.5 rounded-xl bg-gradient-to-r from-[#fa6400] to-[#e05800] hover:from-[#e05800] hover:to-[#c44c00] text-white font-semibold text-xs transition-all shadow-lg shadow-orange-500/20 active:scale-[0.98] group"
                 >
                   <span className="w-5 h-5 rounded-md bg-black/25 flex items-center justify-center font-black text-xs">
                     P
@@ -259,7 +259,7 @@ export function CADShowcaseClient({ initialModels, cadSettings }: CADShowcaseCli
                 target="_blank"
                 rel="noreferrer"
                 download
-                className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-white text-black font-semibold text-xs hover:bg-zinc-200 transition-all shadow-md active:scale-98"
+                className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-white text-black font-semibold text-xs hover:bg-zinc-200 transition-all shadow-md active:scale-[0.98]"
               >
                 <FileDown className="w-4 h-4" />
                 <span>Download CAD File (STEP / STL)</span>

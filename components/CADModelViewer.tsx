@@ -53,6 +53,16 @@ export function CADModelViewer({
     model.upAxis === 'z' || (model.cadSoftware || '').toLowerCase().includes('fusion')
   );
 
+  const isRotatingRef = useRef(isRotating);
+  useEffect(() => {
+    isRotatingRef.current = isRotating;
+  }, [isRotating]);
+
+  const isWireframeRef = useRef(isWireframe);
+  useEffect(() => {
+    isWireframeRef.current = isWireframe;
+  }, [isWireframe]);
+
   useEffect(() => {
     setIsZUp(model.upAxis === 'z' || (model.cadSoftware || '').toLowerCase().includes('fusion'));
   }, [model]);
@@ -66,28 +76,28 @@ export function CADModelViewer({
       color: 0xd4d8dd,
       metalness: 0.9,
       roughness: 0.25,
-      wireframe: isWireframe,
+      wireframe: false,
     });
 
     const darkAnodizedMaterial = new THREE.MeshStandardMaterial({
       color: 0x1f2329,
       metalness: 0.85,
       roughness: 0.35,
-      wireframe: isWireframe,
+      wireframe: false,
     });
 
     const carbonFiberMaterial = new THREE.MeshStandardMaterial({
       color: 0x141416,
       roughness: 0.45,
       metalness: 0.3,
-      wireframe: isWireframe,
+      wireframe: false,
     });
 
     const brassStandoffMaterial = new THREE.MeshStandardMaterial({
       color: 0xd4af37,
       metalness: 0.8,
       roughness: 0.2,
-      wireframe: isWireframe,
+      wireframe: false,
     });
 
     const accentCyanMaterial = new THREE.MeshStandardMaterial({
@@ -95,7 +105,7 @@ export function CADModelViewer({
       emissive: 0x004455,
       roughness: 0.2,
       metalness: 0.7,
-      wireframe: isWireframe,
+      wireframe: false,
     });
 
     if (type.includes('fin-can')) {
@@ -276,7 +286,7 @@ export function CADModelViewer({
     setActiveFaceCount(Math.round(totalFaces));
 
     return group;
-  }, [isWireframe]);
+  }, []);
 
   // Main Scene Initialization & Lifecycle
   useEffect(() => {
@@ -479,9 +489,28 @@ export function CADModelViewer({
       } else {
         // Procedural generation
         const procedural = buildProceduralModel(model.modelUrl || model.id);
+        if (isZUp) {
+          procedural.rotation.x = -Math.PI / 2;
+        }
         currentModelGroup.current = procedural;
         scene.add(procedural);
         setIsLoading(false);
+      }
+
+      // Apply initial wireframe if active
+      if (currentModelGroup.current && isWireframeRef.current) {
+        currentModelGroup.current.traverse((child) => {
+          if ((child as THREE.Mesh).isMesh) {
+            const mesh = child as THREE.Mesh;
+            if (Array.isArray(mesh.material)) {
+              mesh.material.forEach((mat) => {
+                (mat as any).wireframe = true;
+              });
+            } else if (mesh.material) {
+              (mesh.material as any).wireframe = true;
+            }
+          }
+        });
       }
     };
 
@@ -496,7 +525,7 @@ export function CADModelViewer({
       }
 
       // Turntable slow orbital rotation
-      if (isRotating && currentModelGroup.current) {
+      if (isRotatingRef.current && currentModelGroup.current) {
         currentModelGroup.current.rotation.y += 0.004;
       }
 
@@ -523,10 +552,19 @@ export function CADModelViewer({
         cancelAnimationFrame(animationFrameId.current);
       }
       if (rendererRef.current) {
+        if (rendererRef.current.domElement && rendererRef.current.domElement.parentNode) {
+          rendererRef.current.domElement.parentNode.removeChild(rendererRef.current.domElement);
+        }
         rendererRef.current.dispose();
       }
     };
-  }, [model, buildProceduralModel, isRotating, isWireframe, isZUp]);
+  }, [model, buildProceduralModel]);
+
+  // Orientation flip
+  useEffect(() => {
+    if (!currentModelGroup.current) return;
+    currentModelGroup.current.rotation.x = isZUp ? -Math.PI / 2 : 0;
+  }, [isZUp]);
 
   // Toggle wireframe on active model materials
   useEffect(() => {

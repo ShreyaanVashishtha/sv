@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Project } from '@/types/content';
 import { ExternalLink, Github, Sparkles, FolderGit2, X } from 'lucide-react';
 
@@ -19,6 +19,26 @@ export function ProjectsSection({
 }: ProjectsSectionProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [activeModalProject, setActiveModalProject] = useState<Project | null>(null);
+
+  // Lock body scroll and listen for Escape key when project modal is open
+  useEffect(() => {
+    if (!activeModalProject) return;
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setActiveModalProject(null);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [activeModalProject]);
 
   const safeProjects = Array.isArray(projects) ? projects : [];
 
@@ -99,8 +119,16 @@ export function ProjectsSection({
           {filteredProjects.map((project) => (
             <div
               key={project.id}
+              role="button"
+              tabIndex={0}
               onClick={() => setActiveModalProject(project)}
-              className="group relative rounded-2xl bg-zinc-900/40 border border-white/10 hover:border-white/25 p-6 sm:p-7 transition-all duration-300 hover:shadow-card-hover hover:-translate-y-1.5 flex flex-col justify-between cursor-pointer backdrop-blur-sm"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  setActiveModalProject(project);
+                }
+              }}
+              className="group relative rounded-2xl bg-zinc-900/40 border border-white/10 hover:border-white/25 p-6 sm:p-7 transition-all duration-300 hover:shadow-card-hover hover:-translate-y-1.5 flex flex-col justify-between cursor-pointer backdrop-blur-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
             >
               <div>
                 <div className="flex items-start justify-between gap-4 mb-4">
@@ -183,14 +211,18 @@ export function ProjectsSection({
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn"
           onClick={() => setActiveModalProject(null)}
+          role="presentation"
         >
           <div
-            className="relative w-full max-w-2xl bg-zinc-900 border border-white/15 rounded-3xl p-6 md:p-8 shadow-2xl text-left"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="project-modal-title"
+            className="relative w-full max-w-2xl bg-zinc-900 border border-white/15 rounded-3xl p-6 md:p-8 shadow-2xl text-left max-h-[88vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={() => setActiveModalProject(null)}
-              className="absolute top-5 right-5 p-2 rounded-full text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
+              className="absolute top-5 right-5 p-2 rounded-full text-zinc-400 hover:text-white hover:bg-white/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
               aria-label="Close Modal"
             >
               <X className="w-5 h-5" />
@@ -206,7 +238,7 @@ export function ProjectsSection({
               )}
             </div>
 
-            <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
+            <h3 id="project-modal-title" className="text-2xl md:text-3xl font-bold text-white mb-4">
               {activeModalProject.title}
             </h3>
 

@@ -62,7 +62,9 @@ export function AnimateIn({
     <div
       ref={domRef}
       style={{ transitionDelay: `${delay}ms` }}
-      className={`transition-[opacity,transform] duration-600 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[transform,opacity] ${getTransform()} ${className}`}
+      className={`transform-gpu transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        isVisible ? 'will-change-auto' : 'will-change-[transform,opacity]'
+      } ${getTransform()} ${className}`}
     >
       {children}
     </div>

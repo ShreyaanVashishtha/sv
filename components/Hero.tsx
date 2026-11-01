@@ -220,7 +220,7 @@ export function Hero({
               {validMetrics.map((metric, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-zinc-900/60 border border-white/10 hover:border-white/25 hover:bg-zinc-850 hover:-translate-y-0.5 backdrop-blur-md transition-all duration-200 shadow-sm"
+                  className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-zinc-900/60 border border-white/10 hover:border-white/25 hover:bg-zinc-800/80 hover:-translate-y-0.5 backdrop-blur-md transition-all duration-200 shadow-sm"
                 >
                   <span className="text-sm font-semibold text-white tracking-tight">
                     {metric.value}

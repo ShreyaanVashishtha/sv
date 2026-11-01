@@ -68,6 +68,16 @@ export function ContactSection({
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const cleanName = name.trim();
+    const cleanEmail = email.trim();
+    const cleanSubject = subject.trim();
+    const cleanMessage = message.trim();
+
+    if (!cleanName || !cleanEmail || !cleanMessage) {
+      setErrorMessage('Please fill in all required fields.');
+      return;
+    }
+
     setSubmitting(true);
     setErrorMessage('');
 
@@ -75,7 +85,12 @@ export function ContactSection({
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, subject, message }),
+        body: JSON.stringify({
+          name: cleanName,
+          email: cleanEmail,
+          subject: cleanSubject,
+          message: cleanMessage,
+        }),
       });
 
       const json = await res.json();
@@ -190,7 +205,7 @@ export function ContactSection({
                         placeholder="Jane Doe"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-white/10 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/20 transition-all duration-200"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-white/10 text-base sm:text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/20 transition-all duration-200"
                         required
                       />
                     </div>
@@ -204,7 +219,7 @@ export function ContactSection({
                         placeholder="jane@example.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-white/10 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/20 transition-all duration-200"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-white/10 text-base sm:text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/20 transition-all duration-200"
                         required
                       />
                     </div>
@@ -219,7 +234,7 @@ export function ContactSection({
                       placeholder={subjectPlaceholder}
                       value={subject}
                       onChange={(e) => setSubject(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-white/10 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/20 transition-all duration-200"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-white/10 text-base sm:text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/20 transition-all duration-200"
                       required
                     />
                   </div>
@@ -233,13 +248,17 @@ export function ContactSection({
                       placeholder={messagePlaceholder}
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-white/10 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/20 transition-all duration-200 resize-none leading-relaxed"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-white/10 text-base sm:text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/20 transition-all duration-200 resize-none leading-relaxed"
                       required
                     />
                   </div>
 
                   {errorMessage && (
-                    <div className="flex items-center gap-2 text-xs text-rose-400 bg-rose-500/10 border border-rose-500/20 px-3.5 py-2.5 rounded-xl font-mono">
+                    <div
+                      role="alert"
+                      aria-live="polite"
+                      className="flex items-center gap-2 text-xs text-rose-400 bg-rose-500/10 border border-rose-500/20 px-3.5 py-2.5 rounded-xl font-mono animate-fadeIn"
+                    >
                       <AlertCircle className="w-4 h-4 shrink-0" />
                       <span>{errorMessage}</span>
                     </div>
@@ -331,7 +350,7 @@ export function ContactSection({
                     href={social.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="p-3.5 rounded-2xl bg-zinc-900/40 border border-white/5 hover:border-white/20 hover:bg-zinc-850/80 transition-all duration-200 flex items-center justify-between group shadow-sm"
+                    className="p-3.5 rounded-2xl bg-zinc-900/40 border border-white/5 hover:border-white/20 hover:bg-zinc-800/80 transition-all duration-200 flex items-center justify-between group shadow-sm"
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
                       <div className="w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform text-white">

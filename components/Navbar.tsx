@@ -24,9 +24,29 @@ export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps)
       const isScrolled = window.scrollY > 20;
       setScrolled((prev) => (prev !== isScrolled ? isScrolled : prev));
     };
+
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setMobileMenuOpen(false);
+      }
+    };
+
     window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleResize, { passive: true });
+    window.addEventListener('keydown', handleKeyDown);
     handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
 
   const logoBadge = headerSettings?.logoBadge || 'sv7';
@@ -156,8 +176,10 @@ export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps)
         {/* Mobile menu toggle */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 text-zinc-400 hover:text-white rounded-lg border border-white/10 bg-zinc-900/50"
+          className="md:hidden p-2 text-zinc-400 hover:text-white rounded-lg border border-white/10 bg-zinc-900/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
           aria-label="Toggle Menu"
+          aria-expanded={mobileMenuOpen}
+          aria-controls="mobile-nav"
         >
           {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
@@ -165,7 +187,7 @@ export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps)
 
       {/* Mobile dropdown */}
       {mobileMenuOpen && (
-        <div className="md:hidden glass-nav border-t border-white/10 px-6 py-4 space-y-3 animate-fadeIn">
+        <div id="mobile-nav" className="md:hidden glass-nav border-t border-white/10 px-6 py-4 space-y-3 animate-fadeIn">
           {navLinks.map((link) => {
             const target = resolveHref(link.href);
             const isActive =
