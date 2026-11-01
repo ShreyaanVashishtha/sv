@@ -542,7 +542,40 @@
       "Nature & Textures"
     ],
     "enableExif": true,
-    "photosPerPage": 24
+    "photosPerPage": 24,
+    "featuredAssignment": {
+      "enabled": true,
+      "heroChipText": "Hong Kong Sixes Coverage",
+      "eyebrow": "Editorial Assignment • Tournament Coverage",
+      "badge": "Hong Kong Cricket Sixes",
+      "venue": "Tin Kwong Road Ground",
+      "tagline": "High-Speed Sports Action • Vertical Cinema",
+      "title": "Pitch-Side Action & Tournament Cinematography: Hong Kong Sixes",
+      "description": "Comprehensive pitch-side coverage of the international Hong Kong Cricket Sixes at Tin Kwong Road Ground. Freezing bat-on-ball power hits and seam rotation at 1/2500s, tracking high-intensity boundary rope athletics, and delivering same-day 4K 60fps vertical reels formatted for real-time tournament engagement on @sv.snap.",
+      "highlight1Title": "1/2500s Action Burst",
+      "highlight1Desc": "Freezing high-velocity bat impact, seam spin, and boundary clearances in direct sunlight.",
+      "highlight2Title": "4K 60fps Vertical Cinema",
+      "highlight2Desc": "Rapid turnaround matchday reels capturing crowd voltage and international team dynamics.",
+      "highlight3Title": "Super-Telephoto Tracking",
+      "highlight3Desc": "Sony Full-Frame system with FE 200–600mm G OSS & 70–200mm f/2.8 GM glass.",
+      "highlight4Title": "Pitch-Side Field Access",
+      "highlight4Desc": "Accredited field position delivering high-speed tournament coverage.",
+      "specs": {
+        "tournament": "Hong Kong Cricket Sixes",
+        "venue": "Tin Kwong Road Ground, HK",
+        "camera": "Sony Alpha 7 IV (Full-Frame)",
+        "optics": "FE 200–600mm & 70–200mm GM",
+        "shutter": "1/2500s Hi+ Continuous",
+        "cinematography": "4K 60fps S-Cinetone / S-Log3",
+        "licensing": "Alamy Editorial Archive",
+        "scope": "Pitch-side Stills & Vertical Reels"
+      },
+      "filterButtonText": "Filter HK Sixes & Sports Media",
+      "filterCategory": "Sports & Live Action",
+      "alamyButtonText": "License on Alamy",
+      "alamyUrl": "https://www.alamy.com/portfolio/shreyaan",
+      "instagramButtonText": "Watch Reels on @sv.snap"
+    }
   },
   "settings": {
     "siteName": "sv7.dev",

@@ -296,6 +296,42 @@ export interface VideoItem {
   hidden?: boolean;
 }
 
+export interface FeaturedAssignmentSpecs {
+  tournament?: string;
+  venue?: string;
+  camera?: string;
+  optics?: string;
+  shutter?: string;
+  cinematography?: string;
+  licensing?: string;
+  scope?: string;
+}
+
+export interface FeaturedAssignment {
+  enabled?: boolean;
+  heroChipText?: string;
+  eyebrow?: string;
+  badge?: string;
+  venue?: string;
+  tagline?: string;
+  title?: string;
+  description?: string;
+  highlight1Title?: string;
+  highlight1Desc?: string;
+  highlight2Title?: string;
+  highlight2Desc?: string;
+  highlight3Title?: string;
+  highlight3Desc?: string;
+  highlight4Title?: string;
+  highlight4Desc?: string;
+  specs?: FeaturedAssignmentSpecs;
+  filterButtonText?: string;
+  filterCategory?: string;
+  alamyButtonText?: string;
+  alamyUrl?: string;
+  instagramButtonText?: string;
+}
+
 export interface PhotographySettings {
   title: string;
   subtitle: string;
@@ -315,6 +351,7 @@ export interface PhotographySettings {
   categories?: string[];
   enableExif?: boolean;
   photosPerPage?: number;
+  featuredAssignment?: FeaturedAssignment;
 }
 
 export interface CADModelItem {

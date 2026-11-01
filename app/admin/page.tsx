@@ -15,6 +15,7 @@ import {
   PhotoItem,
   VideoItem,
   PhotographySettings,
+  FeaturedAssignment,
   CADModelItem,
 } from '@/types/content';
 import { BrandLogo } from '@/components/BrandLogo';
@@ -68,6 +69,8 @@ import {
   Film,
   Play,
   Video,
+  Trophy,
+  Zap,
 } from 'lucide-react';
 
 interface InboxMessage {
@@ -4295,6 +4298,747 @@ export default function AdminPage() {
                       {alamySyncStatus}
                     </div>
                   )}
+                </div>
+              </div>
+
+              {/* FEATURED EDITORIAL ASSIGNMENT & TOURNAMENT COVERAGE (HK SIXES) */}
+              <div className="p-6 rounded-3xl bg-zinc-900/40 border border-amber-500/30 space-y-5 relative overflow-hidden">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
+                      <Trophy className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h2 className="text-base font-bold text-white">Featured Assignment Showcase (HK Sixes)</h2>
+                        <span className="text-[10px] font-mono uppercase bg-amber-500/15 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-full font-medium">
+                          Editorial &amp; Sports
+                        </span>
+                      </div>
+                      <p className="text-xs text-zinc-400 mt-0.5">
+                        Configure the high-visibility tournament spotlight banner, field specs log, and action reels promo at <code className="text-zinc-200">/photography</code>.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <label className="flex items-center gap-2 cursor-pointer text-xs text-zinc-300 bg-zinc-950 px-3.5 py-2 rounded-xl border border-white/10 hover:border-amber-500/40 transition-all">
+                      <input
+                        type="checkbox"
+                        checked={data.photographySettings?.featuredAssignment?.enabled !== false}
+                        onChange={(e) => {
+                          const currentFa = data.photographySettings?.featuredAssignment || {};
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              featuredAssignment: {
+                                ...currentFa,
+                                enabled: e.target.checked,
+                              },
+                            },
+                          });
+                        }}
+                        className="w-4 h-4 rounded accent-amber-500"
+                      />
+                      <span className="font-medium text-white">Display on /photography</span>
+                    </label>
+
+                    <a
+                      href="/photography"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-zinc-300 hover:text-white transition-all"
+                    >
+                      <span>Preview</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+                </div>
+
+                {/* Sub-section: Badges & Headings */}
+                <div className="space-y-4">
+                  <h3 className="text-xs font-bold text-amber-400 uppercase font-mono tracking-wider flex items-center gap-2">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>Hero Badges &amp; Identity</span>
+                  </h3>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div>
+                      <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">
+                        Hero Metric Chip Text
+                      </label>
+                      <input
+                        type="text"
+                        value={data.photographySettings?.featuredAssignment?.heroChipText ?? ''}
+                        onChange={(e) => {
+                          const fa = data.photographySettings?.featuredAssignment || {};
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              featuredAssignment: { ...fa, heroChipText: e.target.value },
+                            },
+                          });
+                        }}
+                        placeholder="Hong Kong Sixes Coverage"
+                        className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-xs text-white"
+                      />
+                      <span className="text-[10px] text-zinc-500 mt-1 block">Badge pill shown in top stats counter.</span>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">
+                        Eyebrow Label
+                      </label>
+                      <input
+                        type="text"
+                        value={data.photographySettings?.featuredAssignment?.eyebrow ?? ''}
+                        onChange={(e) => {
+                          const fa = data.photographySettings?.featuredAssignment || {};
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              featuredAssignment: { ...fa, eyebrow: e.target.value },
+                            },
+                          });
+                        }}
+                        placeholder="Editorial Assignment • Tournament Coverage"
+                        className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-xs text-white"
+                      />
+                      <span className="text-[10px] text-zinc-500 mt-1 block">Top pulsating badge line.</span>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">
+                        Tournament / Badge Name
+                      </label>
+                      <input
+                        type="text"
+                        value={data.photographySettings?.featuredAssignment?.badge ?? ''}
+                        onChange={(e) => {
+                          const fa = data.photographySettings?.featuredAssignment || {};
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              featuredAssignment: { ...fa, badge: e.target.value },
+                            },
+                          });
+                        }}
+                        placeholder="Hong Kong Cricket Sixes"
+                        className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-xs text-white"
+                      />
+                      <span className="text-[10px] text-zinc-500 mt-1 block">Right badge highlight with trophy icon.</span>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">
+                        Venue / Ground Pill
+                      </label>
+                      <input
+                        type="text"
+                        value={data.photographySettings?.featuredAssignment?.venue ?? ''}
+                        onChange={(e) => {
+                          const fa = data.photographySettings?.featuredAssignment || {};
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              featuredAssignment: { ...fa, venue: e.target.value },
+                            },
+                          });
+                        }}
+                        placeholder="Tin Kwong Road Ground"
+                        className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-xs text-white"
+                      />
+                      <span className="text-[10px] text-zinc-500 mt-1 block">Location tag next to tournament badge.</span>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">
+                        Tagline Subheading
+                      </label>
+                      <input
+                        type="text"
+                        value={data.photographySettings?.featuredAssignment?.tagline ?? ''}
+                        onChange={(e) => {
+                          const fa = data.photographySettings?.featuredAssignment || {};
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              featuredAssignment: { ...fa, tagline: e.target.value },
+                            },
+                          });
+                        }}
+                        placeholder="High-Speed Sports Action • Vertical Cinema"
+                        className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-xs text-white"
+                      />
+                    </div>
+
+                    <div className="md:col-span-2">
+                      <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">
+                        Showcase Headline Title
+                      </label>
+                      <input
+                        type="text"
+                        value={data.photographySettings?.featuredAssignment?.title ?? ''}
+                        onChange={(e) => {
+                          const fa = data.photographySettings?.featuredAssignment || {};
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              featuredAssignment: { ...fa, title: e.target.value },
+                            },
+                          });
+                        }}
+                        placeholder="Pitch-Side Action & Tournament Cinematography: Hong Kong Sixes"
+                        className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-xs text-white font-semibold"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">
+                      Assignment Narrative &amp; Editorial Context
+                    </label>
+                    <textarea
+                      rows={3}
+                      value={data.photographySettings?.featuredAssignment?.description ?? ''}
+                      onChange={(e) => {
+                        const fa = data.photographySettings?.featuredAssignment || {};
+                        setData({
+                          ...data,
+                          photographySettings: {
+                            ...data.photographySettings,
+                            title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                            subtitle: data.photographySettings?.subtitle || '',
+                            featuredAssignment: { ...fa, description: e.target.value },
+                          },
+                        });
+                      }}
+                      placeholder="Comprehensive pitch-side coverage of the international Hong Kong Cricket Sixes..."
+                      className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-xs text-white resize-none leading-relaxed"
+                    />
+                  </div>
+                </div>
+
+                {/* Sub-section: 4 Highlight Callouts */}
+                <div className="pt-4 border-t border-white/10 space-y-4">
+                  <h3 className="text-xs font-bold text-amber-400 uppercase font-mono tracking-wider flex items-center gap-2">
+                    <Zap className="w-3.5 h-3.5" />
+                    <span>Four Feature Highlight Cards</span>
+                  </h3>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* Highlight 1 */}
+                    <div className="p-4 rounded-2xl bg-zinc-950 border border-white/10 space-y-2">
+                      <span className="text-[10px] font-mono uppercase text-amber-400/80 font-semibold">Highlight 1 (Shutter / Action)</span>
+                      <input
+                        type="text"
+                        value={data.photographySettings?.featuredAssignment?.highlight1Title ?? ''}
+                        onChange={(e) => {
+                          const fa = data.photographySettings?.featuredAssignment || {};
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              featuredAssignment: { ...fa, highlight1Title: e.target.value },
+                            },
+                          });
+                        }}
+                        placeholder="1/2500s Action Burst"
+                        className="w-full px-3 py-1.5 rounded-lg bg-zinc-900 border border-white/10 text-xs text-white font-medium"
+                      />
+                      <textarea
+                        rows={2}
+                        value={data.photographySettings?.featuredAssignment?.highlight1Desc ?? ''}
+                        onChange={(e) => {
+                          const fa = data.photographySettings?.featuredAssignment || {};
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              featuredAssignment: { ...fa, highlight1Desc: e.target.value },
+                            },
+                          });
+                        }}
+                        placeholder="Freezing high-velocity bat impact, seam spin, and boundary clearances in direct sunlight."
+                        className="w-full px-3 py-1.5 rounded-lg bg-zinc-900 border border-white/10 text-xs text-zinc-300 resize-none text-[11px]"
+                      />
+                    </div>
+
+                    {/* Highlight 2 */}
+                    <div className="p-4 rounded-2xl bg-zinc-950 border border-white/10 space-y-2">
+                      <span className="text-[10px] font-mono uppercase text-pink-400/80 font-semibold">Highlight 2 (Cinema / Video)</span>
+                      <input
+                        type="text"
+                        value={data.photographySettings?.featuredAssignment?.highlight2Title ?? ''}
+                        onChange={(e) => {
+                          const fa = data.photographySettings?.featuredAssignment || {};
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              featuredAssignment: { ...fa, highlight2Title: e.target.value },
+                            },
+                          });
+                        }}
+                        placeholder="4K 60fps Vertical Cinema"
+                        className="w-full px-3 py-1.5 rounded-lg bg-zinc-900 border border-white/10 text-xs text-white font-medium"
+                      />
+                      <textarea
+                        rows={2}
+                        value={data.photographySettings?.featuredAssignment?.highlight2Desc ?? ''}
+                        onChange={(e) => {
+                          const fa = data.photographySettings?.featuredAssignment || {};
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              featuredAssignment: { ...fa, highlight2Desc: e.target.value },
+                            },
+                          });
+                        }}
+                        placeholder="Rapid turnaround matchday reels capturing crowd voltage and international team dynamics."
+                        className="w-full px-3 py-1.5 rounded-lg bg-zinc-900 border border-white/10 text-xs text-zinc-300 resize-none text-[11px]"
+                      />
+                    </div>
+
+                    {/* Highlight 3 */}
+                    <div className="p-4 rounded-2xl bg-zinc-950 border border-white/10 space-y-2">
+                      <span className="text-[10px] font-mono uppercase text-sky-400/80 font-semibold">Highlight 3 (Glass / Optics)</span>
+                      <input
+                        type="text"
+                        value={data.photographySettings?.featuredAssignment?.highlight3Title ?? ''}
+                        onChange={(e) => {
+                          const fa = data.photographySettings?.featuredAssignment || {};
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              featuredAssignment: { ...fa, highlight3Title: e.target.value },
+                            },
+                          });
+                        }}
+                        placeholder="Super-Telephoto Tracking"
+                        className="w-full px-3 py-1.5 rounded-lg bg-zinc-900 border border-white/10 text-xs text-white font-medium"
+                      />
+                      <textarea
+                        rows={2}
+                        value={data.photographySettings?.featuredAssignment?.highlight3Desc ?? ''}
+                        onChange={(e) => {
+                          const fa = data.photographySettings?.featuredAssignment || {};
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              featuredAssignment: { ...fa, highlight3Desc: e.target.value },
+                            },
+                          });
+                        }}
+                        placeholder="Sony Full-Frame system with FE 200–600mm G OSS & 70–200mm f/2.8 GM glass."
+                        className="w-full px-3 py-1.5 rounded-lg bg-zinc-900 border border-white/10 text-xs text-zinc-300 resize-none text-[11px]"
+                      />
+                    </div>
+
+                    {/* Highlight 4 */}
+                    <div className="p-4 rounded-2xl bg-zinc-950 border border-white/10 space-y-2">
+                      <span className="text-[10px] font-mono uppercase text-emerald-400/80 font-semibold">Highlight 4 (Field Access / Scope)</span>
+                      <input
+                        type="text"
+                        value={data.photographySettings?.featuredAssignment?.highlight4Title ?? ''}
+                        onChange={(e) => {
+                          const fa = data.photographySettings?.featuredAssignment || {};
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              featuredAssignment: { ...fa, highlight4Title: e.target.value },
+                            },
+                          });
+                        }}
+                        placeholder="Pitch-Side Field Access"
+                        className="w-full px-3 py-1.5 rounded-lg bg-zinc-900 border border-white/10 text-xs text-white font-medium"
+                      />
+                      <textarea
+                        rows={2}
+                        value={data.photographySettings?.featuredAssignment?.highlight4Desc ?? ''}
+                        onChange={(e) => {
+                          const fa = data.photographySettings?.featuredAssignment || {};
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              featuredAssignment: { ...fa, highlight4Desc: e.target.value },
+                            },
+                          });
+                        }}
+                        placeholder="Accredited field position delivering high-speed tournament coverage."
+                        className="w-full px-3 py-1.5 rounded-lg bg-zinc-900 border border-white/10 text-xs text-zinc-300 resize-none text-[11px]"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Sub-section: Technical Field Log Specs */}
+                <div className="pt-4 border-t border-white/10 space-y-4">
+                  <h3 className="text-xs font-bold text-amber-400 uppercase font-mono tracking-wider flex items-center gap-2">
+                    <Camera className="w-3.5 h-3.5" />
+                    <span>Technical Field Assignment Specs (Right Log Card)</span>
+                  </h3>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div>
+                      <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">Tournament</label>
+                      <input
+                        type="text"
+                        value={data.photographySettings?.featuredAssignment?.specs?.tournament ?? ''}
+                        onChange={(e) => {
+                          const fa = data.photographySettings?.featuredAssignment || {};
+                          const specs = fa.specs || {};
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              featuredAssignment: { ...fa, specs: { ...specs, tournament: e.target.value } },
+                            },
+                          });
+                        }}
+                        placeholder="Hong Kong Cricket Sixes"
+                        className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-xs text-white"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">Venue / Ground</label>
+                      <input
+                        type="text"
+                        value={data.photographySettings?.featuredAssignment?.specs?.venue ?? ''}
+                        onChange={(e) => {
+                          const fa = data.photographySettings?.featuredAssignment || {};
+                          const specs = fa.specs || {};
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              featuredAssignment: { ...fa, specs: { ...specs, venue: e.target.value } },
+                            },
+                          });
+                        }}
+                        placeholder="Tin Kwong Road Ground, HK"
+                        className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-xs text-white"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">Camera Body</label>
+                      <input
+                        type="text"
+                        value={data.photographySettings?.featuredAssignment?.specs?.camera ?? ''}
+                        onChange={(e) => {
+                          const fa = data.photographySettings?.featuredAssignment || {};
+                          const specs = fa.specs || {};
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              featuredAssignment: { ...fa, specs: { ...specs, camera: e.target.value } },
+                            },
+                          });
+                        }}
+                        placeholder="Sony Alpha 7 IV (Full-Frame)"
+                        className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-xs text-white"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">Action Optics</label>
+                      <input
+                        type="text"
+                        value={data.photographySettings?.featuredAssignment?.specs?.optics ?? ''}
+                        onChange={(e) => {
+                          const fa = data.photographySettings?.featuredAssignment || {};
+                          const specs = fa.specs || {};
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              featuredAssignment: { ...fa, specs: { ...specs, optics: e.target.value } },
+                            },
+                          });
+                        }}
+                        placeholder="FE 200–600mm & 70–200mm GM"
+                        className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-xs text-white"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">Peak Shutter</label>
+                      <input
+                        type="text"
+                        value={data.photographySettings?.featuredAssignment?.specs?.shutter ?? ''}
+                        onChange={(e) => {
+                          const fa = data.photographySettings?.featuredAssignment || {};
+                          const specs = fa.specs || {};
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              featuredAssignment: { ...fa, specs: { ...specs, shutter: e.target.value } },
+                            },
+                          });
+                        }}
+                        placeholder="1/2500s Hi+ Continuous"
+                        className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-xs text-white"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">Cinematography</label>
+                      <input
+                        type="text"
+                        value={data.photographySettings?.featuredAssignment?.specs?.cinematography ?? ''}
+                        onChange={(e) => {
+                          const fa = data.photographySettings?.featuredAssignment || {};
+                          const specs = fa.specs || {};
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              featuredAssignment: { ...fa, specs: { ...specs, cinematography: e.target.value } },
+                            },
+                          });
+                        }}
+                        placeholder="4K 60fps S-Cinetone / S-Log3"
+                        className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-xs text-white"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">Stock Licensing</label>
+                      <input
+                        type="text"
+                        value={data.photographySettings?.featuredAssignment?.specs?.licensing ?? ''}
+                        onChange={(e) => {
+                          const fa = data.photographySettings?.featuredAssignment || {};
+                          const specs = fa.specs || {};
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              featuredAssignment: { ...fa, specs: { ...specs, licensing: e.target.value } },
+                            },
+                          });
+                        }}
+                        placeholder="Alamy Editorial Archive"
+                        className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-xs text-white"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">Media Scope</label>
+                      <input
+                        type="text"
+                        value={data.photographySettings?.featuredAssignment?.specs?.scope ?? ''}
+                        onChange={(e) => {
+                          const fa = data.photographySettings?.featuredAssignment || {};
+                          const specs = fa.specs || {};
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              featuredAssignment: { ...fa, specs: { ...specs, scope: e.target.value } },
+                            },
+                          });
+                        }}
+                        placeholder="Pitch-side Stills & Vertical Reels"
+                        className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-xs text-white"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Sub-section: Action Buttons & Filter Target */}
+                <div className="pt-4 border-t border-white/10 space-y-4">
+                  <h3 className="text-xs font-bold text-amber-400 uppercase font-mono tracking-wider flex items-center gap-2">
+                    <Sliders className="w-3.5 h-3.5" />
+                    <span>Action Buttons &amp; Filter Destination</span>
+                  </h3>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">
+                        Filter Button Label
+                      </label>
+                      <input
+                        type="text"
+                        value={data.photographySettings?.featuredAssignment?.filterButtonText ?? ''}
+                        onChange={(e) => {
+                          const fa = data.photographySettings?.featuredAssignment || {};
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              featuredAssignment: { ...fa, filterButtonText: e.target.value },
+                            },
+                          });
+                        }}
+                        placeholder="Filter HK Sixes & Sports Media"
+                        className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-xs text-white"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">
+                        Target Filter Category
+                      </label>
+                      <input
+                        type="text"
+                        value={data.photographySettings?.featuredAssignment?.filterCategory ?? ''}
+                        onChange={(e) => {
+                          const fa = data.photographySettings?.featuredAssignment || {};
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              featuredAssignment: { ...fa, filterCategory: e.target.value },
+                            },
+                          });
+                        }}
+                        placeholder="Sports & Live Action"
+                        className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-xs text-white font-mono"
+                      />
+                      <span className="text-[10px] text-zinc-500 mt-1 block">Category to activate when clicking the filter button.</span>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">
+                        Instagram Action Button Text
+                      </label>
+                      <input
+                        type="text"
+                        value={data.photographySettings?.featuredAssignment?.instagramButtonText ?? ''}
+                        onChange={(e) => {
+                          const fa = data.photographySettings?.featuredAssignment || {};
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              featuredAssignment: { ...fa, instagramButtonText: e.target.value },
+                            },
+                          });
+                        }}
+                        placeholder="Watch Reels on @sv.snap"
+                        className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-xs text-white"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">
+                        Alamy Licensing Button Text
+                      </label>
+                      <input
+                        type="text"
+                        value={data.photographySettings?.featuredAssignment?.alamyButtonText ?? ''}
+                        onChange={(e) => {
+                          const fa = data.photographySettings?.featuredAssignment || {};
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              featuredAssignment: { ...fa, alamyButtonText: e.target.value },
+                            },
+                          });
+                        }}
+                        placeholder="License on Alamy"
+                        className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-xs text-white"
+                      />
+                    </div>
+
+                    <div className="sm:col-span-2">
+                      <label className="block text-xs font-mono text-zinc-400 mb-1 uppercase">
+                        Custom Alamy Assignment URL (Optional Override)
+                      </label>
+                      <input
+                        type="text"
+                        value={data.photographySettings?.featuredAssignment?.alamyUrl ?? ''}
+                        onChange={(e) => {
+                          const fa = data.photographySettings?.featuredAssignment || {};
+                          setData({
+                            ...data,
+                            photographySettings: {
+                              ...data.photographySettings,
+                              title: data.photographySettings?.title || 'Visual Archive & Cinematography',
+                              subtitle: data.photographySettings?.subtitle || '',
+                              featuredAssignment: { ...fa, alamyUrl: e.target.value },
+                            },
+                          });
+                        }}
+                        placeholder="https://www.alamy.com/portfolio/shreyaan (leave blank to inherit Alamy collection URL)"
+                        className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-white/10 text-xs text-white font-mono"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
 
