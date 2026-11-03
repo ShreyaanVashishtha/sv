@@ -1,9 +1,17 @@
 import type { Metadata } from 'next';
+import { Archivo_Black } from 'next/font/google';
 import './globals.css';
 import { getContent } from '@/lib/content';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { BotIdClient } from 'botid/client';
+
+const archivoBlack = Archivo_Black({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-archivo-black',
+});
 
 const botIdProtectedRoutes = [
   { path: '/api/contact', method: 'POST' },
@@ -171,7 +179,7 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang="en" className="dark scroll-smooth">
+    <html lang="en" className={`dark scroll-smooth ${archivoBlack.variable}`}>
       <head>
         <BotIdClient protect={botIdProtectedRoutes} />
         {customFavicon ? (

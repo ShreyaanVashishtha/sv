@@ -32,6 +32,12 @@ module.exports = {
         },
       },
       fontFamily: {
+        archivo: [
+          "var(--font-archivo-black)",
+          "Arial Black",
+          "Impact",
+          "sans-serif",
+        ],
         sans: [
           "-apple-system",
           "BlinkMacSystemFont",
