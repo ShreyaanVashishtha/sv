@@ -17,7 +17,91 @@ interface NavbarProps {
 export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>('');
   const pathname = usePathname() || '/';
+
+  // ScrollSpy: Automatically highlight active section on the homepage
+  useEffect(() => {
+    if (pathname !== '/') {
+      setActiveSection('');
+      return;
+    }
+
+    const sectionIds = ['projects', 'skills', 'experience', 'education', 'contact'];
+    const sectionElements = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+
+    if (sectionElements.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (window.scrollY < 200) {
+          setActiveSection('');
+          return;
+        }
+
+        const visibleEntries = entries.filter((entry) => entry.isIntersecting);
+        if (visibleEntries.length > 0) {
+          visibleEntries.sort(
+            (a, b) => Math.abs(a.boundingClientRect.top) - Math.abs(b.boundingClientRect.top)
+          );
+          setActiveSection(visibleEntries[0].target.id);
+        }
+      },
+      {
+        rootMargin: '-15% 0px -40% 0px',
+        threshold: [0, 0.2, 0.5],
+      }
+    );
+
+    sectionElements.forEach((el) => observer.observe(el));
+
+    const handleScrollCheck = () => {
+      if (window.scrollY < 200) {
+        setActiveSection('');
+      }
+    };
+    window.addEventListener('scroll', handleScrollCheck, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', handleScrollCheck);
+    };
+  }, [pathname]);
+
+  const isLinkActive = (linkHref: string) => {
+    if (linkHref === '/cad') {
+      return pathname.startsWith('/cad');
+    }
+    if (linkHref === '/photography') {
+      return pathname.startsWith('/photography');
+    }
+    if (pathname === '/') {
+      if (linkHref === '#projects') {
+        return activeSection === 'projects' || activeSection === 'skills';
+      }
+      if (linkHref === '#experience') {
+        return activeSection === 'experience' || activeSection === 'education';
+      }
+      if (linkHref === '#contact') {
+        return activeSection === 'contact';
+      }
+    }
+    return pathname === linkHref;
+  };
+
+  const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith('#') && pathname === '/') {
+      e.preventDefault();
+      const id = href.replace('#', '');
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+    setMobileMenuOpen(false);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -120,10 +204,7 @@ export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps)
           <nav className="hidden md:flex items-center gap-1 bg-zinc-900/60 p-1.5 rounded-full border border-white/10 backdrop-blur-md shadow-sm">
             {navLinks.map((link) => {
               const target = resolveHref(link.href);
-              const isActive =
-                (pathname === link.href) ||
-                (link.href === '/cad' && pathname.startsWith('/cad')) ||
-                (link.href === '/photography' && pathname.startsWith('/photography'));
+              const isActive = isLinkActive(link.href);
               const isInternalPage = target.startsWith('/') && !target.includes('#');
               const linkClass = `px-4 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
                 isActive
@@ -140,7 +221,12 @@ export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps)
               }
 
               return (
-                <a key={link.name} href={target} className={linkClass}>
+                <a
+                  key={link.name}
+                  href={target}
+                  onClick={(e) => handleAnchorClick(e, link.href)}
+                  className={linkClass}
+                >
                   {link.name}
                 </a>
               );
@@ -190,12 +276,9 @@ export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps)
         <div id="mobile-nav" className="md:hidden glass-nav border-t border-white/10 px-6 py-4 space-y-3 animate-fadeIn">
           {navLinks.map((link) => {
             const target = resolveHref(link.href);
-            const isActive =
-              (pathname === link.href) ||
-              (link.href === '/cad' && pathname.startsWith('/cad')) ||
-              (link.href === '/photography' && pathname.startsWith('/photography'));
+            const isActive = isLinkActive(link.href);
             const isInternalPage = target.startsWith('/') && !target.includes('#');
-            const linkClass = `block text-sm font-medium py-1.5 ${
+            const linkClass = `block text-sm font-medium py-1.5 transition-colors ${
               isActive ? 'text-white font-bold' : 'text-zinc-300 hover:text-white'
             }`;
 
@@ -216,7 +299,7 @@ export function Navbar({ status, siteName, cvUrl, headerSettings }: NavbarProps)
               <a
                 key={link.name}
                 href={target}
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={(e) => handleAnchorClick(e, link.href)}
                 className={linkClass}
               >
                 {link.name}

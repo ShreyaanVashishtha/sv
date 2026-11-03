@@ -511,37 +511,39 @@ export function PhotographyGallery({
                   <button
                     type="button"
                     onClick={handleFilterHKSixes}
-                    className="inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 py-2.5 rounded-xl bg-zinc-900/90 bg-gradient-to-r from-amber-500/20 via-amber-500/15 to-orange-500/15 hover:from-amber-500/30 hover:to-orange-500/25 text-amber-200 hover:text-white border border-amber-500/40 hover:border-amber-400/80 text-xs font-semibold transition-all shadow-lg shadow-amber-500/15 active:scale-95 group/filter"
+                    className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-200 hover:text-white border border-amber-500/40 hover:border-amber-400 text-xs font-semibold transition-all shadow-sm shadow-amber-500/10 active:scale-95 group/filter shrink-0"
                   >
-                    <Trophy className="w-4 h-4 text-amber-400 group-hover/filter:scale-110 group-hover/filter:text-amber-300 transition-all" />
-                    <span>{filterButtonText}</span>
+                    <Trophy className="w-4 h-4 text-amber-400 group-hover/filter:scale-110 group-hover/filter:text-amber-300 transition-transform shrink-0" />
+                    <span className="font-semibold text-amber-200 group-hover/filter:text-white">{filterButtonText}</span>
                   </button>
 
-                  <a
-                    href={instagramUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-200 hover:text-white border border-white/10 hover:border-pink-500/40 text-xs font-medium transition-all group/ig active:scale-95 shadow-sm"
-                  >
-                    <Instagram className="w-4 h-4 text-pink-400 group-hover/ig:scale-110 transition-transform" />
-                    <span>{instagramButtonText}</span>
-                    <ExternalLink className="w-3 h-3 text-zinc-500 group-hover/ig:text-white transition-colors" />
-                  </a>
-
-                  {faAlamyUrl && (
+                  <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 shrink-0">
                     <a
-                      href={faAlamyUrl}
+                      href={instagramUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-amber-300 hover:text-amber-200 border border-amber-500/30 hover:border-amber-500/60 text-xs font-medium transition-all group/alamy active:scale-95 shadow-sm"
+                      className="inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 py-2.5 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 text-zinc-200 hover:text-white border border-white/10 hover:border-pink-500/40 text-xs font-medium transition-all group/ig active:scale-95 shadow-sm"
                     >
-                      <span className="w-4 h-4 rounded bg-amber-400 text-black font-mono font-bold text-[10px] flex items-center justify-center shrink-0">
-                        a
-                      </span>
-                      <span>{faAlamyButtonText}</span>
-                      <ExternalLink className="w-3 h-3 text-amber-400/80 group-hover/alamy:text-amber-300 transition-colors" />
+                      <Instagram className="w-4 h-4 text-pink-400 group-hover/ig:scale-110 transition-transform shrink-0" />
+                      <span>{instagramButtonText}</span>
+                      <ExternalLink className="w-3 h-3 text-zinc-500 group-hover/ig:text-white transition-colors shrink-0" />
                     </a>
-                  )}
+
+                    {faAlamyUrl && (
+                      <a
+                        href={faAlamyUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 py-2.5 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 text-amber-300 hover:text-amber-200 border border-amber-500/30 hover:border-amber-500/60 text-xs font-medium transition-all group/alamy active:scale-95 shadow-sm"
+                      >
+                        <span className="w-4 h-4 rounded bg-amber-400 text-black font-mono font-bold text-[10px] flex items-center justify-center shrink-0">
+                          a
+                        </span>
+                        <span>{faAlamyButtonText}</span>
+                        <ExternalLink className="w-3 h-3 text-amber-400/80 group-hover/alamy:text-amber-300 transition-colors shrink-0" />
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
 

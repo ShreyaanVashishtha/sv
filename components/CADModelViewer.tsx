@@ -21,6 +21,8 @@ import {
   Compass,
   RefreshCw,
   X,
+  Hand,
+  Check,
 } from 'lucide-react';
 
 interface CADModelViewerProps {
@@ -52,6 +54,16 @@ export function CADModelViewer({
   const [isZUp, setIsZUp] = useState<boolean>(
     model.upAxis === 'z' || (model.cadSoftware || '').toLowerCase().includes('fusion')
   );
+  const [isTouchEngaged, setIsTouchEngaged] = useState<boolean>(false);
+  const [activeView, setActiveView] = useState<'iso' | 'top' | 'front' | 'side'>('iso');
+
+  const isTouchEngagedRef = useRef(isTouchEngaged);
+  useEffect(() => {
+    isTouchEngagedRef.current = isTouchEngaged;
+    if (rendererRef.current) {
+      rendererRef.current.domElement.style.touchAction = isTouchEngaged ? 'none' : 'pan-y';
+    }
+  }, [isTouchEngaged]);
 
   const isRotatingRef = useRef(isRotating);
   useEffect(() => {
@@ -66,6 +78,41 @@ export function CADModelViewer({
   useEffect(() => {
     setIsZUp(model.upAxis === 'z' || (model.cadSoftware || '').toLowerCase().includes('fusion'));
   }, [model]);
+
+  // Snap camera to engineering isometric & orthographic views
+  const snapCamera = (view: 'iso' | 'top' | 'front' | 'side') => {
+    const camera = cameraRef.current;
+    const controls = controlsRef.current;
+    if (!camera || !controls) return;
+
+    setIsRotating(false);
+    setActiveView(view);
+
+    let targetPos = new THREE.Vector3(5.5, 4.0, 6.5);
+    if (view === 'top') targetPos = new THREE.Vector3(0.001, 8.5, 0.001);
+    else if (view === 'front') targetPos = new THREE.Vector3(0, 0.8, 8.5);
+    else if (view === 'side') targetPos = new THREE.Vector3(8.5, 0.8, 0);
+
+    const startPos = camera.position.clone();
+    const startTime = performance.now();
+    const duration = 400;
+
+    const animateCam = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
+
+      camera.position.lerpVectors(startPos, targetPos, ease);
+      controls.target.set(0, 0, 0);
+      controls.update();
+
+      if (progress < 1) {
+        requestAnimationFrame(animateCam);
+      }
+    };
+
+    requestAnimationFrame(animateCam);
+  };
 
   // Procedural fallback generators for rocketry & mechanical models
   const buildProceduralModel = useCallback((type: string): THREE.Group => {
@@ -332,6 +379,22 @@ export function CADModelViewer({
     controls.maxPolarAngle = Math.PI / 2 + 0.05; // Prevent camera from going under ground
     controlsRef.current = controls;
 
+    // Mobile touch-scroll safety: don't trap scroll unless user engages touch orbit
+    renderer.domElement.style.touchAction = isTouchEngagedRef.current ? 'none' : 'pan-y';
+
+    const handlePointerDown = (e: PointerEvent) => {
+      if (e.pointerType === 'touch') {
+        if (controlsRef.current) {
+          controlsRef.current.enabled = isTouchEngagedRef.current;
+        }
+      } else {
+        if (controlsRef.current) {
+          controlsRef.current.enabled = true;
+        }
+      }
+    };
+    renderer.domElement.addEventListener('pointerdown', handlePointerDown, { capture: true });
+
     // 5. Lighting Setup
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
     scene.add(ambientLight);
@@ -548,6 +611,9 @@ export function CADModelViewer({
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      if (renderer.domElement) {
+        renderer.domElement.removeEventListener('pointerdown', handlePointerDown, { capture: true });
+      }
       if (animationFrameId.current) {
         cancelAnimationFrame(animationFrameId.current);
       }
@@ -711,6 +777,25 @@ export function CADModelViewer({
             <Grid className="w-3.5 h-3.5" />
           </button>
 
+          {/* Orthographic / Isometric Camera Snaps */}
+          <div className="hidden xs:flex items-center p-0.5 rounded-xl bg-zinc-950/80 border border-white/10 backdrop-blur-md text-[10px] font-mono text-zinc-400">
+            {(['iso', 'top', 'front', 'side'] as const).map((view) => (
+              <button
+                key={view}
+                type="button"
+                onClick={() => snapCamera(view)}
+                className={`px-2 py-1 rounded-lg uppercase transition-all ${
+                  activeView === view
+                    ? 'bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/40 shadow-xs'
+                    : 'hover:text-white hover:bg-white/5'
+                }`}
+                title={`Snap Camera to ${view.toUpperCase()} view`}
+              >
+                {view}
+              </button>
+            ))}
+          </div>
+
           {/* Reset Camera View */}
           <button
             type="button"
@@ -740,6 +825,33 @@ export function CADModelViewer({
           <span className="text-xs font-mono uppercase tracking-widest text-zinc-400">
             Rendering 3D Mesh...
           </span>
+        </div>
+      )}
+
+      {/* Mobile Touch-Scroll Safety Overlay */}
+      {!isTouchEngaged && (
+        <div className="absolute inset-0 z-10 pointer-events-none flex items-end justify-center pb-12 sm:hidden">
+          <button
+            type="button"
+            onClick={() => setIsTouchEngaged(true)}
+            className="pointer-events-auto inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-950/90 border border-cyan-500/40 text-cyan-300 text-xs font-mono shadow-xl backdrop-blur-md active:scale-95 transition-all"
+          >
+            <Hand className="w-3.5 h-3.5 text-cyan-400" />
+            <span>Tap to Orbit 3D Model</span>
+          </button>
+        </div>
+      )}
+
+      {isTouchEngaged && (
+        <div className="absolute top-16 left-4 z-20 sm:hidden">
+          <button
+            type="button"
+            onClick={() => setIsTouchEngaged(false)}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-cyan-500 text-black font-semibold text-xs font-mono shadow-xl active:scale-95 transition-all"
+          >
+            <Check className="w-3.5 h-3.5" />
+            <span>Done / Scroll Page</span>
+          </button>
         </div>
       )}
 
