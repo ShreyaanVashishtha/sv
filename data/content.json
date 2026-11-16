@@ -14,7 +14,7 @@
     "bio": [
       "Mechanical Engineering undergraduate at HKUST with a strong foundation in mechanical design, rapid prototyping, and physics-based problem solving.",
       "Currently an engineer on the Astrix team working on Project Aquanaut, focusing on 3D CAD modeling and structural hull design for a custom underwater submersible.",
-      "Previously contributed to aerodynamic packaging and recovery systems for the Descent & Payload rocketry team, as well as UAV airframe R&D prototyping at ZERODRAG."
+      "Previously contributed to aerodynamic packaging and recovery systems for the Descent & Payload rocketry team, as well as UAV airframe R&D prototyping at ZeroDrag."
     ],
     "metrics": [
       {
@@ -47,75 +47,78 @@
   "projects": [
     {
       "id": "proj-aquanaut",
-      "title": "Project Aquanaut — Submersible Primary Hull & Spatial Packaging",
-      "category": "Marine Systems & CAD",
-      "description": "Spearheading the mechanical CAD design of the primary hull for a custom underwater submersible using SOLIDWORKS for the HKUST Astrix team.",
-      "longDescription": "Spearheading the mechanical design of the primary hull for a custom underwater submersible using SOLIDWORKS. Prototyping physical scale models and mechanical enclosures using 3D printing and conventional manufacturing techniques to validate spatial packaging, pressure integrity, and structural tolerances.",
+      "title": "Project Aquanaut — Autonomous Underwater Vehicle",
+      "category": "Marine Robotics & CAD",
+      "description": "Structural hull architecture, multi-quadrant additive manufacturing, and watertight electronics enclosure for an autonomous, GPS-navigated semi-submersible vehicle.",
+      "longDescription": "• Engineered the structural hull architecture for an autonomous, GPS-navigated semi-submersible vehicle using Autodesk Fusion 360 and SolidWorks, selecting a rectangular shell design to maximize roll stability and optimize the rotational moment arm for the thruster configuration.\n\n• Subdivided the primary external shell into 12 distinct sections for optimized additive manufacturing, prototyping the multi-quadrant enclosure using PETG filament to evaluate structural tolerances prior to final integration.\n\n• Designed a cost-effective, accessible core watertight enclosure to safely house the PCB, embedded firmware, and battery, ensuring environmental sealing against water ingress while maintaining accessibility for on-deck debugging.\n\n• Co-led cross-functional team structuring for an 8-member engineering project at Astrix, working to accelerate the transition from conceptual ideas to a deployable prototype.",
       "featured": true,
       "tags": [
-        "SOLIDWORKS",
-        "Project Aquanaut",
-        "Marine Engineering",
-        "Submersibles",
-        "3D Printing",
-        "Astrix"
+        "Autodesk Fusion 360",
+        "SolidWorks",
+        "PETG 3D Printing",
+        "Autonomous Submersible",
+        "Structural Hull Design",
+        "Astrix",
+        "HKUST"
       ],
       "demoUrl": "https://www.linkedin.com/in/shreyaanv/",
       "githubUrl": "https://github.com/ShreyaanVashishtha",
       "imageUrl": "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&auto=format&fit=crop&q=80"
     },
     {
-      "id": "proj-zerodrag",
-      "title": "ZERODRAG — UAV Drone Airframe & Rapid Prototyping",
-      "category": "Robotics & UAVs",
-      "description": "Designed and optimized lightweight UAV drone frames using precision CAD, developing and testing 3D-printed flight prototypes through rapid iteration.",
-      "longDescription": "Designed and optimized UAV drone frames using precision CAD modeling during R&D internship at ZERODRAG in Noida, India. Developed and bench-tested 3D-printed flight prototypes through rapid iteration cycles to isolate structural flaws, optimize weight-to-stiffness ratios, and refine dynamic flight performance.",
+      "id": "proj-flight-recovery",
+      "title": "Flight & Recovery Systems (Aerodynamic & Descent Control)",
+      "category": "Aerospace & Rocketry",
+      "description": "Flight and recovery mechanisms for the CanSat competition, optimizing aerodynamic stability, parachute/paraglider deployment dynamics, and descent rates.",
+      "longDescription": "• Engineered flight and recovery mechanisms for the CanSat competition, focusing on the reliable deployment and safe descent of aerospace systems.\n\n• Designed and iterated on mechanical components to optimize aerodynamic stability and descent control parameters, including parachute and paraglider deployments.\n\n• Prototyped structural mechanisms using CAD software (SolidWorks) and integrated them into the broader vehicle architecture.\n\n• Tested various configurations of the deployment of parachute and paraglider, measuring descent rates and verifying performance against competition guidelines.\n\n• Collaborated within a multidisciplinary student engineering team at Astrix to meet overall vehicle and payload design requirements.",
       "featured": true,
       "tags": [
-        "UAV Design",
-        "CAD Modeling",
-        "3D Printing",
-        "Rapid Prototyping",
-        "ZERODRAG",
-        "Drones"
-      ],
-      "demoUrl": "https://www.linkedin.com/in/shreyaanv/",
-      "githubUrl": "https://github.com/ShreyaanVashishtha",
-      "imageUrl": "https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=800&auto=format&fit=crop&q=80"
-    },
-    {
-      "id": "proj-1",
-      "title": "Astrix Rocket Aerodynamics & Descent Recovery",
-      "category": "Aerospace & Systems",
-      "description": "Mechanism design, aerodynamic load analysis, and control considerations for rocket recovery and descent systems in the HKUST Astrix team.",
-      "longDescription": "Contributed to mechanism design, aerodynamic packaging, deployment dynamics, and control considerations for high-altitude recovery and aerodynamic stability under flight conditions for the Astrix rocketry team.",
-      "featured": true,
-      "tags": [
-        "Aerospace",
-        "SOLIDWORKS",
+        "SolidWorks",
+        "Aerospace Engineering",
+        "CanSat Competition",
         "Descent Control",
-        "Rocketry",
-        "Astrix",
-        "HKUST"
+        "Parachute Deployment",
+        "Flight Dynamics",
+        "Astrix"
       ],
       "demoUrl": "https://www.linkedin.com/in/shreyaanv/",
       "githubUrl": "https://github.com/ShreyaanVashishtha",
       "imageUrl": "https://images.unsplash.com/photo-1517976487502-5f657a8bf606?w=800&auto=format&fit=crop&q=80"
     },
     {
-      "id": "proj-3",
-      "title": "High-Tolerance CAD Mechanical Assemblies",
-      "category": "CAD & Design",
-      "description": "Parametric mechanical assemblies, mechanism design, and stress-optimized mounting brackets engineered in SolidWorks and Autodesk Fusion 360.",
-      "longDescription": "Engineered multi-body assemblies with GD&T tolerances, rapid prototyping via FDM/SLA 3D printing, and structural stress validation.",
+      "id": "proj-zerodrag",
+      "title": "ZeroDrag — UAV Drone Frame Design & Rapid Prototyping",
+      "category": "Robotics & UAVs",
+      "description": "Precision CAD modeling, 3D printing, and rapid prototype testing of UAV drone frames and related aerodynamic components during R&D engineering internship.",
+      "longDescription": "• Designed and optimized UAV drone frames and related aerodynamic components using CAD (Autodesk Fusion 360) at ZeroDrag in Noida, India.\n\n• Developed and bench-tested 3D-printed prototypes through rapid iteration, converting design concepts into functional hardware.\n\n• Identified design issues, vibration profiles, and stress points to refine structural components based on real-world flight test results.\n\n• Gained hands-on experience across the entire product development cycle: CAD modeling, rapid prototyping, structural iteration, and flight testing.",
       "featured": true,
       "tags": [
-        "SOLIDWORKS",
-        "Fusion 360",
-        "CAD Modeling",
-        "Mechanism Design"
+        "Autodesk Fusion 360",
+        "UAV Development",
+        "3D Printing",
+        "Rapid Prototyping",
+        "Drone Frames",
+        "ZeroDrag"
       ],
       "demoUrl": "https://www.linkedin.com/in/shreyaanv/",
+      "githubUrl": "https://github.com/ShreyaanVashishtha",
+      "imageUrl": "https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": "proj-cad-assemblies",
+      "title": "High-Tolerance CAD & Precision Mechanisms",
+      "category": "CAD & Design",
+      "description": "Multi-body assemblies with GD&T tolerances, interactive WebGL 3D visualizations, and rapid additive prototyping in SolidWorks and Fusion 360.",
+      "longDescription": "• Engineered multi-body assemblies with GD&T tolerances, rapid prototyping via FDM/SLA 3D printing, and structural stress validation.\n\n• Integrated with interactive browser-based Three.js WebGL inspection engine allowing real-time orbit, wireframe topology inspection, and engineering orthographic view snapping.\n\n• Features aerospace avionics modules, supersonic fin cans, dual-axis sensor gimbals, and structural chassis designs.",
+      "featured": true,
+      "tags": [
+        "SolidWorks",
+        "Autodesk Fusion 360",
+        "Interactive WebGL",
+        "GD&T",
+        "Mechanism Design"
+      ],
+      "demoUrl": "/cad",
       "githubUrl": "https://github.com/ShreyaanVashishtha",
       "imageUrl": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop&q=80"
     }
@@ -126,23 +129,48 @@
       "items": [
         {
           "name": "SolidWorks",
-          "level": "Advanced CAD"
+          "level": "Advanced CAD & Assemblies"
         },
         {
-          "name": "Fusion 360",
-          "level": "Parametric 3D"
+          "name": "Autodesk Fusion 360",
+          "level": "Parametric 3D & Assemblies"
         },
         {
           "name": "Mechanism Design",
           "level": "Specialized"
         },
         {
-          "name": "Aerodynamic Testing",
-          "level": "Applied"
+          "name": "Additive Manufacturing & 3D Printing",
+          "level": "PETG / Rapid Prototyping"
         },
         {
-          "name": "Descent & Recovery",
-          "level": "Rocketry"
+          "name": "Flight & Recovery Systems",
+          "level": "Aerospace & Descent Control"
+        },
+        {
+          "name": "Structural Hull Architecture",
+          "level": "Submersible Marine Systems"
+        }
+      ]
+    },
+    {
+      "category": "Robotics & UAV Systems",
+      "items": [
+        {
+          "name": "UAV Drone Frame Design",
+          "level": "Aerodynamic & Structural"
+        },
+        {
+          "name": "Rapid Prototyping & Iteration",
+          "level": "Hands-on Hardware R&D"
+        },
+        {
+          "name": "CanSat Flight Mechanisms",
+          "level": "Experimental Testing"
+        },
+        {
+          "name": "GD&T Tolerancing & Packaging",
+          "level": "Precision Engineering"
         }
       ]
     },
@@ -155,7 +183,7 @@
         },
         {
           "name": "Numerical Computing",
-          "level": "Applied"
+          "level": "Applied Simulators"
         },
         {
           "name": "Algorithm Design",
@@ -164,15 +192,11 @@
         {
           "name": "Git & Version Control",
           "level": "Proficient"
-        },
-        {
-          "name": "GUI Development",
-          "level": "Practical"
         }
       ]
     },
     {
-      "category": "Analytical Sciences",
+      "category": "Analytical Sciences & Mentorship",
       "items": [
         {
           "name": "Classical Mechanics & Physics",
@@ -187,29 +211,12 @@
           "level": "IB HL Grade 6"
         },
         {
-          "name": "Flight Dynamics",
-          "level": "Applied"
-        }
-      ]
-    },
-    {
-      "category": "Core Competencies",
-      "items": [
+          "name": "Critical Thinking & Mindware",
+          "level": "Univ. of Michigan Certified"
+        },
         {
-          "name": "STEM Tutoring & Mentorship",
+          "name": "STEM Tutoring & Peer Mentorship",
           "level": "Experienced"
-        },
-        {
-          "name": "Technical Problem-Solving",
-          "level": "Core"
-        },
-        {
-          "name": "Cross-Functional Collaboration",
-          "level": "Astrix Team"
-        },
-        {
-          "name": "Communication & Leadership",
-          "level": "Core"
         }
       ]
     }
@@ -219,54 +226,78 @@
       "id": "exp-1",
       "role": "Mechanical Engineer (Project Aquanaut)",
       "company": "Astrix - Student Space Exploration",
-      "period": "Sep 2026 — Present",
-      "description": "Spearheading the mechanical design of the primary hull for a custom underwater submersible (Project Aquanaut) using SOLIDWORKS.",
+      "period": "Sep 2026 — Present (On-site, Hong Kong SAR)",
+      "description": "Spearheading the mechanical design of the primary hull for a custom autonomous underwater submersible using SOLIDWORKS and Fusion 360.",
       "highlights": [
         "Spearheading the mechanical design of the primary hull for a custom underwater submersible using SOLIDWORKS.",
-        "Prototyping scale models and mechanical enclosures using 3D printing and conventional manufacturing techniques to validate spatial packaging and structural tolerances."
+        "Prototyping scale models and mechanical enclosures using 3D printing and conventional manufacturing techniques to validate spatial packaging and structural tolerances.",
+        "Co-leading cross-functional engineering team coordination for an 8-member project transition from concept to deployable prototype."
       ]
     },
     {
       "id": "exp-2",
       "role": "Aerodynamic & Descent Control Engineer",
       "company": "Astrix - Student Space Exploration",
-      "period": "Sep 2025 — Oct 2026",
-      "description": "Worked as a junior engineer in the Aerodynamic & Descent Control team, contributing to aerodynamic packaging and recovery systems for the Descent & Payload team.",
+      "period": "Sep 2025 — Oct 2026 (Hybrid, Hong Kong SAR)",
+      "description": "Contributed to the Aerodynamic & Descent Control team, engineering flight recovery systems and CanSat mechanisms.",
       "highlights": [
-        "Worked as a junior engineer working in the Aerodynamic & Descent Control team.",
-        "Was a member of the Payload and Descent Control teams, involved in mechanism design, testing, and control considerations for flight and recovery systems."
+        "Engineered flight recovery mechanisms for CanSat and high-altitude vehicles, focusing on parachute/paraglider deployment dynamics and descent control.",
+        "Designed, iterated, and prototyped structural mechanisms using SolidWorks, ensuring vehicle packaging and recovery system reliability.",
+        "Collaborated across multidisciplinary Astrix rocketry sub-teams to evaluate descent rates and stability against mission constraints."
       ]
     },
     {
       "id": "exp-3",
-      "role": "Junior R&D Intern (UAV Development)",
+      "role": "Junior R&D Intern (UAV Systems)",
       "company": "ZERODRAG",
-      "period": "Jul 2026 — Aug 2026",
-      "description": "Contributed to UAV drone frame design, rapid iteration, and hardware prototyping at ZERODRAG in Noida, Uttar Pradesh, India.",
+      "period": "Jul 2026 — Aug 2026 (Noida, Uttar Pradesh, India)",
+      "description": "Hands-on engineering internship focused on UAV drone frame design, rapid 3D-printed prototyping, and iterative flight testing.",
       "highlights": [
-        "Designed and optimized UAV drone frames using CAD.",
-        "Developed and tested 3D-printed prototypes through rapid iteration.",
-        "Identified design issues and refined components based on testing results.",
-        "Gained hands-on experience in UAV development, prototyping, and product design."
+        "Designed and optimized UAV drone frames using Autodesk Fusion 360 and precision CAD modeling.",
+        "Developed and tested 3D-printed prototypes through rapid iteration, turning concept designs into functional flight hardware.",
+        "Identified structural stress points and refined component tolerances based on physical test results.",
+        "Gained deep product development experience taking ideas from CAD modeling to physical, working flight systems."
       ]
     },
     {
       "id": "exp-4",
       "role": "IB Tutor (Physics & Economics HL/SL)",
       "company": "Edunade",
-      "period": "Jan 2026 — Present",
-      "description": "Provided 1-to-1 tutoring for IB Physics and Economics (HL/SL), adapting explanations to individual learning styles.",
+      "period": "Jan 2026 — Present (Remote / Freelance)",
+      "description": "Provided 1-to-1 tutoring for IB Physics and Economics (HL/SL), adapting pedagogical explanations to individual learning styles.",
       "highlights": [
         "Designed exam-focused lesson plans aligned with IB mark schemes, command terms, and assessment objectives.",
         "Trained students in Paper 1, Paper 2, Paper 3 (Economics) and Physics problem-solving, with emphasis on structure, diagrams, and evaluation.",
-        "Supported students with Internal Assessments (IAs) by refining research questions, analysis, and presentation."
+        "Supported students with Internal Assessments (IAs) by refining research questions, mathematical modeling, analysis, and presentation."
       ]
     },
     {
       "id": "exp-5",
+      "role": "Committee Member",
+      "company": "IMechE Hong Kong Young Members Section",
+      "period": "Sep 2025 — Present (Hong Kong SAR)",
+      "description": "Serving as an active committee member for the Institution of Mechanical Engineers (IMechE) Hong Kong Young Members Section.",
+      "highlights": [
+        "Coordinated engineering seminars, student workshops, and professional networking initiatives.",
+        "Promoted mechanical engineering disciplines and career pathways among young engineers and university students in Hong Kong."
+      ]
+    },
+    {
+      "id": "exp-6",
+      "role": "Peer Advisor & Mentor",
+      "company": "HKUST Engineering (MAE Department)",
+      "period": "Aug 2026 — Present (Hong Kong SAR)",
+      "description": "Serving as MAE Department Peer Advisor and mentor at HKUST, supporting junior engineering students.",
+      "highlights": [
+        "Provided academic guidance, design project mentorship, and curriculum navigation for junior Mechanical Engineering undergraduates.",
+        "Facilitated study sessions, peer problem-solving, and transition into university engineering programs."
+      ]
+    },
+    {
+      "id": "exp-7",
       "role": "Mathematics Mentor (Math Buddies)",
       "company": "Creative Secondary School",
-      "period": "2023 — 2024",
+      "period": "2023 — 2024 (Hong Kong SAR)",
       "description": "Mentored junior students in mathematics through the Math Buddies program, offering weekly support to students and helping in improving their confidence and understanding of key concepts.",
       "highlights": [
         "Mentored junior cohorts to reinforce algebra, geometry, and foundational numeracy.",
@@ -277,34 +308,59 @@
   "education": [
     {
       "id": "edu-1",
-      "degree": "Bachelor of Engineering (B.Eng.) — Mechanical & Aerospace Engineering",
+      "degree": "Bachelor of Engineering (B.Eng.) — Mechanical Engineering",
       "institution": "The Hong Kong University of Science and Technology (HKUST)",
-      "period": "2025 — 2029 (Expected June 2029)",
-      "location": "Hong Kong",
+      "period": "Sep 2025 — 2029 (Expected June 2029)",
+      "location": "Hong Kong SAR",
       "score": "Undergraduate",
       "highlights": [
-        "Member of the Astrix Rocketry Team (Aerodynamic and Descent Control).",
+        "Astrix Team Member (Descent & Payload, Project Aquanaut)",
+        "MAE Department Peer Mentor / Advisor",
         "Focused study in mechanical systems, aerospace dynamics, and computational mechanics."
       ]
     },
     {
       "id": "edu-2",
       "degree": "International Baccalaureate (IB) Diploma",
-      "institution": "Creative Secondary School",
-      "period": "Graduated May 2025",
-      "location": "Hong Kong",
-      "score": "",
+      "institution": "Creative Secondary School 啓思中學",
+      "period": "Aug 2019 — May 2025",
+      "location": "Hong Kong SAR",
+      "score": "Combined Grade: 38 Pts",
       "highlights": [
-        "Physics (HL)",
-        "Mathematics: Analysis & Approaches (HL)",
-        "Economics (HL)",
-        "English A: Language & Literature (SL)",
-        "Theory of Knowledge",
-        "Extended Essay "
+        "Jacaranda House Committee Vice-Captain",
+        "Founder/Host of Unsolved (Mystery-Solving ECA)",
+        "Athletics Team & Badminton Team",
+        "Physics (HL): 7 | Mathematics: Analysis & Approaches (HL): 6 | Economics (HL): 6",
+        "Design Technology (SL): 5 | English A: Lang & Lit (SL): 6 | Spanish AB initio (SL): 5",
+        "Theory of Knowledge: A | Extended Essay: B"
       ]
     }
   ],
   "certifications": [
+    {
+      "id": "cert-mindware",
+      "title": "Mindware: Critical Thinking for the Information Age",
+      "issuer": "University of Michigan (Coursera)",
+      "date": "April 2026",
+      "score": "Credential ID: DOCN6K70MV58",
+      "details": "Cognitive bias mitigation, scientific reasoning, empirical evaluation, and decision-making."
+    },
+    {
+      "id": "cert-peer-supporter",
+      "title": "Peer Supporter Certificate",
+      "issuer": "KELY Support Group",
+      "date": "January 2024",
+      "score": "Certified Peer Supporter",
+      "details": "Active listening, empathetic guidance, peer mentorship, and youth mental health support."
+    },
+    {
+      "id": "cert-genai",
+      "title": "Introduction to Generative AI",
+      "issuer": "Certified Credential",
+      "date": "2025",
+      "score": "Certified",
+      "details": "Foundations of Large Language Models, generative architectures, and AI application workflows."
+    },
     {
       "id": "cert-1",
       "title": "IELTS Academic (Overall 8.5 / 9.0)",
@@ -328,30 +384,6 @@
       "date": "June 2022",
       "score": "Honors Distinction",
       "details": "Integrated Sciences: 7, ICT: 7, Physical Education: 7, Mathematics: 6"
-    },
-    {
-      "id": "cert-genai",
-      "title": "Introduction to Generative AI",
-      "issuer": "Certified Credential",
-      "date": "2025",
-      "score": "Certified",
-      "details": "Foundations of Generative Models, Deep Learning architectures, and AI-assisted workflows."
-    },
-    {
-      "id": "cert-peer-supporter",
-      "title": "Peer Supporter Certificate",
-      "issuer": "HKUST Peer Mentorship",
-      "date": "2025",
-      "score": "Certified",
-      "details": "Active listening, empathetic guidance, peer mentorship, and academic support frameworks."
-    },
-    {
-      "id": "cert-mindware",
-      "title": "Mindware: Critical Thinking for the Information Age",
-      "issuer": "Certified Credential",
-      "date": "2025",
-      "score": "Certified",
-      "details": "Cognitive bias mitigation, scientific reasoning, empirical evaluation, and decision-making."
     }
   ],
   "photos": [

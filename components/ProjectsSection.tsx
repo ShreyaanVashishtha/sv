@@ -247,8 +247,8 @@ export function ProjectsSection({
             </p>
 
             {activeModalProject.longDescription && (
-              <div className="p-4 rounded-xl bg-black/40 border border-white/5 mb-6 text-xs md:text-sm text-zinc-400 leading-relaxed font-mono">
-                <span className="text-white font-semibold block mb-1">Architecture Notes:</span>
+              <div className="p-4 rounded-xl bg-black/40 border border-white/5 mb-6 text-xs md:text-sm text-zinc-400 leading-relaxed font-mono whitespace-pre-line">
+                <span className="text-white font-semibold block mb-2">Architecture & Engineering Notes:</span>
                 {activeModalProject.longDescription}
               </div>
             )}
