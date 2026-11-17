@@ -15,7 +15,7 @@ export function SkillsSection({
   skills = [],
   eyebrow = 'Core Capabilities',
   title = 'Engineering Stack & Disciplines',
-  subtitle = 'Selected technologies, protocols, and architectural patterns deployed in production environments.',
+  subtitle = 'Core engineering tools, CAD assemblies, aerodynamic mechanisms, and computational frameworks applied across aerospace and marine systems.',
 }: SkillsSectionProps) {
   const safeSkills = Array.isArray(skills) ? skills : [];
 

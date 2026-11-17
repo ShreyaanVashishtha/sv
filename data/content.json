@@ -18,12 +18,20 @@
     ],
     "metrics": [
       {
-        "label": "Astrix Flight Team",
+        "label": "Undergraduate",
+        "value": "HKUST B.Eng"
+      },
+      {
+        "label": "Astrix Space Exploration",
+        "value": "Project Aquanaut"
+      },
+      {
+        "label": "Flight Recovery",
         "value": "Aero & Descent"
       },
       {
-        "label": "Undergraduate",
-        "value": "HKUST B.Eng"
+        "label": "IELTS Academic",
+        "value": "8.5 / 9"
       }
     ]
   },
@@ -723,7 +731,7 @@
     "biometricCredentialIds": [],
     "accentColor": "#ffffff",
     "cvUrl": "",
-    "contactMessage": "Interested in aerospace engineering, Astrix rocketry, IB tutoring, or technical collaboration? Reach out directly.",
+    "contactMessage": "Interested in aerospace engineering, Astrix rocketry, submersible systems, or technical collaboration? Reach out directly.",
     "footerNote": "Crafted with precision for sv7.dev. Mechanical & Aerospace Engineering @ HKUST.",
     "sectionVisibility": {
       "heroMetrics": true,
@@ -780,7 +788,7 @@
     "hero": {
       "showStatusBadge": false,
       "statusBadgePrefix": "Status",
-      "exploreButtonText": "Explore Work",
+      "exploreButtonText": "Explore Projects",
       "exploreButtonHref": "#projects",
       "copyEmailText": "Copy email",
       "showAvatar": false,
@@ -789,21 +797,21 @@
     "headings": {
       "projectsEyebrow": "Selected Works",
       "projectsTitle": "Featured Projects & Systems",
-      "projectsSubtitle": "Aerospace recovery mechanisms, scientific numerical simulators, and parametric CAD designs.",
+      "projectsSubtitle": "Autonomous underwater vehicles, experimental rocketry recovery mechanisms, UAV airframes, and precision CAD assemblies.",
       "skillsEyebrow": "Core Capabilities",
       "skillsTitle": "Engineering Stack & Disciplines",
-      "skillsSubtitle": "Selected technologies, protocols, and architectural patterns deployed in production environments.",
+      "skillsSubtitle": "Core engineering tools, CAD assemblies, aerodynamic mechanisms, and computational frameworks applied across aerospace and marine systems.",
       "experienceEyebrow": "Track Record",
       "experienceTitle": "Experience & Milestones",
-      "experienceSubtitle": "Engineering teams, pedagogical mentorship, and organizational leadership.",
+      "experienceSubtitle": "Engineering teams, UAV hardware prototyping, pedagogical mentorship, and technical leadership.",
       "educationEyebrow": "Academic Background",
       "educationTitle": "Education & Honors",
-      "educationSubtitle": "Undergraduate aerospace studies, International Baccalaureate diploma, and certified proficiencies.",
-      "certificationsEyebrow": "Standardized Exams & Credentials",
-      "certificationsTitle": "Standardized Exams & Certifications",
-      "contactEyebrow": "Initiate Contact",
+      "educationSubtitle": "Undergraduate mechanical engineering at HKUST, International Baccalaureate diploma, and certified credentials.",
+      "certificationsEyebrow": "Standardized Credentials",
+      "certificationsTitle": "Exams & Certifications",
+      "contactEyebrow": "Get in Touch",
       "contactTitle": "Let's Build Something Meaningful",
-      "contactSubtitle": "Open for select consulting, high-impact systems architecture, and engineering advisory."
+      "contactSubtitle": "Interested in aerospace engineering, Astrix rocketry, submersible systems, or technical collaboration? Reach out directly."
     },
     "terminal": {
       "windowTitle": "bash — sv7.dev",
@@ -815,13 +823,13 @@
       "collapseText": "Hide response preview"
     },
     "contact": {
-      "formTitle": "Send a Direct Dispatch",
+      "formTitle": "Send a Message",
       "subjectLabel": "Subject / Topic",
-      "subjectPlaceholder": "e.g. Rocketry Systems, Collaboration, IB Tutoring",
+      "subjectPlaceholder": "e.g. Astrix Rocketry, Project Aquanaut, Engineering Inquiry",
       "messageLabel": "Your Message",
       "messagePlaceholder": "Tell me about your project, inquiry, or question...",
-      "submitButtonText": "Send Dispatch",
-      "directTitle": "Direct Channels",
+      "submitButtonText": "Send Message",
+      "directTitle": "Direct Inquiries & Collaboration",
       "responseDisclaimer": "Typically replies within 24–48 hours.",
       "copyAddressText": "Copy Address",
       "hideEmailAddress": true,
@@ -935,5 +943,22 @@
       "hidden": false,
       "order": 4
     }
-  ]
+  ],
+  "sectionHeadings": {
+    "projectsEyebrow": "Selected Works",
+    "projectsTitle": "Featured Projects & Systems",
+    "projectsSubtitle": "Autonomous underwater vehicles, experimental rocketry recovery mechanisms, UAV airframes, and precision CAD assemblies.",
+    "skillsEyebrow": "Core Capabilities",
+    "skillsTitle": "Engineering Stack & Disciplines",
+    "skillsSubtitle": "Core engineering tools, CAD assemblies, aerodynamic mechanisms, and computational frameworks applied across aerospace and marine systems.",
+    "experienceEyebrow": "Track Record",
+    "experienceTitle": "Experience & Milestones",
+    "experienceSubtitle": "Engineering teams, UAV hardware prototyping, pedagogical mentorship, and technical leadership.",
+    "educationEyebrow": "Academic Background",
+    "educationTitle": "Education & Honors",
+    "educationSubtitle": "Mechanical Engineering at HKUST, IB Diploma, and continuous technical certifications.",
+    "contactEyebrow": "Direct Inquiries",
+    "contactTitle": "Let's Collaborate",
+    "contactSubtitle": "Open to mechanical engineering internships, aerospace R&D roles, and technical project collaborations."
+  }
 }

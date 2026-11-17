@@ -201,23 +201,15 @@ export function CADShowcaseClient({ initialModels, cadSettings }: CADShowcaseCli
               )}
 
               {activeModel.printablesUrl && (
-                <div className="p-3 rounded-2xl bg-orange-500/10 border border-orange-500/25 space-y-1 col-span-2">
-                  <div className="flex items-center justify-between text-[10px] text-orange-400 uppercase font-mono">
-                    <span className="flex items-center gap-1.5 font-bold">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#fa6400] animate-pulse" />
-                      <span>Printables 3D Model Repository</span>
+                <div className="p-3 rounded-2xl bg-zinc-900/60 border border-white/5 space-y-1 col-span-2">
+                  <span className="text-[10px] text-zinc-500 uppercase block">Printables Repository</span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-white font-semibold text-xs flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#fa6400]" />
+                      Slicing &amp; 3D Print Package
                     </span>
-                    <span className="text-zinc-400">Available</span>
+                    <span className="text-[10px] text-zinc-400 font-mono">Available</span>
                   </div>
-                  <a
-                    href={activeModel.printablesUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-white hover:text-orange-300 font-semibold flex items-center justify-between transition-colors pt-0.5 text-xs"
-                  >
-                    <span className="truncate">Download 3D Printing Files &amp; G-Code</span>
-                    <ExternalLink className="w-3.5 h-3.5 text-orange-400 shrink-0 ml-1" />
-                  </a>
                 </div>
               )}
             </div>
@@ -231,13 +223,13 @@ export function CADShowcaseClient({ initialModels, cadSettings }: CADShowcaseCli
                   href={activeModel.printablesUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center gap-2.5 px-5 py-3.5 rounded-xl bg-gradient-to-r from-[#fa6400] to-[#e05800] hover:from-[#e05800] hover:to-[#c44c00] text-white font-semibold text-xs transition-all shadow-lg shadow-orange-500/20 active:scale-[0.98] group"
+                  className="w-full flex items-center justify-center gap-2.5 px-5 py-3 rounded-xl bg-white text-black font-semibold text-xs hover:bg-zinc-200 transition-all shadow-md active:scale-[0.98] group"
                 >
-                  <span className="w-5 h-5 rounded-md bg-black/25 flex items-center justify-center font-black text-xs">
+                  <span className="w-4 h-4 rounded-full bg-[#fa6400] text-white flex items-center justify-center text-[10px] font-bold">
                     P
                   </span>
-                  <span>Download on Printables</span>
-                  <ExternalLink className="w-3.5 h-3.5 text-white/80 group-hover:translate-x-0.5 transition-transform" />
+                  <span>View &amp; Download on Printables</span>
+                  <ExternalLink className="w-3.5 h-3.5 text-zinc-500 group-hover:translate-x-0.5 transition-transform" />
                 </a>
 
                 {activeModel.downloadUrl && (

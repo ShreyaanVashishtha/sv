@@ -396,8 +396,8 @@ export function PhotographyGallery({
 
             <div className="px-3.5 py-1.5 rounded-xl bg-zinc-900/60 border border-white/10 text-xs flex items-center gap-2">
               <MapPin className="w-3.5 h-3.5 text-amber-400" />
-              <span className="text-zinc-400">Hub:</span>
-              <span className="text-white">Hong Kong SAR &bull; Spaceports</span>
+              <span className="text-zinc-400">Base:</span>
+              <span className="text-white">Hong Kong SAR</span>
             </div>
 
             {isFaEnabled && (

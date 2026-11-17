@@ -47,16 +47,16 @@ export function ContactSection({
   const [submitted, setSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const formTitle = contactSettings?.formTitle || 'Send a Direct Dispatch';
+  const formTitle = contactSettings?.formTitle || 'Send a Message';
   const subjectLabel = contactSettings?.subjectLabel || 'Subject / Topic';
   const subjectPlaceholder =
-    contactSettings?.subjectPlaceholder || 'e.g. Rocketry Systems, Collaboration, IB Tutoring';
+    contactSettings?.subjectPlaceholder || 'e.g. Astrix Rocketry, Project Aquanaut, Engineering Inquiry';
   const messageLabel = contactSettings?.messageLabel || 'Your Message';
   const messagePlaceholder =
     contactSettings?.messagePlaceholder || 'Tell me about your project, inquiry, or question...';
-  const submitButtonText = contactSettings?.submitButtonText || 'Send Dispatch';
+  const submitButtonText = contactSettings?.submitButtonText || 'Send Message';
   const responseDisclaimer =
-    contactSettings?.responseDisclaimer || 'Typically replies within 24 business hours.';
+    contactSettings?.responseDisclaimer || 'Typically replies within 24–48 hours.';
   const displayEmail =
     contactSettings?.publicDisplayEmail || profile.email || 'contact@sv7.dev';
 
@@ -166,14 +166,14 @@ export function ContactSection({
             <div>
               <div className="flex items-center justify-between pb-4 mb-6 border-b border-white/10">
                 <div>
-                  <h3 className="text-lg font-bold text-white">{formTitle}</h3>
+                  <h3 className="text-lg font-bold text-white tracking-tight">{formTitle}</h3>
                   <p className="text-xs text-zinc-400 mt-0.5">
-                    Routed securely to private inbox. Zero spam bots.
+                    Direct delivery to Shreyaan&apos;s personal inbox.
                   </p>
                 </div>
                 <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-mono uppercase tracking-wider">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>Channel Open</span>
+                  <span>Available</span>
                 </div>
               </div>
 
@@ -182,15 +182,15 @@ export function ContactSection({
                   <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto shadow-inner">
                     <CheckCircle2 className="w-7 h-7" />
                   </div>
-                  <h4 className="text-lg font-bold text-white">Transmission Delivered</h4>
+                  <h4 className="text-lg font-bold text-white tracking-tight">Message Delivered</h4>
                   <p className="text-xs text-zinc-400 max-w-sm mx-auto leading-relaxed">
-                    Thank you! Your dispatch has been securely encrypted and delivered to Shreyaan&apos;s primary inbox. You will receive a direct reply shortly.
+                    Thank you! Your message has been sent directly to Shreyaan&apos;s inbox. You will receive a reply shortly.
                   </p>
                   <button
                     onClick={() => setSubmitted(false)}
                     className="inline-flex items-center gap-1.5 text-xs text-zinc-300 hover:text-white underline pt-4 font-mono transition-colors"
                   >
-                    <span>Transmit Another Message</span>
+                    <span>Send Another Message</span>
                   </button>
                 </div>
               ) : (
@@ -269,7 +269,7 @@ export function ContactSection({
                     disabled={submitting}
                     className="group w-full flex items-center justify-center gap-2 bg-white text-black font-semibold text-xs py-3.5 rounded-xl hover:bg-zinc-200 transition-all duration-200 hover:scale-[1.008] active:scale-[0.99] shadow-md disabled:opacity-50 mt-2"
                   >
-                    <span>{submitting ? 'Encrypting & Delivering...' : submitButtonText}</span>
+                    <span>{submitting ? 'Delivering...' : submitButtonText}</span>
                     <Send className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </button>
                 </form>
@@ -279,9 +279,9 @@ export function ContactSection({
             <div className="pt-4 mt-6 border-t border-white/5 flex items-center justify-between text-[11px] text-zinc-500 font-mono">
               <span className="flex items-center gap-1.5">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                <span>SSL Secured Transmission</span>
+                <span>Private &amp; Direct Channel</span>
               </span>
-              <span>BotId Protected</span>
+              <span>Encrypted Delivery</span>
             </div>
           </div>
 
@@ -296,16 +296,16 @@ export function ContactSection({
                 </span>
                 <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>Direct Channel</span>
+                  <span>Active</span>
                 </span>
               </div>
 
               <div className="text-lg sm:text-xl font-bold text-white tracking-tight">
-                {contactSettings?.directTitle || 'Direct Inquiries & RFPs'}
+                {contactSettings?.directTitle || 'Direct Inquiries & Collaboration'}
               </div>
 
               <p className="text-xs text-zinc-400 mt-2 leading-relaxed">
-                {responseDisclaimer} Prefer writing directly via your email client? Inquiries routed directly or via the dispatch console are received into private inbox.
+                {responseDisclaimer} Prefer writing directly via your email client? Inquiries routed directly or via the form above are received into private inbox.
               </p>
 
               <div className="mt-4 pt-4 border-t border-white/10 flex items-center gap-2">

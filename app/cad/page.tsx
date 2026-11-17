@@ -75,7 +75,7 @@ export default async function CADPage() {
             </span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl font-black font-archivo tracking-tight text-white leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white leading-tight">
             {title}
           </h1>
 

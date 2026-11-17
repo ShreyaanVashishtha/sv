@@ -172,7 +172,7 @@ export function Hero({
               className="group flex items-center gap-2 bg-zinc-900/90 text-zinc-300 hover:text-white px-4 py-2.5 rounded-xl text-sm font-medium border border-white/10 hover:border-white/20 transition-all hover:bg-zinc-800/80 active:scale-[0.98]"
             >
               <Mail className="w-4 h-4 text-zinc-400" />
-              <span>Direct Dispatch</span>
+              <span>Get in Touch</span>
               <ArrowUpRight className="w-3.5 h-3.5 text-zinc-500 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-white" />
             </a>
           ) : (

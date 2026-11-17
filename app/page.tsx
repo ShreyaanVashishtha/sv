@@ -29,21 +29,21 @@ export default async function HomePage() {
   const headings = data.settings?.headings || {
     projectsEyebrow: 'Selected Works',
     projectsTitle: 'Featured Projects & Systems',
-    projectsSubtitle: 'Aerospace recovery mechanisms, scientific numerical simulators, and parametric CAD designs.',
+    projectsSubtitle: 'Autonomous underwater vehicles, experimental rocketry recovery mechanisms, UAV airframes, and precision CAD assemblies.',
     skillsEyebrow: 'Core Capabilities',
     skillsTitle: 'Engineering Stack & Disciplines',
-    skillsSubtitle: 'Selected technologies, protocols, and architectural patterns deployed in production environments.',
+    skillsSubtitle: 'Core engineering tools, CAD assemblies, aerodynamic mechanisms, and computational frameworks applied across aerospace and marine systems.',
     experienceEyebrow: 'Track Record',
     experienceTitle: 'Experience & Milestones',
-    experienceSubtitle: 'Engineering teams, pedagogical mentorship, and organizational leadership.',
+    experienceSubtitle: 'Engineering teams, UAV hardware prototyping, pedagogical mentorship, and technical leadership.',
     educationEyebrow: 'Academic Background',
     educationTitle: 'Education & Honors',
-    educationSubtitle: 'Undergraduate aerospace studies, International Baccalaureate diploma, and certified proficiencies.',
+    educationSubtitle: 'Undergraduate mechanical engineering at HKUST, International Baccalaureate diploma, and certified credentials.',
     certificationsEyebrow: 'Standardized Credentials',
-    certificationsTitle: 'Standardized Exams & Certifications',
-    contactEyebrow: 'Initiate Contact',
+    certificationsTitle: 'Exams & Certifications',
+    contactEyebrow: 'Get in Touch',
     contactTitle: "Let's Build Something Meaningful",
-    contactSubtitle: 'Open for select consulting, high-impact systems architecture, and engineering advisory.',
+    contactSubtitle: 'Interested in aerospace engineering, Astrix rocketry, submersible systems, or technical collaboration? Reach out directly.',
   };
 
   const defaultOrder = ['projects', 'skills', 'experience', 'education', 'terminalCard', 'contact'];
