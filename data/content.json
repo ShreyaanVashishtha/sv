@@ -1,10 +1,11 @@
 {
+  "version": 2026111801,
   "profile": {
     "name": "Shreyaan Vashishtha",
     "handle": "",
     "title": "BEng Mechanical Engineering @ HKUST | Astrix Team Member | Peer Mentor",
     "tagline": "Mechanical Engineering undergraduate at HKUST with a strong foundation in mechanical design, rapid prototyping, and physics-based problem solving. Currently engineering Project Aquanaut (underwater submersible) and previously Astrix Rocketry Aerodynamics & Descent Control.",
-    "avatar": "https://images.unsplash.com/photo-1517976487502-5f657a8bf606?w=600&auto=format&fit=crop&q=80",
+    "avatar": "https://images.unsplash.com/photo-1516849841032-87cbac4d88f7?w=600&auto=format&fit=crop&q=80",
     "status": {
       "available": true,
       "text": "BEng Mechanical Engineering @ HKUST • Astrix Project Aquanaut"
@@ -91,7 +92,7 @@
       ],
       "demoUrl": "https://www.linkedin.com/in/shreyaanv/",
       "githubUrl": "https://github.com/ShreyaanVashishtha",
-      "imageUrl": "https://images.unsplash.com/photo-1517976487502-5f657a8bf606?w=800&auto=format&fit=crop&q=80"
+      "imageUrl": "https://images.unsplash.com/photo-1516849841032-87cbac4d88f7?w=800&auto=format&fit=crop&q=80"
     },
     {
       "id": "proj-zerodrag",
@@ -887,7 +888,7 @@
       "category": "Aerospace & Rocketry",
       "modelUrl": "procedural:fin-can",
       "format": "glb",
-      "thumbnailUrl": "https://images.unsplash.com/photo-1517976487502-5f657a8bf606?w=800&auto=format&fit=crop&q=80",
+      "thumbnailUrl": "https://images.unsplash.com/photo-1516849841032-87cbac4d88f7?w=800&auto=format&fit=crop&q=80",
       "cadSoftware": "SolidWorks & ANSYS Fluent",
       "material": "6061-T6 Billet Aluminum & G10 Fins",
       "manufacturing": "4-Axis CNC Milling",

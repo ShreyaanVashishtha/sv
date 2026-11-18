@@ -233,7 +233,7 @@ export const DEFAULT_MODELS: CADModelItem[] = [
     category: 'Aerospace & Rocketry',
     modelUrl: 'procedural:fin-can',
     format: 'glb',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1517976487502-5f657a8bf606?w=800&auto=format&fit=crop&q=80',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1516849841032-87cbac4d88f7?w=800&auto=format&fit=crop&q=80',
     cadSoftware: 'SolidWorks & ANSYS Fluent',
     material: '6061-T6 Billet Aluminum & G10 Fins',
     manufacturing: '4-Axis CNC Milling',
@@ -271,12 +271,13 @@ export const DEFAULT_MODELS: CADModelItem[] = [
 ];
 
 const DEFAULT_CONTENT: WebsiteData = {
+  version: 2026111801,
   profile: {
     name: 'Shreyaan Vashishtha',
     handle: 'shreyaanv',
     title: 'Mechanical & Aerospace Engineering @ HKUST',
     tagline: 'Junior Engineer in the Astrix Rocketry Team specializing in Aerodynamics & Descent Control, mechanism design, and computational engineering.',
-    avatar: 'https://images.unsplash.com/photo-1517976487502-5f657a8bf606?w=600&auto=format&fit=crop&q=80',
+    avatar: 'https://images.unsplash.com/photo-1516849841032-87cbac4d88f7?w=600&auto=format&fit=crop&q=80',
     status: {
       available: true,
       text: 'B.Eng Student at HKUST & Engineering with Astrix Rocketry',
@@ -317,6 +318,7 @@ function mergeWithDefaults(parsed: any): WebsiteData {
   return {
     ...DEFAULT_CONTENT,
     ...(parsed || {}),
+    version: parsed?.version || DEFAULT_CONTENT.version || 0,
     profile: {
       ...DEFAULT_CONTENT.profile,
       ...(parsed?.profile || {}),
@@ -407,59 +409,50 @@ function mergeWithDefaults(parsed: any): WebsiteData {
 
 export async function getContent(): Promise<WebsiteData> {
   try {
-    // 1. Check in-memory cache first (super fast response)
-    if (globalThis.__sv7_content_cache) {
-      const cached = globalThis.__sv7_content_cache;
-      const envKey = process.env.ADMIN_PASSKEY || process.env.ADMIN_PASSWORD;
-      if (envKey && envKey.trim().toLowerCase() !== 'admin') {
-        cached.settings.adminPasskey = envKey.trim();
-        cached.settings.adminPassword = envKey.trim();
-      }
-      return cached;
-    }
-
-    // 2. Check Cloud Database (Vercel KV / Upstash Redis) if available
-    if (redis) {
-      try {
-        const remote = await redis.get<WebsiteData>(REDIS_CONTENT_KEY);
-        if (remote && remote.profile) {
-          const merged = mergeWithDefaults(remote);
-          globalThis.__sv7_content_cache = merged;
-          return merged;
-        }
-      } catch (redisErr) {
-        console.warn('Redis read failed, falling back to disk:', redisErr);
-      }
-    }
-
     let fileContents = '';
 
-    // 3. Check /tmp (active serverless runtime writes)
+    // 1. Check /tmp (active serverless runtime writes)
     if (fs.existsSync(TMP_FILE_PATH)) {
       try {
         fileContents = fs.readFileSync(TMP_FILE_PATH, 'utf-8');
       } catch (e) {}
     }
 
-    // 4. Check primary repository location (process.cwd())
+    // 2. Check primary repository location (process.cwd())
     if (!fileContents && fs.existsSync(DATA_FILE_PATH)) {
       fileContents = fs.readFileSync(DATA_FILE_PATH, 'utf-8');
     }
 
-    const parsed = fileContents.trim() ? JSON.parse(fileContents) : DEFAULT_CONTENT;
-    const result = mergeWithDefaults(parsed);
+    const diskParsed = fileContents.trim() ? JSON.parse(fileContents) : DEFAULT_CONTENT;
+    const diskData = mergeWithDefaults(diskParsed);
+    const diskVersion = diskData.version || 0;
 
-    // If Redis is active but empty, auto-seed it with the initial website data
+    // 3. Check Cloud Database (Vercel KV / Upstash Redis) if available
     if (redis) {
       try {
-        await redis.set(REDIS_CONTENT_KEY, result);
-      } catch (seedErr) {
-        console.warn('Auto-seeding Redis failed:', seedErr);
+        const remote = await redis.get<WebsiteData>(REDIS_CONTENT_KEY);
+        if (remote && remote.profile) {
+          const remoteVersion = remote.version || 0;
+          // If remote in Redis is at least as fresh as disk, use remote
+          if (remoteVersion >= diskVersion) {
+            const merged = mergeWithDefaults(remote);
+            globalThis.__sv7_content_cache = merged;
+            return merged;
+          }
+          // If diskData is newer (e.g. newly deployed code updates), auto-sync Redis!
+          console.log(`[ContentSync] Auto-updating Redis from disk (v${diskVersion} > v${remoteVersion})`);
+          await redis.set(REDIS_CONTENT_KEY, diskData);
+        } else {
+          // Redis was empty, seed with diskData
+          await redis.set(REDIS_CONTENT_KEY, diskData);
+        }
+      } catch (redisErr) {
+        console.warn('Redis sync failed, falling back to disk:', redisErr);
       }
     }
 
-    globalThis.__sv7_content_cache = result;
-    return result;
+    globalThis.__sv7_content_cache = diskData;
+    return diskData;
   } catch (error) {
     console.error('Error reading content, using fallback:', error);
     return DEFAULT_CONTENT;
@@ -468,6 +461,8 @@ export async function getContent(): Promise<WebsiteData> {
 
 export async function saveContent(data: WebsiteData): Promise<boolean> {
   try {
+    data.version = Date.now();
+
     // Sanitize passkey: ensure 'admin' is never stored
     if (
       data.settings.adminPasskey &&

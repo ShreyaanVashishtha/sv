@@ -385,6 +385,7 @@ export interface CADSettings {
 }
 
 export interface WebsiteData {
+  version?: number;
   profile: Profile;
   socials: Social[];
   projects: Project[];
